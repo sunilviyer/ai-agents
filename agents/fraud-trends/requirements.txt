@@ -1,0 +1,20 @@
+# Fraud Trends Investigator Agent - Python Dependencies
+# Installation: pip install -r requirements.txt
+
+# AI Framework
+langchain>=0.3.0
+
+# LLM Integration
+langchain-anthropic>=0.2.0
+
+# Web Search API
+tavily-python>=0.5.0
+
+# Data Validation
+pydantic>=2.5.0
+
+# Environment Management
+python-dotenv>=1.0.0
+
+# Database Client (for future import script in Epic 4)
+psycopg2-binary>=2.9.0

@@ -1,0 +1,77 @@
+# Environment Variables
+.env
+.env.local
+.env*.local
+**/.env
+**/.env.local
+
+# API Keys & Secrets
+**/secrets/
+**/*secret*
+**/*credentials*
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/venv/
+**/env/
+**/.venv/
+**/.pytest_cache/
+**/*.egg-info/
+
+# Agent outputs (uncomment if outputs contain sensitive data)
+# agents/**/output/*.json
+
+# Node.js
+website/node_modules/
+website/.next/
+website/out/
+website/.vercel/
+website/build/
+website/dist/
+**/node_modules/
+
+# Logs
+**/*.log
+**/logs/
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Database
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+
+# Temporary files
+**/tmp/
+**/temp/
+**/*.tmp
+
+# BMad Method Framework
+.bmad/
+.augment/
+node_modules/
+package-lock.json
+package.json
+
+# BMad artifacts (COMMIT THESE - they're documentation)
+# bmad-artifacts/ - Keep this in git!
+# .claude/ - Keep this in git!

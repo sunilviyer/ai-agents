@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic AI Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Molten Lava Theme - RED PRIMARY */
+      --molten-lava: #780000;
+      --flag-red: #C1121F;
+      --papaya-whip: #FDF0D5;
+      --deep-space-blue: #003049;
+      --steel-blue: #669BBC;
+      
+      /* Semantic mappings - RED as primary */
+      --bg-primary: var(--molten-lava);
+      --bg-secondary: #5a0000;
+      --bg-card: rgba(90, 0, 0, 0.6);
+      --bg-elevated: rgba(193, 18, 31, 0.3);
+      
+      --text-primary: var(--papaya-whip);
+      --text-secondary: rgba(253, 240, 213, 0.8);
+      --text-muted: rgba(253, 240, 213, 0.5);
+      
+      --accent-primary: var(--deep-space-blue);
+      --accent-secondary: var(--steel-blue);
+      --accent-warm: var(--papaya-whip);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: linear-gradient(180deg, var(--flag-red) 0%, var(--molten-lava) 30%, #4a0000 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Ember particles effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(2px 2px at 50px 50px, rgba(253, 240, 213, 0.4), transparent),
+        radial-gradient(2px 2px at 150px 120px, rgba(253, 240, 213, 0.3), transparent),
+        radial-gradient(1px 1px at 250px 80px, rgba(253, 240, 213, 0.35), transparent),
+        radial-gradient(2px 2px at 350px 200px, rgba(253, 240, 213, 0.25), transparent),
+        radial-gradient(1px 1px at 450px 150px, rgba(253, 240, 213, 0.4), transparent),
+        radial-gradient(2px 2px at 100px 300px, rgba(253, 240, 213, 0.2), transparent),
+        radial-gradient(1px 1px at 300px 350px, rgba(253, 240, 213, 0.35), transparent),
+        radial-gradient(2px 2px at 500px 400px, rgba(253, 240, 213, 0.3), transparent);
+      background-size: 550px 450px;
+      animation: float-embers 15s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    @keyframes float-embers {
+      0%, 100% { transform: translateY(0); opacity: 0.8; }
+      50% { transform: translateY(-20px); opacity: 1; }
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--papaya-whip);
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .header h1 span {
+      color: var(--papaya-whip);
+      text-shadow: 0 0 40px rgba(253, 240, 213, 0.5);
+    }
+    
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      font-weight: 400;
+    }
+    
+    /* Robot Stage */
+    .robot-stage {
+      background: linear-gradient(180deg, rgba(0, 48, 73, 0.95) 0%, rgba(0, 26, 44, 0.98) 100%);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(102, 155, 188, 0.3);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* Cool contrast glow */
+    .robot-stage::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 150px;
+      background: radial-gradient(ellipse, rgba(102, 155, 188, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .robots-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    /* Individual Robot */
+    .robot-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .robot-container:hover .robot-wrapper {
+      transform: translateY(-8px) scale(1.05);
+    }
+    
+    .robot-container:hover .robot-glow {
+      opacity: 0.7;
+    }
+    
+    .robot-container.sleeping {
+      opacity: 0.25;
+      filter: grayscale(60%);
+      pointer-events: none;
+    }
+    
+    .robot-container.active .robot-wrapper {
+      transform: scale(1.1);
+    }
+    
+    .robot-wrapper {
+      position: relative;
+      width: 120px;
+      height: 160px;
+      transition: all 0.3s ease;
+    }
+    
+    .robot-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      opacity: 0.35;
+      filter: blur(25px);
+      transition: all 0.3s ease;
+      z-index: 0;
+    }
+    
+    .robot-svg {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .robot-label {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    
+    .robot-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--papaya-whip);
+      margin-bottom: 0.35rem;
+    }
+    
+    .robot-type {
+      font-size: 0.75rem;
+      color: rgba(253, 240, 213, 0.6);
+      padding: 0.3rem 0.85rem;
+      background: rgba(102, 155, 188, 0.2);
+      border: 1px solid rgba(102, 155, 188, 0.3);
+      border-radius: 100px;
+    }
+    
+    /* Robot SVG Animations */
+    .robot-body {
+      animation: breathe 2.5s ease-in-out infinite;
+    }
+    
+    @keyframes breathe {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    
+    .robot-eye {
+      animation: blink 4s ease-in-out infinite;
+      transform-origin: center;
+    }
+    
+    @keyframes blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+    
+    /* Z's for sleeping */
+    .sleep-zs {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .robot-container.sleeping .sleep-zs {
+      opacity: 1;
+      animation: float-z 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes float-z {
+      0%, 100% { transform: translateY(0) rotate(-10deg); opacity: 1; }
+      50% { transform: translateY(-10px) rotate(10deg); opacity: 0.5; }
+    }
+    
+    /* Workflow Panel */
+    .workflow-panel {
+      background: linear-gradient(180deg, rgba(0, 48, 73, 0.95) 0%, rgba(0, 26, 44, 0.98) 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+      border: 1px solid rgba(102, 155, 188, 0.25);
+      display: none;
+      animation: slideUp 0.5s ease;
+    }
+    
+    .workflow-panel.visible {
+      display: block;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .workflow-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    
+    .workflow-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--papaya-whip);
+    }
+    
+    .workflow-title .icon {
+      font-size: 1.75rem;
+    }
+    
+    .close-btn {
+      background: rgba(102, 155, 188, 0.2);
+      border: 1px solid rgba(102, 155, 188, 0.3);
+      color: var(--papaya-whip);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.25rem;
+      transition: all 0.2s;
+    }
+    
+    .close-btn:hover {
+      background: rgba(193, 18, 31, 0.5);
+      border-color: var(--flag-red);
+    }
+    
+    /* Steps */
+    .workflow-steps {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    
+    .step {
+      flex: 1;
+      min-width: 110px;
+      padding: 1rem;
+      background: rgba(102, 155, 188, 0.1);
+      border: 1px solid rgba(102, 155, 188, 0.15);
+      border-radius: 12px;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s;
+    }
+    
+    .step.active {
+      background: rgba(253, 240, 213, 0.1);
+      border-color: rgba(253, 240, 213, 0.3);
+    }
+    
+    .step.completed {
+      background: rgba(102, 155, 188, 0.2);
+      border-color: rgba(102, 155, 188, 0.4);
+    }
+    
+    .step-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.7rem;
+      color: rgba(253, 240, 213, 0.5);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+    
+    .step-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: rgba(253, 240, 213, 0.7);
+    }
+    
+    .step.active .step-name {
+      color: var(--papaya-whip);
+    }
+    
+    .step.completed .step-name {
+      color: var(--steel-blue);
+    }
+    
+    .step-indicator {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      margin: 0.75rem auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .step .step-indicator {
+      background: rgba(102, 155, 188, 0.2);
+      color: rgba(253, 240, 213, 0.5);
+      border: 1px solid rgba(102, 155, 188, 0.3);
+    }
+    
+    .step.active .step-indicator {
+      background: var(--papaya-whip);
+      color: var(--molten-lava);
+      border-color: var(--papaya-whip);
+      animation: pulse 1.5s ease-in-out infinite;
+      box-shadow: 0 0 20px rgba(253, 240, 213, 0.5);
+    }
+    
+    .step.completed .step-indicator {
+      background: var(--steel-blue);
+      color: var(--deep-space-blue);
+      border-color: var(--steel-blue);
+    }
+    
+    .step.completed .step-indicator::after {
+      content: '✓';
+    }
+    
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(253, 240, 213, 0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(253, 240, 213, 0); }
+    }
+    
+    /* Animation Display */
+    .animation-display {
+      background: rgba(0, 26, 44, 0.6);
+      border: 1px solid rgba(102, 155, 188, 0.2);
+      border-radius: 12px;
+      padding: 2rem;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .animation-text {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      text-align: center;
+      max-width: 400px;
+      font-weight: 500;
+    }
+    
+    /* Search Bar Animation */
+    .search-bar {
+      background: rgba(102, 155, 188, 0.15);
+      border: 1px solid rgba(102, 155, 188, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      max-width: 400px;
+      width: 100%;
+    }
+    
+    .search-bar .icon {
+      color: var(--steel-blue);
+    }
+    
+    .search-bar input {
+      background: none;
+      border: none;
+      color: var(--papaya-whip);
+      font-size: 0.9rem;
+      width: 100%;
+      outline: none;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+    
+    /* Results Cards */
+    .results-container {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .result-card {
+      background: linear-gradient(135deg, rgba(102, 155, 188, 0.2) 0%, rgba(102, 155, 188, 0.1) 100%);
+      border: 1px solid rgba(102, 155, 188, 0.25);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      min-width: 100px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.4s ease forwards;
+      text-align: center;
+    }
+    
+    .result-card:nth-child(1) { animation-delay: 0.1s; }
+    .result-card:nth-child(2) { animation-delay: 0.2s; }
+    .result-card:nth-child(3) { animation-delay: 0.3s; }
+    .result-card:nth-child(4) { animation-delay: 0.4s; }
+    
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .result-card-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+    
+    /* CTA Button */
+    .workflow-cta {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    .cta-button {
+      background: linear-gradient(135deg, var(--papaya-whip) 0%, #e8d5b5 100%);
+      color: var(--molten-lava);
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 12px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(253, 240, 213, 0.3);
+    }
+    
+    /* Live Chat (Gita Guide) */
+    .live-chat-container {
+      display: none;
+    }
+    
+    .live-chat-container.visible {
+      display: block;
+    }
+    
+    .sage-message {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .sage-avatar {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+    }
+    
+    .sage-bubble {
+      background: linear-gradient(135deg, rgba(253, 240, 213, 0.1) 0%, rgba(253, 240, 213, 0.05) 100%);
+      border: 1px solid rgba(253, 240, 213, 0.2);
+      border-radius: 16px;
+      padding: 1.25rem;
+      position: relative;
+    }
+    
+    .sage-bubble p {
+      color: var(--papaya-whip);
+      line-height: 1.7;
+    }
+    
+    .pointing-hand {
+      position: absolute;
+      right: -30px;
+      bottom: 20px;
+      font-size: 2rem;
+      animation: point 1s ease-in-out infinite;
+    }
+    
+    @keyframes point {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(10px); }
+    }
+    
+    .chat-input-wrapper {
+      margin-top: 1.5rem;
+    }
+    
+    .chat-input {
+      width: 100%;
+      background: rgba(0, 48, 73, 0.6);
+      border: 2px solid var(--papaya-whip);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      color: var(--papaya-whip);
+      font-size: 1rem;
+      font-family: 'Source Sans 3', sans-serif;
+      outline: none;
+      animation: glow-border 2s ease-in-out infinite;
+    }
+    
+    .chat-input::placeholder {
+      color: rgba(253, 240, 213, 0.5);
+    }
+    
+    @keyframes glow-border {
+      0%, 100% { box-shadow: 0 0 15px rgba(253, 240, 213, 0.2); }
+      50% { box-shadow: 0 0 25px rgba(253, 240, 213, 0.4); }
+    }
+    
+    .chat-suggestions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .suggestion-chip {
+      background: rgba(102, 155, 188, 0.15);
+      border: 1px solid rgba(102, 155, 188, 0.25);
+      border-radius: 100px;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      color: rgba(253, 240, 213, 0.8);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .suggestion-chip:hover {
+      background: rgba(253, 240, 213, 0.15);
+      border-color: var(--papaya-whip);
+      color: var(--papaya-whip);
+    }
+    
+    /* Agent Grid (Below Fold) */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--papaya-whip);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+    
+    .agent-card {
+      background: linear-gradient(180deg, rgba(0, 48, 73, 0.9) 0%, rgba(0, 26, 44, 0.95) 100%);
+      border: 1px solid rgba(102, 155, 188, 0.2);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .agent-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--card-accent, var(--steel-blue));
+    }
+    
+    .agent-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(102, 155, 188, 0.4);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+    }
+    
+    .agent-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .agent-card-icon {
+      font-size: 2.25rem;
+    }
+    
+    .agent-card-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--papaya-whip);
+    }
+    
+    .agent-card-badge {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      background: rgba(102, 155, 188, 0.2);
+      border: 1px solid rgba(102, 155, 188, 0.3);
+      border-radius: 4px;
+      color: rgba(253, 240, 213, 0.6);
+      margin-top: 0.35rem;
+      display: inline-block;
+    }
+    
+    .agent-card-description {
+      color: rgba(253, 240, 213, 0.7);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    
+    .agent-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .agent-card-cases {
+      font-size: 0.8rem;
+      color: rgba(253, 240, 213, 0.5);
+    }
+    
+    .agent-card-link {
+      font-size: 0.9rem;
+      color: var(--steel-blue);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .agent-card-link:hover {
+      color: var(--papaya-whip);
+    }
+    
+    .live-badge {
+      background: linear-gradient(135deg, var(--papaya-whip) 0%, #e8d5b5 100%);
+      color: var(--molten-lava);
+      font-size: 0.65rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-left: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2.25rem;
+      }
+      
+      .robots-row {
+        gap: 1rem;
+      }
+      
+      .robot-wrapper {
+        width: 85px;
+        height: 115px;
+      }
+      
+      .robot-name {
+        font-size: 0.95rem;
+      }
+      
+      .workflow-steps {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+      
+      .step {
+        min-width: 95px;
+      }
+      
+      .agent-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>🤖 <span>Agentic AI</span> Portfolio</h1>
+      <p>Five AI agents. Five distinct minds. Click a robot to see it work.</p>
+    </header>
+    
+    <!-- Robot Stage -->
+    <section class="robot-stage">
+      <div class="robots-row">
+        <!-- Scout (Fraud Trends) - Steel Blue -->
+        <div class="robot-container" data-agent="fraud-trends" onclick="activateRobot(this)">
+          <div class="robot-wrapper">
+            <div class="robot-glow" style="background: var(--steel-blue);"></div>
+            <svg class="robot-svg" viewBox="0 0 120 160">
+              <g class="robot-body">
+                <ellipse cx="60" cy="155" rx="30" ry="5" fill="rgba(0,0,0,0.3)"/>
+                <rect x="35" y="115" width="15" height="35" rx="5" fill="#669BBC"/>
+                <rect x="70" y="115" width="15" height="35" rx="5" fill="#669BBC"/>
+                <rect x="30" y="145" width="25" height="10" rx="4" fill="#4a7a94"/>
+                <rect x="65" y="145" width="25" height="10" rx="4" fill="#4a7a94"/>
+                <rect x="25" y="60" width="70" height="60" rx="10" fill="#669BBC"/>
+                <rect x="35" y="75" width="50" height="30" rx="5" fill="#4a7a94"/>
+                <rect x="5" y="65" width="15" height="40" rx="5" fill="#669BBC"/>
+                <rect x="100" y="65" width="15" height="40" rx="5" fill="#669BBC"/>
+                <circle cx="12" cy="110" r="8" fill="#7eb3cc"/>
+                <circle cx="108" cy="110" r="8" fill="#7eb3cc"/>
+                <rect x="30" y="15" width="60" height="50" rx="12" fill="#669BBC"/>
+                <circle class="robot-eye" cx="45" cy="40" r="8" fill="#FDF0D5"/>
+                <circle class="robot-eye" cx="75" cy="40" r="8" fill="#FDF0D5"/>
+                <circle cx="45" cy="40" r="4" fill="#003049"/>
+                <circle cx="75" cy="40" r="4" fill="#003049"/>
+                <circle cx="100" cy="25" r="12" fill="none" stroke="#FDF0D5" stroke-width="3"/>
+                <line x1="108" y1="33" x2="115" y2="42" stroke="#FDF0D5" stroke-width="3" stroke-linecap="round"/>
+              </g>
+            </svg>
+            <span class="sleep-zs">💤</span>
+          </div>
+          <div class="robot-label">
+            <div class="robot-name">Scout</div>
+            <div class="robot-type">Research</div>
+          </div>
+        </div>
+        
+        <!-- Ticker (Stock Monitor) - Green accent -->
+        <div class="robot-container" data-agent="stock-monitor" onclick="activateRobot(this)">
+          <div class="robot-wrapper">
+            <div class="robot-glow" style="background: #4ade80;"></div>
+            <svg class="robot-svg" viewBox="0 0 120 160">
+              <g class="robot-body">
+                <ellipse cx="60" cy="155" rx="30" ry="5" fill="rgba(0,0,0,0.3)"/>
+                <rect x="35" y="115" width="15" height="35" rx="5" fill="#22c55e"/>
+                <rect x="70" y="115" width="15" height="35" rx="5" fill="#22c55e"/>
+                <rect x="30" y="145" width="25" height="10" rx="4" fill="#16a34a"/>
+                <rect x="65" y="145" width="25" height="10" rx="4" fill="#16a34a"/>
+                <rect x="25" y="60" width="70" height="60" rx="10" fill="#22c55e"/>
+                <polyline points="35,100 45,85 55,95 65,75 75,90 85,80" fill="none" stroke="#16a34a" stroke-width="2"/>
+                <rect x="5" y="65" width="15" height="40" rx="5" fill="#22c55e"/>
+                <rect x="100" y="65" width="15" height="40" rx="5" fill="#22c55e"/>
+                <circle cx="12" cy="110" r="8" fill="#4ade80"/>
+                <circle cx="108" cy="110" r="8" fill="#4ade80"/>
+                <rect x="25" y="20" width="70" height="45" rx="10" fill="#22c55e"/>
+                <line x1="60" y1="20" x2="60" y2="5" stroke="#4ade80" stroke-width="3"/>
+                <circle cx="60" cy="5" r="5" fill="#FDF0D5">
+                  <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/>
+                </circle>
+                <circle class="robot-eye" cx="42" cy="42" r="8" fill="#FDF0D5"/>
+                <circle class="robot-eye" cx="78" cy="42" r="8" fill="#FDF0D5"/>
+                <circle cx="42" cy="42" r="4" fill="#003049"/>
+                <circle cx="78" cy="42" r="4" fill="#003049"/>
+              </g>
+            </svg>
+            <span class="sleep-zs">💤</span>
+          </div>
+          <div class="robot-label">
+            <div class="robot-name">Ticker</div>
+            <div class="robot-type">Detection</div>
+          </div>
+        </div>
+        
+        <!-- Matcher (House Finder) - Orange accent -->
+        <div class="robot-container" data-agent="house-finder" onclick="activateRobot(this)">
+          <div class="robot-wrapper">
+            <div class="robot-glow" style="background: #fb923c;"></div>
+            <svg class="robot-svg" viewBox="0 0 120 160">
+              <g class="robot-body">
+                <ellipse cx="60" cy="155" rx="30" ry="5" fill="rgba(0,0,0,0.3)"/>
+                <rect x="35" y="115" width="15" height="35" rx="5" fill="#f97316"/>
+                <rect x="70" y="115" width="15" height="35" rx="5" fill="#f97316"/>
+                <rect x="30" y="145" width="25" height="10" rx="4" fill="#ea580c"/>
+                <rect x="65" y="145" width="25" height="10" rx="4" fill="#ea580c"/>
+                <rect x="25" y="60" width="70" height="60" rx="10" fill="#f97316"/>
+                <rect x="40" y="70" width="40" height="40" rx="3" fill="#FDF0D5"/>
+                <line x1="48" y1="80" x2="72" y2="80" stroke="#ea580c" stroke-width="2"/>
+                <line x1="48" y1="88" x2="72" y2="88" stroke="#ea580c" stroke-width="2"/>
+                <line x1="48" y1="96" x2="65" y2="96" stroke="#ea580c" stroke-width="2"/>
+                <rect x="5" y="65" width="15" height="40" rx="5" fill="#f97316"/>
+                <rect x="100" y="65" width="15" height="40" rx="5" fill="#f97316"/>
+                <circle cx="12" cy="110" r="8" fill="#fb923c"/>
+                <circle cx="108" cy="110" r="8" fill="#fb923c"/>
+                <polygon points="60,10 25,35 25,60 95,60 95,35" fill="#f97316"/>
+                <rect x="35" y="35" width="50" height="25" fill="#f97316"/>
+                <circle class="robot-eye" cx="45" cy="45" r="7" fill="#FDF0D5"/>
+                <circle class="robot-eye" cx="75" cy="45" r="7" fill="#FDF0D5"/>
+                <circle cx="45" cy="45" r="3" fill="#003049"/>
+                <circle cx="75" cy="45" r="3" fill="#003049"/>
+              </g>
+            </svg>
+            <span class="sleep-zs">💤</span>
+          </div>
+          <div class="robot-label">
+            <div class="robot-name">Matcher</div>
+            <div class="robot-type">Matching</div>
+          </div>
+        </div>
+        
+        <!-- Quill (Article Editor) - Purple accent -->
+        <div class="robot-container" data-agent="article-editor" onclick="activateRobot(this)">
+          <div class="robot-wrapper">
+            <div class="robot-glow" style="background: #a78bfa;"></div>
+            <svg class="robot-svg" viewBox="0 0 120 160">
+              <g class="robot-body">
+                <ellipse cx="60" cy="155" rx="30" ry="5" fill="rgba(0,0,0,0.3)"/>
+                <rect x="38" y="115" width="12" height="35" rx="4" fill="#8b5cf6"/>
+                <rect x="70" y="115" width="12" height="35" rx="4" fill="#8b5cf6"/>
+                <rect x="33" y="145" width="22" height="10" rx="4" fill="#7c3aed"/>
+                <rect x="65" y="145" width="22" height="10" rx="4" fill="#7c3aed"/>
+                <rect x="30" y="55" width="60" height="65" rx="8" fill="#8b5cf6"/>
+                <rect x="38" y="65" width="44" height="35" rx="3" fill="#FDF0D5"/>
+                <line x1="60" y1="65" x2="60" y2="100" stroke="#7c3aed" stroke-width="2"/>
+                <rect x="8" y="60" width="12" height="45" rx="4" fill="#8b5cf6"/>
+                <rect x="100" y="60" width="12" height="45" rx="4" fill="#8b5cf6"/>
+                <circle cx="14" cy="110" r="7" fill="#a78bfa"/>
+                <circle cx="106" cy="110" r="7" fill="#a78bfa"/>
+                <rect x="32" y="15" width="56" height="45" rx="10" fill="#8b5cf6"/>
+                <rect x="35" y="30" width="18" height="14" rx="3" fill="none" stroke="#FDF0D5" stroke-width="2"/>
+                <rect x="67" y="30" width="18" height="14" rx="3" fill="none" stroke="#FDF0D5" stroke-width="2"/>
+                <line x1="53" y1="37" x2="67" y2="37" stroke="#FDF0D5" stroke-width="2"/>
+                <circle class="robot-eye" cx="44" cy="37" r="5" fill="#FDF0D5"/>
+                <circle class="robot-eye" cx="76" cy="37" r="5" fill="#FDF0D5"/>
+                <circle cx="44" cy="37" r="2" fill="#003049"/>
+                <circle cx="76" cy="37" r="2" fill="#003049"/>
+                <line x1="95" y1="10" x2="110" y2="30" stroke="#FDF0D5" stroke-width="4" stroke-linecap="round"/>
+              </g>
+            </svg>
+            <span class="sleep-zs">💤</span>
+          </div>
+          <div class="robot-label">
+            <div class="robot-name">Quill</div>
+            <div class="robot-type">Enhancement</div>
+          </div>
+        </div>
+        
+        <!-- Sage (Gita Guide) - Papaya Whip / Cream -->
+        <div class="robot-container" data-agent="gita-guide" onclick="activateRobot(this)">
+          <div class="robot-wrapper">
+            <div class="robot-glow" style="background: var(--papaya-whip);"></div>
+            <svg class="robot-svg" viewBox="0 0 120 160">
+              <g class="robot-body">
+                <!-- Lotus base -->
+                <ellipse cx="60" cy="150" rx="35" ry="10" fill="#FDF0D5"/>
+                <path d="M25,150 Q35,140 45,150" fill="#e8d5b5"/>
+                <path d="M40,150 Q50,138 60,150" fill="#e8d5b5"/>
+                <path d="M55,150 Q65,138 75,150" fill="#e8d5b5"/>
+                <path d="M70,150 Q80,140 90,150" fill="#e8d5b5"/>
+                <!-- Legs (in lotus position) -->
+                <ellipse cx="45" cy="130" rx="18" ry="10" fill="#FDF0D5"/>
+                <ellipse cx="75" cy="130" rx="18" ry="10" fill="#FDF0D5"/>
+                <!-- Body -->
+                <rect x="30" y="60" width="60" height="55" rx="12" fill="#FDF0D5"/>
+                <!-- Om symbol on body -->
+                <text x="60" y="95" text-anchor="middle" fill="#780000" font-size="24">ॐ</text>
+                <!-- Arms in meditation pose -->
+                <ellipse cx="22" cy="95" rx="10" ry="20" fill="#FDF0D5"/>
+                <ellipse cx="98" cy="95" rx="10" ry="20" fill="#FDF0D5"/>
+                <circle cx="22" cy="115" r="7" fill="#e8d5b5"/>
+                <circle cx="98" cy="115" r="7" fill="#e8d5b5"/>
+                <!-- Serene head -->
+                <circle cx="60" cy="35" r="28" fill="#FDF0D5"/>
+                <!-- Peaceful closed eyes -->
+                <path class="robot-eye" d="M42,35 Q48,30 54,35" fill="none" stroke="#780000" stroke-width="2" stroke-linecap="round"/>
+                <path class="robot-eye" d="M66,35 Q72,30 78,35" fill="none" stroke="#780000" stroke-width="2" stroke-linecap="round"/>
+                <!-- Gentle smile -->
+                <path d="M50,48 Q60,55 70,48" fill="none" stroke="#780000" stroke-width="2" stroke-linecap="round"/>
+                <!-- Halo/Aura -->
+                <circle cx="60" cy="35" r="35" fill="none" stroke="#780000" stroke-width="1" opacity="0.3">
+                  <animate attributeName="r" values="35;42;35" dur="2.5s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+              </g>
+            </svg>
+            <span class="sleep-zs">💤</span>
+          </div>
+          <div class="robot-label">
+            <div class="robot-name">Sage</div>
+            <div class="robot-type" style="background: linear-gradient(135deg, var(--papaya-whip), #e8d5b5); color: var(--molten-lava); border-color: transparent;">✨ LIVE</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Workflow Panel -->
+      <div class="workflow-panel" id="workflowPanel">
+        <div class="workflow-header">
+          <div class="workflow-title">
+            <span class="icon" id="workflowIcon">🔍</span>
+            <span id="workflowAgentName">Scout - Fraud Trends Research</span>
+          </div>
+          <button class="close-btn" onclick="closeWorkflow()">×</button>
+        </div>
+        
+        <div class="workflow-steps" id="workflowSteps"></div>
+        
+        <div class="animation-display" id="animationDisplay"></div>
+        
+        <!-- Live Chat Container (Gita Guide only) -->
+        <div class="live-chat-container" id="liveChatContainer">
+          <div class="sage-message">
+            <svg class="sage-avatar" viewBox="0 0 60 60">
+              <circle cx="30" cy="30" r="28" fill="#FDF0D5"/>
+              <text x="30" y="38" text-anchor="middle" fill="#780000" font-size="20">ॐ</text>
+            </svg>
+            <div class="sage-bubble">
+              <p>Namaste! I'm here to explore the wisdom of the Bhagavad Gita with you. Ask me about any verse, concept, or share a life situation where you'd like guidance.</p>
+              <span class="pointing-hand">👉</span>
+            </div>
+          </div>
+          
+          <div class="chat-input-wrapper">
+            <input type="text" class="chat-input" placeholder="What would you like to explore?" id="chatInput">
+          </div>
+          
+          <div class="chat-suggestions">
+            <span class="suggestion-chip" onclick="fillSuggestion('What is dharma?')">What is dharma?</span>
+            <span class="suggestion-chip" onclick="fillSuggestion('Tell me about overcoming fear')">Overcoming fear</span>
+            <span class="suggestion-chip" onclick="fillSuggestion('Explain Chapter 2')">Chapter 2</span>
+            <span class="suggestion-chip" onclick="fillSuggestion('How do I find inner peace?')">Inner peace</span>
+          </div>
+        </div>
+        
+        <div class="workflow-cta" id="workflowCta">
+          <button class="cta-button">
+            View Full Case Studies <span>→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Agent Grid -->
+    <h2 class="section-title">Explore Each Agent</h2>
+    <section class="agent-grid">
+      <div class="agent-card" style="--card-accent: var(--steel-blue);">
+        <div class="agent-card-header">
+          <span class="agent-card-icon">🔍</span>
+          <div>
+            <div class="agent-card-title">Fraud Trends Investigator</div>
+            <div class="agent-card-badge">Research & Synthesis Agent</div>
+          </div>
+        </div>
+        <p class="agent-card-description">Deep research on global insurance fraud patterns across industry, regulatory, and academic sources.</p>
+        <div class="agent-card-footer">
+          <span class="agent-card-cases">5 case studies</span>
+          <a href="#" class="agent-card-link">Explore →</a>
+        </div>
+      </div>
+      
+      <div class="agent-card" style="--card-accent: #22c55e;">
+        <div class="agent-card-header">
+          <span class="agent-card-icon">📈</span>
+          <div>
+            <div class="agent-card-title">Market Watch Agent</div>
+            <div class="agent-card-badge">Event Detection & Alert Agent</div>
+          </div>
+        </div>
+        <p class="agent-card-description">AI-powered financial event detection for mergers, acquisitions, buybacks, and dilution alerts.</p>
+        <div class="agent-card-footer">
+          <span class="agent-card-cases">5 case studies</span>
+          <a href="#" class="agent-card-link">Explore →</a>
+        </div>
+      </div>
+      
+      <div class="agent-card" style="--card-accent: #f97316;">
+        <div class="agent-card-header">
+          <span class="agent-card-icon">🏠</span>
+          <div>
+            <div class="agent-card-title">Home Match Agent</div>
+            <div class="agent-card-badge">Multi-Criteria Matching Agent</div>
+          </div>
+        </div>
+        <p class="agent-card-description">AI-powered home matching with school ratings, walk scores, and personalized tradeoff analysis.</p>
+        <div class="agent-card-footer">
+          <span class="agent-card-cases">5 case studies</span>
+          <a href="#" class="agent-card-link">Explore →</a>
+        </div>
+      </div>
+      
+      <div class="agent-card" style="--card-accent: #8b5cf6;">
+        <div class="agent-card-header">
+          <span class="agent-card-icon">✍️</span>
+          <div>
+            <div class="agent-card-title">Article Enhancer</div>
+            <div class="agent-card-badge">Content Enhancement Agent</div>
+          </div>
+        </div>
+        <p class="agent-card-description">Transform drafts into polished, well-sourced articles with automated research and citation.</p>
+        <div class="agent-card-footer">
+          <span class="agent-card-cases">5 case studies</span>
+          <a href="#" class="agent-card-link">Explore →</a>
+        </div>
+      </div>
+      
+      <div class="agent-card" style="--card-accent: var(--papaya-whip);">
+        <div class="agent-card-header">
+          <span class="agent-card-icon">🙏</span>
+          <div>
+            <div class="agent-card-title">Gita Guide<span class="live-badge">✨ LIVE</span></div>
+            <div class="agent-card-badge">Conversational Expert Agent</div>
+          </div>
+        </div>
+        <p class="agent-card-description">Wisdom of the Bhagavad Gita through interactive dialogue. Ask questions and explore verses.</p>
+        <div class="agent-card-footer">
+          <span class="agent-card-cases">5 conversations + Live</span>
+          <a href="#" class="agent-card-link">Start Chat →</a>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+  <script>
+    const agentConfigs = {
+      'fraud-trends': {
+        icon: '🔍',
+        name: 'Scout - Fraud Trends Research',
+        color: 'var(--steel-blue)',
+        steps: [
+          { name: 'Plan', type: 'planning' },
+          { name: 'Search Industry', type: 'search' },
+          { name: 'Search Regulatory', type: 'search' },
+          { name: 'Extract Findings', type: 'analysis' },
+          { name: 'Synthesize', type: 'synthesis' }
+        ],
+        animations: [
+          { text: 'Planning research approach...', searchQuery: null },
+          { text: 'Searching industry publications...', searchQuery: 'auto insurance fraud trends 2024' },
+          { text: 'Searching regulatory reports...', searchQuery: 'NICB fraud report 2024' },
+          { text: 'Extracting key findings...', results: ['$8.6B', '42%', '15,000'] },
+          { text: 'Generating synthesis report...', final: true }
+        ]
+      },
+      'stock-monitor': {
+        icon: '📈',
+        name: 'Ticker - Stock Monitor',
+        color: '#22c55e',
+        steps: [
+          { name: 'Initialize', type: 'setup' },
+          { name: 'Scan News', type: 'search' },
+          { name: 'Scan Filings', type: 'search' },
+          { name: 'Classify', type: 'analysis' },
+          { name: 'Assess Impact', type: 'analysis' },
+          { name: 'Generate Alerts', type: 'synthesis' }
+        ],
+        animations: [
+          { text: 'Loading watchlist: AAPL, MSFT, GOOGL, NVDA...', searchQuery: null },
+          { text: 'Scanning financial news...', searchQuery: 'NVDA acquisition 2025' },
+          { text: 'Checking SEC filings...', searchQuery: 'NVDA 8-K filing' },
+          { text: 'Classifying events...', results: ['Acquisition', 'Buyback'] },
+          { text: 'Assessing shareholder impact...', results: ['Positive', 'High'] },
+          { text: 'Generating alert cards...', final: true }
+        ]
+      },
+      'house-finder': {
+        icon: '🏠',
+        name: 'Matcher - House Finder',
+        color: '#f97316',
+        steps: [
+          { name: 'Parse Criteria', type: 'setup' },
+          { name: 'Search Listings', type: 'search' },
+          { name: 'Filter', type: 'filter' },
+          { name: 'Add Schools', type: 'enrichment' },
+          { name: 'Add Scores', type: 'enrichment' },
+          { name: 'Rank', type: 'analysis' },
+          { name: 'Report', type: 'synthesis' }
+        ],
+        animations: [
+          { text: 'Parsing: 4 bed, $1.5M max, school > 8...', searchQuery: null },
+          { text: 'Searching Oakville listings...', searchQuery: null, results: ['156'] },
+          { text: 'Applying filters...', results: ['156 → 23'] },
+          { text: 'Looking up school ratings...', results: ['8.5', '8.7'] },
+          { text: 'Adding walk scores...', results: ['72', '68'] },
+          { text: 'Ranking by match score...', results: ['94%', '91%', '88%'] },
+          { text: 'Generating property report...', final: true }
+        ]
+      },
+      'article-editor': {
+        icon: '✍️',
+        name: 'Quill - Article Enhancer',
+        color: '#8b5cf6',
+        steps: [
+          { name: 'Analyze', type: 'analysis' },
+          { name: 'Find Claims', type: 'extraction' },
+          { name: 'Search Refs', type: 'search' },
+          { name: 'Find Examples', type: 'search' },
+          { name: 'Check Flow', type: 'analysis' },
+          { name: 'Enhance', type: 'synthesis' }
+        ],
+        animations: [
+          { text: 'Analyzing structure... Score: 65/100', searchQuery: null },
+          { text: 'Identifying claims needing citations...', results: ['6 claims', '4 need refs'] },
+          { text: 'Searching for references...', searchQuery: 'insurance fraud statistics 2024' },
+          { text: 'Finding relevant examples...', results: ['Lemonade AI'] },
+          { text: 'Checking flow... Score: 70/100', searchQuery: null },
+          { text: 'Generating enhanced version...', results: ['187→412', '+4 refs'], final: true }
+        ]
+      },
+      'gita-guide': {
+        icon: '🙏',
+        name: 'Sage - Gita Guide',
+        color: 'var(--papaya-whip)',
+        isLive: true,
+        steps: [
+          { name: 'Understand', type: 'analysis' },
+          { name: 'Retrieve', type: 'retrieval' },
+          { name: 'Adapt', type: 'personalization' },
+          { name: 'Teach', type: 'synthesis' },
+          { name: 'Suggest', type: 'guidance' }
+        ],
+        animations: []
+      }
+    };
+    
+    let activeRobot = null;
+    let currentStep = 0;
+    let animationInterval = null;
+    
+    function activateRobot(element) {
+      const agent = element.dataset.agent;
+      const config = agentConfigs[agent];
+      
+      if (activeRobot === element) {
+        closeWorkflow();
+        return;
+      }
+      
+      if (activeRobot) {
+        activeRobot.classList.remove('active');
+      }
+      
+      activeRobot = element;
+      currentStep = 0;
+      
+      document.querySelectorAll('.robot-container').forEach(robot => {
+        if (robot === element) {
+          robot.classList.add('active');
+          robot.classList.remove('sleeping');
+        } else {
+          robot.classList.add('sleeping');
+          robot.classList.remove('active');
+        }
+      });
+      
+      const panel = document.getElementById('workflowPanel');
+      document.getElementById('workflowIcon').textContent = config.icon;
+      document.getElementById('workflowAgentName').textContent = config.name;
+      
+      const stepsContainer = document.getElementById('workflowSteps');
+      stepsContainer.innerHTML = config.steps.map((step, i) => `
+        <div class="step" id="step-${i}">
+          <div class="step-number">STEP ${i + 1}</div>
+          <div class="step-name">${step.name}</div>
+          <div class="step-indicator">${i + 1}</div>
+        </div>
+      `).join('');
+      
+      const liveChatContainer = document.getElementById('liveChatContainer');
+      const animationDisplay = document.getElementById('animationDisplay');
+      const workflowCta = document.getElementById('workflowCta');
+      
+      if (config.isLive) {
+        liveChatContainer.classList.add('visible');
+        animationDisplay.style.display = 'none';
+        workflowCta.style.display = 'none';
+        stepsContainer.style.display = 'none';
+      } else {
+        liveChatContainer.classList.remove('visible');
+        animationDisplay.style.display = 'flex';
+        workflowCta.style.display = 'flex';
+        stepsContainer.style.display = 'flex';
+        runAnimation(config);
+      }
+      
+      panel.classList.add('visible');
+    }
+    
+    function runAnimation(config) {
+      if (animationInterval) clearInterval(animationInterval);
+      
+      currentStep = 0;
+      updateStep(config);
+      
+      animationInterval = setInterval(() => {
+        currentStep++;
+        if (currentStep >= config.steps.length) {
+          clearInterval(animationInterval);
+          document.querySelectorAll('.step').forEach(s => s.classList.add('completed'));
+          return;
+        }
+        updateStep(config);
+      }, 2500);
+    }
+    
+    function updateStep(config) {
+      document.querySelectorAll('.step').forEach((step, i) => {
+        step.classList.remove('active', 'completed');
+        if (i < currentStep) step.classList.add('completed');
+        if (i === currentStep) step.classList.add('active');
+      });
+      
+      const anim = config.animations[currentStep];
+      if (!anim) return;
+      
+      const display = document.getElementById('animationDisplay');
+      
+      let html = `<div class="animation-text">${anim.text}</div>`;
+      
+      if (anim.searchQuery) {
+        html += `
+          <div class="search-bar">
+            <span class="icon">🔍</span>
+            <input type="text" value="${anim.searchQuery}" readonly>
+          </div>
+        `;
+      }
+      
+      if (anim.results) {
+        html += `
+          <div class="results-container">
+            ${anim.results.map((r, i) => `
+              <div class="result-card" style="animation-delay: ${i * 0.15}s;">
+                <div class="result-card-value" style="color: ${config.color}">${r}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+      
+      display.innerHTML = html;
+    }
+    
+    function closeWorkflow() {
+      if (animationInterval) clearInterval(animationInterval);
+      
+      document.querySelectorAll('.robot-container').forEach(robot => {
+        robot.classList.remove('active', 'sleeping');
+      });
+      
+      document.getElementById('workflowPanel').classList.remove('visible');
+      activeRobot = null;
+    }
+    
+    function fillSuggestion(text) {
+      document.getElementById('chatInput').value = text;
+      document.getElementById('chatInput').focus();
+    }
+  </script>
+</body>
+</html>

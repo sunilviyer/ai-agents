@@ -1,0 +1,112 @@
+# generated: 2025-02-09
+# project: AIAgents
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: /Volumes/External/AIAgents/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2025-02-09
+project: AIAgents
+project_key: NOKEY
+tracking_system: file-system
+story_location: /Volumes/External/AIAgents/_bmad-output/implementation-artifacts
+
+development_status:
+  # Epic 1: Project Foundation & Environment Setup
+  epic-1: done
+  1-1-initialize-nextjs-website-project: done
+  1-2-create-python-agent-project-structure: done
+  1-3-install-python-dependencies: done
+  1-4-install-nextjs-database-client: done
+  1-5-configure-python-environment-variables: done
+  1-6-configure-nextjs-environment-variables: done
+  1-7-create-agent-readme-documentation: done
+  1-8-create-security-validation-checklist: done
+  epic-1-retrospective: optional
+
+  # Epic 2: Universal Database Schema & Type System
+  epic-2: backlog
+  2-1-create-postgresql-database-schema: backlog
+  2-2-create-read-only-database-user-for-api: backlog
+  2-3-define-python-pydantic-models: backlog
+  2-4-define-typescript-type-definitions: backlog
+  2-5-create-database-connection-module: backlog
+  2-6-create-json-validation-script: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: Fraud Trends Research Agent (6-Step Workflow)
+  epic-3: backlog
+  3-1-define-agent-constants: backlog
+  3-2-implement-step-1-research-planning: backlog
+  3-3-implement-step-2-industry-source-search: backlog
+  3-4-implement-step-3-regulatory-source-search: backlog
+  3-5-implement-step-4-academic-source-search: backlog
+  3-6-implement-step-5-extract-key-findings: backlog
+  3-7-implement-step-6-synthesize-report: backlog
+  3-8-implement-json-output-generation: backlog
+  3-9-implement-error-handling-and-logging: backlog
+  3-10-add-code-documentation-and-comments: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: Case Study Validation & Database Import
+  epic-4: backlog
+  4-1-create-database-import-script-structure: backlog
+  4-2-implement-case-study-import-logic: backlog
+  4-3-implement-execution-steps-import-logic: backlog
+  4-4-add-pre-import-validation: backlog
+  4-5-implement-batch-import-for-multiple-files: backlog
+  4-6-add-database-connection-error-handling: backlog
+  4-7-create-gate-1-validation-checklist: backlog
+  epic-4-retrospective: optional
+
+  # Epic 5: REST API for Case Study Access
+  epic-5: backlog
+  5-1-create-api-route-structure: backlog
+  5-2-implement-case-study-query-logic: backlog
+  5-3-implement-api-response-formatting: backlog
+  5-4-implement-agent-slug-validation: backlog
+  5-5-implement-database-error-handling: backlog
+  5-6-implement-empty-results-handling: backlog
+  5-7-add-api-route-typescript-linting: backlog
+  5-8-test-api-performance: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: Deployment & Gate 1 Validation
+  epic-6: backlog
+  6-1-generate-5-fraud-trends-case-studies: backlog
+  6-2-import-all-case-studies-to-production-database: backlog
+  6-3-configure-vercel-environment-variables: backlog
+  6-4-deploy-nextjs-api-to-vercel: backlog
+  6-5-execute-security-checklist-md-validation: backlog
+  6-6-execute-gate-1-checklist-md-validation: backlog
+  6-7-make-go-no-go-decision-on-universal-schema: backlog
+  6-8-document-deployment-process: backlog
+  epic-6-retrospective: optional
