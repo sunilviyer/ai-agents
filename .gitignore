@@ -68,9 +68,6 @@ Thumbs.db
 # BMad Method Framework
 .bmad/
 .augment/
-node_modules/
-package-lock.json
-package.json
 
 # BMad artifacts - IGNORED (contain internal planning docs)
 _bmad/
