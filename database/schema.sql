@@ -26,9 +26,10 @@ CREATE TABLE case_studies (
   -- Agent-specific data (JSONB for flexibility)
   input_parameters JSONB NOT NULL,        -- Agent-specific input schema
   output_result JSONB NOT NULL,           -- Agent-specific output schema
-  execution_trace JSONB NOT NULL,         -- Array of ExecutionStep objects
+  execution_trace JSONB,                  -- Optional: Array of ExecutionStep objects
 
   -- Display controls
+  display BOOLEAN DEFAULT true,           -- Whether to show on website
   featured BOOLEAN DEFAULT false,
   display_order INTEGER,
 
@@ -38,8 +39,8 @@ CREATE TABLE case_studies (
 );
 
 -- Indexes for performance
-CREATE INDEX idx_case_studies_slug ON case_studies(agent_slug);
-CREATE INDEX idx_case_studies_featured ON case_studies(featured, display_order);
+CREATE INDEX idx_case_studies_agent_slug ON case_studies(agent_slug);
+CREATE INDEX idx_case_studies_display ON case_studies(display, featured, display_order);
 CREATE INDEX idx_case_studies_created ON case_studies(created_at DESC);
 
 -- Execution Steps: Detailed step-by-step trace
@@ -64,7 +65,7 @@ CREATE TABLE execution_steps (
   UNIQUE(case_study_id, step_number)
 );
 
-CREATE INDEX idx_execution_steps_case_study ON execution_steps(case_study_id, step_number);
+CREATE INDEX idx_execution_steps_case_study_id ON execution_steps(case_study_id, step_number);
 
 -- =============================================================================
 -- GITA GUIDE SPECIFIC TABLES (for live chat functionality)
@@ -148,7 +149,7 @@ CREATE INDEX idx_schools_rating ON schools(fraser_rating DESC);
 
 -- School Catchment Areas (simplified postal code mapping)
 CREATE TABLE school_catchments (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID DEFAULT gen_random_uuid(),
   school_id UUID REFERENCES schools(id) ON DELETE CASCADE,
   postal_code VARCHAR(10),
   PRIMARY KEY (school_id, postal_code)

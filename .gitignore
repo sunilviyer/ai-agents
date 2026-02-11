@@ -72,6 +72,9 @@ node_modules/
 package-lock.json
 package.json
 
-# BMad artifacts (COMMIT THESE - they're documentation)
-# bmad-artifacts/ - Keep this in git!
-# .claude/ - Keep this in git!
+# BMad artifacts - IGNORED (contain internal planning docs)
+_bmad/
+_bmad-output/
+
+# Custom Claude Code commands
+.claude/
