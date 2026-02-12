@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import CaseStudyList from '@/app/components/CaseStudyList';
 import BackButton from '@/app/components/BackButton';
+import ScoutEasel from '@/app/components/ScoutEasel';
 
 interface PageProps {
   params: Promise<{
@@ -101,6 +102,13 @@ export default async function AgentPage({ params }: PageProps) {
             </p>
           </div>
         </div>
+
+        {/* Scout Workflow Animation - Only for Scout agent */}
+        {slug === 'scout' && (
+          <div className="mb-12">
+            <ScoutEasel />
+          </div>
+        )}
 
         {/* Case Studies */}
         <CaseStudyList agentSlug={dbSlug} agentName={agent.name} agentColor={agent.color} />
