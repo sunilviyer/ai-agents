@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Molten Lava Theme - RED PRIMARY */
+  --molten-lava: #780000;
+  --flag-red: #C1121F;
+  --papaya-whip: #FDF0D5;
+  --deep-space-blue: #003049;
+  --steel-blue: #669BBC;
+
+  --background: #780000;
+  --foreground: #FDF0D5;
 }
 
 @theme inline {
@@ -10,17 +17,104 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Custom colors for agents */
+  --color-molten-lava: #780000;
+  --color-flag-red: #C1121F;
+  --color-papaya-whip: #FDF0D5;
+  --color-deep-space-blue: #003049;
+  --color-steel-blue: #669BBC;
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, #780000 0%, #450000 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: linear-gradient(180deg,
+    rgba(0, 48, 73, 0.95) 0%,
+    rgba(0, 26, 44, 0.98) 100%);
+  border-radius: 24px;
+  border: 1px solid rgba(102, 155, 188, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.glass-card {
+  background: linear-gradient(135deg,
+    rgba(0, 48, 73, 0.85) 0%,
+    rgba(0, 26, 44, 0.9) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(102, 155, 188, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+/* Floating Embers Animation */
+@keyframes float-ember {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-100px) translateX(20px);
+    opacity: 1;
+  }
+}
+
+.ember {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #FDF0D5 0%, rgba(253, 240, 213, 0) 70%);
+  border-radius: 50%;
+  animation: float-ember 8s ease-in-out infinite;
+}
+
+/* Robot Breathing Animation */
+@keyframes breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.robot-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Robot Eye Blink Animation */
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+
+.robot-blink {
+  transform-origin: center;
+  animation: blink 4s ease-in-out infinite;
+}
+
+/* Glow Effect */
+.glow-red {
+  box-shadow: 0 0 20px rgba(193, 18, 31, 0.6),
+              0 0 40px rgba(193, 18, 31, 0.4);
+}
+
+.glow-blue {
+  box-shadow: 0 0 20px rgba(102, 155, 188, 0.6),
+              0 0 40px rgba(102, 155, 188, 0.4);
+}
+
+/* Fade In Animation */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
 }
