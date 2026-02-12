@@ -163,16 +163,14 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
               {/* Step Info */}
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-4xl">{stepTypeIcons[currentStep.step_type] || stepTypeIcons.default}</span>
                   <h3 className="text-2xl font-bold tracking-tight" style={{
                     color: '#003049',
                     fontFamily: 'var(--font-geist-sans)'
                   }}>
-                    {currentStep.step_name}
+                    Step {currentStep.step_number}: {currentStep.step_name}
                   </h3>
                 </div>
                 <div className="flex items-center gap-4 text-base font-semibold" style={{ color: '#669BBC' }}>
-                  <span>Step {currentStep.step_number} of {steps.length}</span>
                   <span className="px-3 py-1 rounded-lg uppercase tracking-wider text-xs"
                         style={{
                           background: `${agentColor}25`,
@@ -183,6 +181,37 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
                   </span>
                 </div>
               </div>
+            </div>
+
+            {/* Navigation Buttons */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => handleStepClick(Math.max(0, currentStepIndex - 1))}
+                disabled={currentStepIndex === 0}
+                className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all duration-300 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed"
+                style={{
+                  background: currentStepIndex === 0 ? 'rgba(0, 48, 73, 0.2)' : `${agentColor}40`,
+                  color: '#003049',
+                  border: `2px solid ${currentStepIndex === 0 ? 'rgba(0, 48, 73, 0.3)' : agentColor}`,
+                  fontWeight: 'bold'
+                }}
+              >
+                ←
+              </button>
+
+              <button
+                onClick={() => handleStepClick(Math.min(steps.length - 1, currentStepIndex + 1))}
+                disabled={currentStepIndex >= steps.length - 1}
+                className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all duration-300 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed"
+                style={{
+                  background: currentStepIndex >= steps.length - 1 ? 'rgba(0, 48, 73, 0.2)' : `${agentColor}40`,
+                  color: '#003049',
+                  border: `2px solid ${currentStepIndex >= steps.length - 1 ? 'rgba(0, 48, 73, 0.3)' : agentColor}`,
+                  fontWeight: 'bold'
+                }}
+              >
+                →
+              </button>
             </div>
           </div>
         </div>
@@ -219,49 +248,6 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
                 {formatDetailsForAccordion(currentStep.details)}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Step Navigation */}
-      <div className="rounded-2xl p-6"
-           style={{
-             background: 'linear-gradient(135deg, rgba(0, 48, 73, 0.9) 0%, rgba(0, 26, 44, 0.95) 100%)',
-             border: '1px solid rgba(102, 155, 188, 0.3)',
-             boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)'
-           }}>
-        {/* Step Timeline */}
-        <div className="relative">
-          <div className="text-xs uppercase tracking-wider font-semibold mb-3" style={{ color: '#FDF0D5' }}>
-            Timeline
-          </div>
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin"
-               style={{ scrollbarColor: `${agentColor}60 transparent` }}>
-            {steps.map((step, index) => (
-              <button
-                key={step.step_number}
-                onClick={() => handleStepClick(index)}
-                className="relative flex-shrink-0 w-16 h-16 rounded-xl flex flex-col items-center justify-center font-bold transition-all duration-300 hover:scale-110"
-                style={{
-                  background: index === currentStepIndex
-                    ? `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100())`
-                    : index < currentStepIndex
-                      ? `rgba(102, 155, 188, 0.35)`
-                      : 'rgba(0, 48, 73, 0.6)',
-                  color: '#FDF0D5',
-                  border: index === currentStepIndex
-                    ? `2px solid ${agentColor}`
-                    : '1px solid rgba(102, 155, 188, 0.3)',
-                  boxShadow: index === currentStepIndex ? `0 0 30px ${agentColor}80` : 'none'
-                }}
-                title={step.step_name}
-              >
-                <span className="text-xl">{step.step_number}</span>
-                {index < currentStepIndex && (
-                  <span className="text-green-400 text-sm mt-1">✓</span>
-                )}
-              </button>
-            ))}
           </div>
         </div>
       </div>
