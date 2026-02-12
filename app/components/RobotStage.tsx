@@ -149,7 +149,7 @@ function ScoutRobot() {
       <circle cx="100" cy="70" r="35" fill="#669BBC" stroke="#003049" strokeWidth="3"/>
 
       {/* Magnifying Glass Antenna */}
-      <line x1="100" y1="35" x2="100" x2="15" stroke="#003049" strokeWidth="3"/>
+      <line x1="100" y1="35" x2="100" y2="15" stroke="#003049" strokeWidth="3"/>
       <circle cx="100" cy="10" r="8" fill="none" stroke="#003049" strokeWidth="3"/>
 
       {/* Eyes */}
@@ -187,7 +187,7 @@ function TickerRobot() {
       <circle cx="100" cy="70" r="35" fill="#22c55e" stroke="#003049" strokeWidth="3"/>
 
       {/* Blinking Light Antenna */}
-      <line x1="100" y1="35" x2="100" x2="15" stroke="#003049" strokeWidth="3"/>
+      <line x1="100" y1="35" x2="100" y2="15" stroke="#003049" strokeWidth="3"/>
       <circle cx="100" cy="10" r="5" fill="#ff0000">
         <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/>
       </circle>
@@ -258,7 +258,7 @@ function QuillRobot() {
       <circle cx="100" cy="70" r="35" fill="#8b5cf6" stroke="#003049" strokeWidth="3"/>
 
       {/* Quill Pen Antenna */}
-      <line x1="100" y1="35" x2="95" x2="10" stroke="#003049" strokeWidth="3"/>
+      <line x1="100" y1="35" x2="95" y2="10" stroke="#003049" strokeWidth="3"/>
       <polygon points="95,10 90,5 100,8" fill="#FDF0D5" stroke="#003049" strokeWidth="2"/>
 
       {/* Eyes */}
