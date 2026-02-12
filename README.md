@@ -64,19 +64,27 @@ This portfolio demonstrates **5 different agent archetypes**:
 /AIAgents
 ├── docs/                      # All requirement documents
 ├── agents/                    # Python agent implementations (run locally)
-│   ├── fraud-trends/
-│   ├── stock-monitor/
-│   ├── house-finder/
-│   ├── article-editor/
-│   └── gita-guide/
-├── website/                   # Next.js frontend (deployed to Vercel)
-│   ├── src/
-│   │   ├── app/              # App router
-│   │   ├── components/       # React components
-│   │   └── lib/              # DB, types, utilities
-│   └── public/
+│   ├── fraud-trends/         # ✅ Implemented (3 case studies)
+│   ├── stock-monitor/        # ⏳ Planned
+│   ├── house-finder/         # ⏳ Planned
+│   ├── article-editor/       # ⏳ Planned
+│   └── gita-guide/           # ⏳ Planned
+├── app/                       # Next.js App Router (deployed to Vercel)
+│   ├── api/                  # REST API routes
+│   │   └── agents/[slug]/case-studies/
+│   ├── layout.tsx
+│   └── page.tsx
+├── lib/                       # Utilities (DB, types)
+│   ├── db.ts                 # PostgreSQL connection
+│   └── types.ts              # TypeScript definitions
+├── public/                    # Static assets
 ├── database/                  # SQL schema and migrations
-└── scripts/                   # Data loading utilities
+│   └── schema.sql            # Universal multi-agent schema
+├── website/                   # Old deployment docs (archived)
+├── DEPLOYMENT_GUIDE.md       # 📖 Complete deployment guide
+├── GATE_1_VALIDATION_REPORT.md
+├── UNIVERSAL_SCHEMA_DECISION.md
+└── package.json              # Next.js dependencies
 ```
 
 ---
@@ -154,38 +162,44 @@ npm run dev
 
 ## 🌐 Deployment
 
-### Deploy to Vercel
+**Production URL:** https://ai-agents-rosy-mu.vercel.app
+
+### Quick Deployment (Git-Based)
 
 ```bash
-cd website
+# Make changes, commit, and push
+git add .
+git commit -m "Update: Description of changes"
+git push origin main
 
-# Login to Vercel
-vercel login
-
-# Deploy
-vercel --prod
+# Vercel automatically deploys from main branch
+# Check status: https://vercel.com/[your-org]/ai-agents
 ```
+
+### Detailed Deployment Guide
+
+For complete deployment instructions, troubleshooting, and best practices:
+
+📖 **[See DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)**
+
+Topics covered:
+- Initial Vercel setup
+- Environment variable configuration
+- Database setup and permissions
+- Deployment workflow
+- Troubleshooting common issues
+- Rollback procedures
+- Security best practices
 
 ### Environment Variables in Vercel
 
-Add these in Vercel Dashboard → Settings → Environment Variables:
+Add in Vercel Dashboard → Settings → Environment Variables:
 
 ```
-DATABASE_URL=postgresql://...
-ANTHROPIC_API_KEY=sk-ant-...
-SESSION_SECRET=random-secret-key
-GITA_CHAT_MESSAGE_LIMIT=10
+DATABASE_URL=postgresql://api_readonly:password@host/database?sslmode=require
 ```
 
-### Link from Your Portfolio
-
-In your main portfolio site:
-
-```html
-<a href="https://ai-agents.yourdomain.com">
-  🤖 Explore My AI Agents
-</a>
-```
+**Important:** Use read-only database user for API security.
 
 ---
 
