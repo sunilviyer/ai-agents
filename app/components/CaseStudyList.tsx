@@ -32,6 +32,7 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor }: Prop
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     async function fetchCaseStudies() {
@@ -111,14 +112,37 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor }: Prop
         </p>
       </div>
 
-      <div className="space-y-8">
-        {caseStudies.map((caseStudy) => (
-          <CaseStudyCard
-            key={caseStudy.id}
-            caseStudy={caseStudy}
-            agentColor={agentColor}
-          />
-        ))}
+      {/* TABS FOR CASE STUDIES */}
+      <div className="mb-8">
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin"
+             style={{ scrollbarColor: `${agentColor}60 transparent` }}>
+          {caseStudies.map((caseStudy, index) => (
+            <button
+              key={caseStudy.id}
+              onClick={() => setActiveTab(index)}
+              className="flex-shrink-0 px-6 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+              style={{
+                background: activeTab === index
+                  ? `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100%)`
+                  : 'rgba(0, 48, 73, 0.5)',
+                color: '#FDF0D5',
+                border: activeTab === index ? `2px solid ${agentColor}` : '1px solid rgba(102, 155, 188, 0.3)',
+                boxShadow: activeTab === index ? `0 8px 24px ${agentColor}50` : 'none'
+              }}
+            >
+              <div className="text-sm opacity-80 mb-1">Case Study {index + 1}</div>
+              <div className="text-base font-bold">{caseStudy.title.split(' - ')[0]}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ACTIVE CASE STUDY */}
+      <div className="animate-fade-in">
+        <CaseStudyCard
+          caseStudy={caseStudies[activeTab]}
+          agentColor={agentColor}
+        />
       </div>
     </div>
   );
