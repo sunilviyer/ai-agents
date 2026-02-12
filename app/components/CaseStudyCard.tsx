@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import WorkflowVisualization from './WorkflowVisualization';
 
 interface ExecutionStep {
   step_number: number;
@@ -40,6 +41,7 @@ const stepTypeIcons: Record<string, string> = {
 
 export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
   const [showTrace, setShowTrace] = useState(false);
+  const [viewMode, setViewMode] = useState<'interactive' | 'detailed'>('interactive');
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set());
 
   const toggleStep = (stepNumber: number) => {
@@ -121,9 +123,9 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
             }}
           >
             <span className="flex items-center gap-2">
-              <span className="text-2xl">{showTrace ? '📖' : '📋'}</span>
+              <span className="text-2xl">{showTrace ? '🎬' : '▶️'}</span>
               <span>
-                {showTrace ? 'Hide' : 'Show'} Execution Trace
+                {showTrace ? 'Hide' : 'Watch'} Execution Workflow
                 ({caseStudy.executionTrace.length} steps)
               </span>
             </span>
@@ -133,10 +135,44 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
             </span>
           </button>
 
-          {/* Execution Steps */}
+          {/* Execution Workflow */}
           {showTrace && (
-            <div className="mt-6 space-y-4 animate-fade-in">
-              {caseStudy.executionTrace.map((step) => (
+            <div className="mt-6 animate-fade-in">
+              {/* View Mode Toggle */}
+              <div className="mb-6 flex gap-4 justify-center">
+                <button
+                  onClick={() => setViewMode('interactive')}
+                  className="px-6 py-3 rounded-lg font-semibold transition-all duration-300"
+                  style={{
+                    backgroundColor: viewMode === 'interactive' ? agentColor : 'rgba(0, 48, 73, 0.5)',
+                    color: '#FDF0D5',
+                    border: viewMode === 'interactive' ? `2px solid ${agentColor}` : 'none'
+                  }}
+                >
+                  🎬 Interactive View
+                </button>
+                <button
+                  onClick={() => setViewMode('detailed')}
+                  className="px-6 py-3 rounded-lg font-semibold transition-all duration-300"
+                  style={{
+                    backgroundColor: viewMode === 'detailed' ? agentColor : 'rgba(0, 48, 73, 0.5)',
+                    color: '#FDF0D5',
+                    border: viewMode === 'detailed' ? `2px solid ${agentColor}` : 'none'
+                  }}
+                >
+                  📋 Detailed View
+                </button>
+              </div>
+
+              {/* Interactive Workflow Visualization */}
+              {viewMode === 'interactive' && (
+                <WorkflowVisualization steps={caseStudy.executionTrace} agentColor={agentColor} />
+              )}
+
+              {/* Detailed Step List */}
+              {viewMode === 'detailed' && (
+                <div className="space-y-4">
+                  {caseStudy.executionTrace.map((step) => (
                 <div key={step.step_number} className="glass-card p-6">
                   <button
                     onClick={() => toggleStep(step.step_number)}
@@ -207,12 +243,14 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
                       </div>
                     </div>
                   )}
-                </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </>
+    )}
     </div>
   );
 }
