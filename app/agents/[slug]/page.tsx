@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import CaseStudyList from '@/app/components/CaseStudyList';
+import BackButton from '@/app/components/BackButton';
 
 interface PageProps {
   params: Promise<{
@@ -80,18 +81,7 @@ export default async function AgentPage({ params }: PageProps) {
       <div className="container mx-auto px-6 py-16 relative z-10">
         {/* Header */}
         <div className="mb-12">
-          <a
-            href="/"
-            className="inline-block mb-8 px-4 py-2 rounded-lg transition-colors duration-300"
-            style={{
-              backgroundColor: 'rgba(0, 48, 73, 0.85)',
-              color: '#669BBC'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 48, 73, 1)'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 48, 73, 0.85)'}
-          >
-            ← Back to All Agents
-          </a>
+          <BackButton />
 
           <div className="glass-panel p-12">
             <div className="flex items-center gap-4 mb-4">
