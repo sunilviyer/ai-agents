@@ -114,13 +114,13 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor }: Prop
 
       {/* TABS FOR CASE STUDIES */}
       <div className="mb-8">
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin"
-             style={{ scrollbarColor: `${agentColor}60 transparent` }}>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3"
+             style={{ gridAutoRows: '1fr' }}>
           {caseStudies.map((caseStudy, index) => (
             <button
               key={caseStudy.id}
               onClick={() => setActiveTab(index)}
-              className="flex-shrink-0 px-6 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+              className="px-4 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center text-center min-h-[100px]"
               style={{
                 background: activeTab === index
                   ? `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100%)`
@@ -130,8 +130,10 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor }: Prop
                 boxShadow: activeTab === index ? `0 8px 24px ${agentColor}50` : 'none'
               }}
             >
-              <div className="text-sm opacity-80 mb-1">Case Study {index + 1}</div>
-              <div className="text-base font-bold">{caseStudy.title.split(' - ')[0]}</div>
+              <div className="text-xs opacity-80 mb-2 whitespace-nowrap">Case {index + 1}</div>
+              <div className="text-sm font-bold leading-tight break-words hyphens-auto" style={{ wordBreak: 'break-word' }}>
+                {caseStudy.title.split(' - ')[0]}
+              </div>
             </button>
           ))}
         </div>
