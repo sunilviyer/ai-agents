@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import WorkflowVisualization from './WorkflowVisualization';
+import { formatDataAsText } from './formatDataAsText';
 
 interface ExecutionStep {
   step_number: number;
@@ -89,25 +90,21 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
 
       {/* Input Parameters */}
       <div className="mb-6 glass-card p-6">
-        <h4 className="text-xl font-bold mb-3" style={{ color: '#FDF0D5' }}>
+        <h4 className="text-xl font-bold mb-4" style={{ color: '#FDF0D5' }}>
           📥 Input Parameters
         </h4>
-        <div className="font-mono text-sm overflow-x-auto">
-          <pre className="whitespace-pre-wrap" style={{ color: '#669BBC' }}>
-            {JSON.stringify(caseStudy.inputParameters, null, 2)}
-          </pre>
+        <div className="text-sm" style={{ color: '#669BBC' }}>
+          {formatDataAsText(caseStudy.inputParameters)}
         </div>
       </div>
 
       {/* Output Summary */}
       <div className="mb-6 glass-card p-6">
-        <h4 className="text-xl font-bold mb-3" style={{ color: '#FDF0D5' }}>
+        <h4 className="text-xl font-bold mb-4" style={{ color: '#FDF0D5' }}>
           📤 Output Summary
         </h4>
-        <div className="font-mono text-sm overflow-x-auto max-h-96 overflow-y-auto">
-          <pre className="whitespace-pre-wrap" style={{ color: '#669BBC' }}>
-            {JSON.stringify(caseStudy.outputResult, null, 2)}
-          </pre>
+        <div className="text-sm max-h-96 overflow-y-auto" style={{ color: '#669BBC' }}>
+          {formatDataAsText(caseStudy.outputResult)}
         </div>
       </div>
 

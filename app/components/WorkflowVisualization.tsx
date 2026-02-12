@@ -28,16 +28,31 @@ const stepTypeIcons: Record<string, string> = {
   'default': '📍'
 };
 
-// Helper function to convert JSON details to natural, readable text
-function formatDetailsAsText(details: Record<string, unknown>): React.ReactNode {
-  const formatValue = (key: string, value: unknown, depth: number = 0): React.ReactNode => {
-    const indent = '  '.repeat(depth);
+// Calculate reading time based on text length (assuming 200 words per minute)
+function calculateReadingTime(text: string): number {
+  const words = text.split(/\s+/).length;
+  const minutes = words / 200;
+  const milliseconds = minutes * 60 * 1000;
+  return Math.max(3000, Math.min(milliseconds, 15000)); // Min 3s, max 15s
+}
 
+// Helper function to convert JSON details to natural, readable text
+function formatDetailsAsText(details: Record<string, unknown>): { text: React.ReactNode; wordCount: number } {
+  let totalWords = 0;
+
+  const countWords = (str: string) => {
+    const words = str.split(/\s+/).length;
+    totalWords += words;
+    return words;
+  };
+
+  const formatValue = (key: string, value: unknown, depth: number = 0): React.ReactNode => {
     if (value === null || value === undefined) {
       return null;
     }
 
     if (typeof value === 'string') {
+      countWords(value);
       // Long strings get their own paragraph
       if (value.length > 80) {
         return (
@@ -46,7 +61,7 @@ function formatDetailsAsText(details: Record<string, unknown>): React.ReactNode 
               {formatLabel(key)}:
             </strong>
             <br />
-            <span className="mt-1 block pl-4 border-l-2" style={{ borderColor: 'rgba(102, 155, 188, 0.3)' }}>
+            <span className="mt-1 block pl-4 border-l-2" style={{ borderColor: 'rgba(253, 240, 213, 0.3)' }}>
               {value}
             </span>
           </p>
@@ -64,6 +79,7 @@ function formatDetailsAsText(details: Record<string, unknown>): React.ReactNode 
     }
 
     if (typeof value === 'number' || typeof value === 'boolean') {
+      countWords(String(value));
       return (
         <p key={key} className="mb-2">
           <strong className="font-semibold" style={{ color: '#FDF0D5' }}>
@@ -79,6 +95,7 @@ function formatDetailsAsText(details: Record<string, unknown>): React.ReactNode 
 
       // Check if array of simple values
       if (value.every(v => typeof v === 'string' || typeof v === 'number')) {
+        value.forEach(v => countWords(String(v)));
         return (
           <div key={key} className="mb-4">
             <strong className="font-semibold block mb-2" style={{ color: '#FDF0D5' }}>
@@ -101,8 +118,13 @@ function formatDetailsAsText(details: Record<string, unknown>): React.ReactNode 
           </strong>
           <div className="space-y-4 pl-4">
             {value.map((item, idx) => (
-              <div key={idx} className="glass-card p-4 rounded-lg">
-                <div className="text-sm font-semibold mb-2 opacity-70">Item {idx + 1}</div>
+              <div key={idx} className="p-4 rounded-lg" style={{
+                background: 'rgba(253, 240, 213, 0.05)',
+                border: '1px solid rgba(253, 240, 213, 0.1)'
+              }}>
+                <div className="text-sm font-semibold mb-2 opacity-70" style={{ color: '#FDF0D5' }}>
+                  Item {idx + 1}
+                </div>
                 {typeof item === 'object' && item !== null
                   ? Object.entries(item as Record<string, unknown>).map(([k, v]) => formatValue(k, v, depth + 1))
                   : <span>{String(item)}</span>
@@ -121,7 +143,7 @@ function formatDetailsAsText(details: Record<string, unknown>): React.ReactNode 
       if (entries.length === 0) return null;
 
       return (
-        <div key={key} className="mb-4 pl-4 border-l-2" style={{ borderColor: 'rgba(102, 155, 188, 0.3)' }}>
+        <div key={key} className="mb-4 pl-4 border-l-2" style={{ borderColor: 'rgba(253, 240, 213, 0.3)' }}>
           <strong className="font-semibold block mb-2" style={{ color: '#FDF0D5' }}>
             {formatLabel(key)}:
           </strong>
@@ -145,14 +167,19 @@ function formatDetailsAsText(details: Record<string, unknown>): React.ReactNode 
 
   const entries = Object.entries(details);
   if (entries.length === 0) {
-    return <p className="italic opacity-70">No additional details available for this step.</p>;
+    return {
+      text: <p className="italic opacity-70" style={{ color: '#FDF0D5' }}>No additional details available for this step.</p>,
+      wordCount: 5
+    };
   }
 
-  return (
+  const textContent = (
     <div className="space-y-3">
       {entries.map(([key, value]) => formatValue(key, value))}
     </div>
   );
+
+  return { text: textContent, wordCount: totalWords };
 }
 
 export default function WorkflowVisualization({ steps, agentColor }: Props) {
@@ -165,11 +192,11 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
 
   const currentStep = steps[currentStepIndex];
 
-  // Typewriter effect for content
+  // Update content when step changes
   useEffect(() => {
     if (currentStep) {
-      // Immediate display with fade-in
-      setDisplayedText(formatDetailsAsText(currentStep.details));
+      const formatted = formatDetailsAsText(currentStep.details);
+      setDisplayedText(formatted.text);
 
       // Scroll to top of content
       if (contentRef.current) {
@@ -178,10 +205,12 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
     }
   }, [currentStep]);
 
-  // Auto-advance to next step
+  // Auto-advance to next step with intelligent timing
   useEffect(() => {
     if (isPlaying && currentStepIndex < steps.length - 1) {
-      const duration = currentStep?.duration_ms || 4000;
+      const formatted = formatDetailsAsText(currentStep.details);
+      const readingTime = calculateReadingTime(JSON.stringify(currentStep.details));
+      const duration = currentStep?.duration_ms || readingTime;
 
       timerRef.current = setTimeout(() => {
         setCurrentStepIndex(prev => prev + 1);
@@ -225,230 +254,199 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
   if (!currentStep) return null;
 
   return (
-    <div className="relative">
-      {/* Atmospheric Background */}
-      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl"
-             style={{ background: `radial-gradient(circle, ${agentColor} 0%, transparent 70%)` }} />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl"
-             style={{ background: `radial-gradient(circle, ${agentColor} 0%, transparent 70%)` }} />
-      </div>
+    <div className="relative space-y-6">
+      {/* GLASSMORPHIC WHITEBOARD */}
+      <div className="relative overflow-hidden rounded-3xl"
+           style={{
+             background: 'linear-gradient(135deg, rgba(253, 240, 213, 0.95) 0%, rgba(253, 240, 213, 0.98) 100%)',
+             boxShadow: '0 30px 90px rgba(0, 0, 0, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.1)',
+             backdropFilter: 'blur(60px)',
+             border: '2px solid rgba(255, 255, 255, 0.6)'
+           }}>
 
-      {/* Main Stage Container */}
-      <div className="space-y-6">
-        {/* Glassmorphic Whiteboard */}
-        <div className="relative overflow-hidden rounded-3xl"
+        {/* Whiteboard Header */}
+        <div className="relative px-8 py-6 border-b-2"
              style={{
-               background: 'linear-gradient(135deg, rgba(0, 48, 73, 0.95) 0%, rgba(0, 26, 44, 0.98) 100%)',
-               boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-               backdropFilter: 'blur(40px)',
-               border: '1px solid rgba(102, 155, 188, 0.2)'
+               background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, transparent 100%)',
+               borderColor: 'rgba(0, 48, 73, 0.15)'
              }}>
-
-          {/* Whiteboard Header Bar */}
-          <div className="relative px-8 py-6 border-b border-steel-blue/20"
-               style={{
-                 background: 'linear-gradient(to bottom, rgba(102, 155, 188, 0.08) 0%, transparent 100%)'
-               }}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                {/* Step Number Badge */}
-                <div className="relative">
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold"
-                    style={{
-                      background: `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100%)`,
-                      color: '#FDF0D5',
-                      boxShadow: `0 8px 32px ${agentColor}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)`
-                    }}
-                  >
-                    <span className="animate-pulse">{currentStep.step_number}</span>
-                  </div>
-                  {/* Animated Ring */}
-                  <div className="absolute inset-0 rounded-2xl animate-ping opacity-20"
-                       style={{ background: agentColor }} />
-                </div>
-
-                {/* Step Info */}
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-2xl">{stepTypeIcons[currentStep.step_type] || stepTypeIcons.default}</span>
-                    <h3 className="text-xl font-bold tracking-tight" style={{
-                      color: '#FDF0D5',
-                      fontFamily: 'var(--font-geist-sans)'
-                    }}>
-                      {currentStep.step_name}
-                    </h3>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs">
-                    <span className="px-2 py-1 rounded-md uppercase tracking-wider font-semibold"
-                          style={{
-                            background: `${agentColor}20`,
-                            color: agentColor,
-                            border: `1px solid ${agentColor}30`
-                          }}>
-                      {currentStep.step_type}
-                    </span>
-                    {currentStep.duration_ms && (
-                      <span style={{ color: '#669BBC' }}>
-                        ⏱ {currentStep.duration_ms < 1000
-                          ? `${currentStep.duration_ms}ms`
-                          : `${(currentStep.duration_ms / 1000).toFixed(2)}s`}
-                      </span>
-                    )}
-                  </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {/* Step Number Badge - PROMINENT */}
+              <div className="relative">
+                <div
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold"
+                  style={{
+                    background: `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100%)`,
+                    color: '#FDF0D5',
+                    boxShadow: `0 10px 40px ${agentColor}60, inset 0 2px 0 rgba(255, 255, 255, 0.3)`,
+                    border: '2px solid rgba(255, 255, 255, 0.5)'
+                  }}
+                >
+                  {currentStep.step_number}
                 </div>
               </div>
 
-              {/* Step Counter */}
-              <div className="text-right">
-                <div className="text-sm opacity-60" style={{ color: '#669BBC' }}>
-                  Progress
+              {/* Step Info */}
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-3xl">{stepTypeIcons[currentStep.step_type] || stepTypeIcons.default}</span>
+                  <h3 className="text-2xl font-bold tracking-tight" style={{
+                    color: '#003049',
+                    fontFamily: 'var(--font-geist-sans)'
+                  }}>
+                    {currentStep.step_name}
+                  </h3>
                 </div>
-                <div className="text-2xl font-bold" style={{ color: '#FDF0D5' }}>
-                  {currentStep.step_number}<span className="opacity-40">/{steps.length}</span>
+                <div className="flex items-center gap-3 text-sm">
+                  <span className="px-3 py-1 rounded-lg uppercase tracking-wider font-semibold"
+                        style={{
+                          background: `${agentColor}30`,
+                          color: agentColor,
+                          border: `1px solid ${agentColor}50`
+                        }}>
+                    {currentStep.step_type}
+                  </span>
+                  <span style={{ color: '#669BBC' }} className="font-medium">
+                    Step {currentStep.step_number} of {steps.length}
+                  </span>
                 </div>
               </div>
             </div>
-
-            {/* Progress Bar */}
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20">
-              <div
-                className="h-full transition-all duration-100 ease-linear"
-                style={{
-                  width: `${progress}%`,
-                  background: `linear-gradient(90deg, ${agentColor} 0%, ${agentColor}cc 100%)`,
-                  boxShadow: `0 0 20px ${agentColor}80`
-                }}
-              />
-            </div>
           </div>
 
-          {/* Whiteboard Content Area */}
-          <div
-            ref={contentRef}
-            className="px-8 py-8 min-h-[400px] max-h-[600px] overflow-y-auto"
-            style={{
-              color: '#669BBC',
-              fontFamily: 'var(--font-geist-sans)',
-              fontSize: '0.95rem',
-              lineHeight: '1.7',
-              scrollbarWidth: 'thin',
-              scrollbarColor: `${agentColor}40 transparent`
-            }}
-          >
-            <div className="prose prose-invert max-w-none animate-fade-in"
-                 key={currentStep.step_number}>
-              {displayedText}
-            </div>
+          {/* Progress Bar */}
+          <div className="absolute bottom-0 left-0 right-0 h-2" style={{ background: 'rgba(0, 48, 73, 0.1)' }}>
+            <div
+              className="h-full transition-all duration-100 ease-linear"
+              style={{
+                width: `${progress}%`,
+                background: `linear-gradient(90deg, ${agentColor} 0%, ${agentColor}cc 100%)`,
+                boxShadow: `0 0 20px ${agentColor}80`
+              }}
+            />
           </div>
-
-          {/* Whiteboard Footer Glow */}
-          <div className="h-px"
-               style={{
-                 background: `linear-gradient(90deg, transparent 0%, ${agentColor}30 50%, transparent 100%)`
-               }} />
         </div>
 
-        {/* Control Panel */}
-        <div className="glass-card rounded-2xl p-6"
-             style={{
-               background: 'linear-gradient(135deg, rgba(0, 48, 73, 0.8) 0%, rgba(0, 26, 44, 0.9) 100%)',
-               border: '1px solid rgba(102, 155, 188, 0.15)'
-             }}>
-          <div className="flex items-center gap-4 mb-6">
-            {/* Play/Pause */}
-            <button
-              onClick={handlePlayPause}
-              className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all duration-300 hover:scale-110 hover:rotate-12"
-              style={{
-                background: `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100%)`,
-                color: '#FDF0D5',
-                boxShadow: `0 8px 24px ${agentColor}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)`
-              }}
-            >
-              {isPlaying ? '⏸' : '▶'}
-            </button>
-
-            {/* Reset */}
-            <button
-              onClick={handleReset}
-              className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all duration-300 hover:scale-110 hover:-rotate-180"
-              style={{
-                background: 'rgba(0, 48, 73, 0.6)',
-                color: '#669BBC',
-                border: '1px solid rgba(102, 155, 188, 0.2)'
-              }}
-            >
-              ↺
-            </button>
-
-            {/* Spacer */}
-            <div className="flex-grow" />
-
-            {/* Previous */}
-            <button
-              onClick={() => handleStepClick(Math.max(0, currentStepIndex - 1))}
-              disabled={currentStepIndex === 0}
-              className="w-14 h-14 rounded-xl flex items-center justify-center text-xl transition-all duration-300 hover:scale-110 disabled:opacity-20 disabled:cursor-not-allowed"
-              style={{
-                background: 'rgba(0, 48, 73, 0.6)',
-                color: '#669BBC',
-                border: '1px solid rgba(102, 155, 188, 0.2)'
-              }}
-            >
-              ←
-            </button>
-
-            {/* Next */}
-            <button
-              onClick={() => handleStepClick(Math.min(steps.length - 1, currentStepIndex + 1))}
-              disabled={currentStepIndex >= steps.length - 1}
-              className="w-14 h-14 rounded-xl flex items-center justify-center text-xl transition-all duration-300 hover:scale-110 disabled:opacity-20 disabled:cursor-not-allowed"
-              style={{
-                background: 'rgba(0, 48, 73, 0.6)',
-                color: '#669BBC',
-                border: '1px solid rgba(102, 155, 188, 0.2)'
-              }}
-            >
-              →
-            </button>
+        {/* Whiteboard Content Area */}
+        <div
+          ref={contentRef}
+          className="px-10 py-10 min-h-[500px] max-h-[700px] overflow-y-auto"
+          style={{
+            color: '#003049',
+            fontFamily: 'var(--font-geist-sans)',
+            fontSize: '1rem',
+            lineHeight: '1.8',
+            scrollbarWidth: 'thin',
+            scrollbarColor: `${agentColor}60 transparent`
+          }}
+        >
+          <div className="prose max-w-none animate-fade-in"
+               key={currentStep.step_number}>
+            {displayedText}
           </div>
+        </div>
+      </div>
 
-          {/* Step Timeline */}
-          <div className="relative">
-            <div className="text-xs uppercase tracking-wider font-semibold mb-3 opacity-60"
-                 style={{ color: '#669BBC' }}>
-              Timeline
-            </div>
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin"
-                 style={{ scrollbarColor: `${agentColor}40 transparent` }}>
-              {steps.map((step, index) => (
-                <button
-                  key={step.step_number}
-                  onClick={() => handleStepClick(index)}
-                  className="relative flex-shrink-0 w-14 h-14 rounded-xl flex flex-col items-center justify-center text-xs font-bold transition-all duration-300 hover:scale-110"
-                  style={{
-                    background: index === currentStepIndex
-                      ? `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100%)`
-                      : index < currentStepIndex
-                        ? `rgba(102, 155, 188, 0.2)`
-                        : 'rgba(0, 48, 73, 0.4)',
-                    color: '#FDF0D5',
-                    border: index === currentStepIndex
-                      ? `2px solid ${agentColor}`
-                      : '1px solid rgba(102, 155, 188, 0.1)',
-                    boxShadow: index === currentStepIndex ? `0 0 24px ${agentColor}60` : 'none'
-                  }}
-                  title={step.step_name}
-                >
-                  <span className="text-lg">{step.step_number}</span>
-                  {index < currentStepIndex && (
-                    <span className="text-green-400 text-xs">✓</span>
-                  )}
-                </button>
-              ))}
-            </div>
+      {/* Control Panel */}
+      <div className="rounded-2xl p-6"
+           style={{
+             background: 'linear-gradient(135deg, rgba(0, 48, 73, 0.85) 0%, rgba(0, 26, 44, 0.95) 100%)',
+             border: '1px solid rgba(102, 155, 188, 0.3)',
+             boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4)'
+           }}>
+        <div className="flex items-center gap-4 mb-6">
+          {/* Play/Pause */}
+          <button
+            onClick={handlePlayPause}
+            className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl transition-all duration-300 hover:scale-110"
+            style={{
+              background: `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100%)`,
+              color: '#FDF0D5',
+              boxShadow: `0 10px 30px ${agentColor}50, inset 0 1px 0 rgba(255, 255, 255, 0.3)`,
+              border: '2px solid rgba(255, 255, 255, 0.2)'
+            }}
+          >
+            {isPlaying ? '⏸' : '▶'}
+          </button>
+
+          {/* Reset */}
+          <button
+            onClick={handleReset}
+            className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl transition-all duration-300 hover:scale-110"
+            style={{
+              background: 'rgba(102, 155, 188, 0.2)',
+              color: '#FDF0D5',
+              border: '1px solid rgba(102, 155, 188, 0.3)'
+            }}
+          >
+            ↺
+          </button>
+
+          {/* Spacer */}
+          <div className="flex-grow" />
+
+          {/* Previous */}
+          <button
+            onClick={() => handleStepClick(Math.max(0, currentStepIndex - 1))}
+            disabled={currentStepIndex === 0}
+            className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl transition-all duration-300 hover:scale-110 disabled:opacity-20 disabled:cursor-not-allowed"
+            style={{
+              background: 'rgba(102, 155, 188, 0.2)',
+              color: '#FDF0D5',
+              border: '1px solid rgba(102, 155, 188, 0.3)'
+            }}
+          >
+            ←
+          </button>
+
+          {/* Next */}
+          <button
+            onClick={() => handleStepClick(Math.min(steps.length - 1, currentStepIndex + 1))}
+            disabled={currentStepIndex >= steps.length - 1}
+            className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl transition-all duration-300 hover:scale-110 disabled:opacity-20 disabled:cursor-not-allowed"
+            style={{
+              background: 'rgba(102, 155, 188, 0.2)',
+              color: '#FDF0D5',
+              border: '1px solid rgba(102, 155, 188, 0.3)'
+            }}
+          >
+            →
+          </button>
+        </div>
+
+        {/* Step Timeline */}
+        <div className="relative">
+          <div className="text-xs uppercase tracking-wider font-semibold mb-3" style={{ color: '#FDF0D5' }}>
+            Timeline
+          </div>
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin"
+               style={{ scrollbarColor: `${agentColor}60 transparent` }}>
+            {steps.map((step, index) => (
+              <button
+                key={step.step_number}
+                onClick={() => handleStepClick(index)}
+                className="relative flex-shrink-0 w-16 h-16 rounded-xl flex flex-col items-center justify-center font-bold transition-all duration-300 hover:scale-110"
+                style={{
+                  background: index === currentStepIndex
+                    ? `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100%)`
+                    : index < currentStepIndex
+                      ? `rgba(102, 155, 188, 0.3)`
+                      : 'rgba(0, 48, 73, 0.5)',
+                  color: '#FDF0D5',
+                  border: index === currentStepIndex
+                    ? `2px solid ${agentColor}`
+                    : '1px solid rgba(102, 155, 188, 0.2)',
+                  boxShadow: index === currentStepIndex ? `0 0 30px ${agentColor}70` : 'none'
+                }}
+                title={step.step_name}
+              >
+                <span className="text-xl">{step.step_number}</span>
+                {index < currentStepIndex && (
+                  <span className="text-green-400 text-sm mt-1">✓</span>
+                )}
+              </button>
+            ))}
           </div>
         </div>
       </div>
