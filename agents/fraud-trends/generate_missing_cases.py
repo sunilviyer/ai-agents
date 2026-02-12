@@ -1,21 +1,14 @@
 #!/usr/bin/env python3
 """
-Generate Multiple Case Studies for Fraud Trends Agent
+Generate the 3 Missing Case Studies for Fraud Trends Agent
 
-This script generates multiple case studies with diverse topics to showcase
-the agent's capabilities across different fraud scenarios.
+This script generates only the case studies that haven't been run yet:
+1. Auto Insurance Fraud 2024-2025
+2. Property Fraud After Climate Events
+3. Organized Fraud Rings
 
 Usage:
-    python3 generate_case_studies.py
-
-The script will generate case studies for:
-1. Synthetic Identity Fraud (auto insurance)
-2. Benefits Data Sharing (insurers)
-3. Telematics Fraud (usage-based insurance)
-4. Medical Provider Fraud (health insurance)
-5. Property Claims Inflation (homeowners insurance)
-
-Implementation: Epic 6, Story 6.1
+    python3 generate_missing_cases.py
 """
 
 import sys
@@ -42,8 +35,8 @@ from utils.logging_config import get_logger, log_info
 # Load environment variables
 load_dotenv()
 
-# Case study topics to generate (from documentation: 01-fraud-trends-agent.md Section 7)
-CASE_STUDY_TOPICS = [
+# The 3 missing case studies (from documentation: 01-fraud-trends-agent.md Section 7)
+MISSING_CASE_STUDIES = [
     {
         "topic": "Auto Insurance Fraud",
         "regions": ["Canada", "US"],
@@ -59,25 +52,11 @@ CASE_STUDY_TOPICS = [
         "description": "How natural disasters create fraud opportunities"
     },
     {
-        "topic": "Digital Insurance Fraud",
-        "regions": ["North America", "UK"],
-        "time_range": "2024-2025",
-        "focus_areas": ["synthetic identity", "deepfakes", "application fraud"],
-        "description": "The rise of AI-enabled insurance fraud"
-    },
-    {
         "topic": "Organized Insurance Fraud",
         "regions": ["Canada", "US"],
         "time_range": "2023-2025",
         "focus_areas": ["fraud rings", "cross-border networks", "prosecution rates"],
         "description": "Networks, tactics, and prosecution trends"
-    },
-    {
-        "topic": "Fraud Detection Technology",
-        "regions": ["Global"],
-        "time_range": "2024-2025",
-        "focus_areas": ["AI detection", "predictive analytics", "automation"],
-        "description": "AI/ML adoption and predictive analytics"
     },
 ]
 
@@ -87,7 +66,7 @@ def generate_single_case_study(topic_config: dict, index: int, total: int) -> bo
     Generate a single case study.
 
     Args:
-        topic_config: Configuration dict with topic, regions, time_range
+        topic_config: Configuration dict with topic, regions, time_range, focus_areas
         index: Current case study index (1-based)
         total: Total number of case studies to generate
 
@@ -102,6 +81,7 @@ def generate_single_case_study(topic_config: dict, index: int, total: int) -> bo
     print(f"Topic: {topic_config['description']}")
     print(f"Regions: {', '.join(topic_config['regions'])}")
     print(f"Time Range: {topic_config['time_range']}")
+    print(f"Focus Areas: {', '.join(topic_config['focus_areas'])}")
     print()
 
     # Create input
@@ -175,6 +155,8 @@ def generate_single_case_study(topic_config: dict, index: int, total: int) -> bo
     except Exception as e:
         print(f"\n✗ Error generating case study {index}/{total}: {e}")
         logger.error(f"Case study generation failed: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 
@@ -185,32 +167,38 @@ def main():
     # Validate environment variables
     if not os.getenv("ANTHROPIC_API_KEY"):
         print("✗ Error: ANTHROPIC_API_KEY environment variable not set")
+        print("  Please set it in your .env file or environment")
         return 1
 
     if not os.getenv("TAVILY_API_KEY"):
         print("✗ Error: TAVILY_API_KEY environment variable not set")
+        print("  Please set it in your .env file or environment")
         return 1
 
     # Print header
     print("=" * 70)
-    print("FRAUD TRENDS AGENT - BATCH CASE STUDY GENERATION")
+    print("FRAUD TRENDS AGENT - GENERATE MISSING CASE STUDIES")
     print("=" * 70)
     print()
-    print(f"Generating {len(CASE_STUDY_TOPICS)} case studies...")
+    print(f"Generating {len(MISSING_CASE_STUDIES)} missing case studies...")
+    print()
+    print("Missing studies:")
+    for i, topic in enumerate(MISSING_CASE_STUDIES, 1):
+        print(f"  {i}. {topic['description']}")
     print()
 
     # Generate case studies
     successful = 0
     failed = 0
 
-    for index, topic_config in enumerate(CASE_STUDY_TOPICS, start=1):
-        if generate_single_case_study(topic_config, index, len(CASE_STUDY_TOPICS)):
+    for index, topic_config in enumerate(MISSING_CASE_STUDIES, start=1):
+        if generate_single_case_study(topic_config, index, len(MISSING_CASE_STUDIES)):
             successful += 1
         else:
             failed += 1
 
         # Brief pause between case studies
-        if index < len(CASE_STUDY_TOPICS):
+        if index < len(MISSING_CASE_STUDIES):
             import time
             print("\nWaiting 2 seconds before next case study...")
             time.sleep(2)
@@ -218,16 +206,16 @@ def main():
     # Summary
     print()
     print("=" * 70)
-    print("BATCH GENERATION COMPLETE")
+    print("GENERATION COMPLETE")
     print("=" * 70)
     print()
-    print(f"Total case studies: {len(CASE_STUDY_TOPICS)}")
+    print(f"Total case studies attempted: {len(MISSING_CASE_STUDIES)}")
     print(f"Successful: {successful}")
     print(f"Failed: {failed}")
     print()
 
     if failed == 0:
-        print("✓ All case studies generated successfully!")
+        print("✓ All missing case studies generated successfully!")
         print()
         print("Next steps:")
         print("  1. Review case studies in output/ directory")
