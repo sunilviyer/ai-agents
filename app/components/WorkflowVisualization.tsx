@@ -3,11 +3,15 @@
 import { useState, useEffect, useRef } from 'react';
 
 interface ExecutionStep {
-  step_number: number;
-  step_name: string;
-  step_type: string;
-  details: Record<string, unknown>;
-  duration_ms: number | null;
+  stepNumber?: number;
+  stepName?: string;
+  stepType?: string;
+  step_number?: number;
+  step_name?: string;
+  step_type?: string;
+  details?: Record<string, unknown>;
+  durationMs?: number | null;
+  duration_ms?: number | null;
   timestamp: string;
 }
 
@@ -40,15 +44,15 @@ const SCOUT_STEP_DESCRIPTIONS: Record<string, string> = {
 
 // Generate narrative explanation for each step
 function generateNarrative(step: ExecutionStep): string {
-  const { step_type } = step;
+  const stepType = step.stepType || step.step_type || '';
 
   // Use specific description if available
-  if (SCOUT_STEP_DESCRIPTIONS[step_type]) {
-    return SCOUT_STEP_DESCRIPTIONS[step_type];
+  if (SCOUT_STEP_DESCRIPTIONS[stepType]) {
+    return SCOUT_STEP_DESCRIPTIONS[stepType];
   }
 
   // Fallback for other step types
-  return `The agent is executing this step as part of its workflow process. Each action builds upon previous steps to achieve the final objective.`;
+  return `The agent executed this step as part of its workflow process. Each action builds upon previous steps to achieve the final objective.`;
 }
 
 // Format details for accordion
@@ -123,6 +127,12 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
 
   if (!currentStep) return null;
 
+  // Normalize step properties to handle both camelCase and snake_case
+  const stepNumber = currentStep.stepNumber || currentStep.step_number || 0;
+  const stepName = currentStep.stepName || currentStep.step_name || '';
+  const stepType = currentStep.stepType || currentStep.step_type || '';
+  const details = currentStep.details || {};
+
   const narrative = generateNarrative(currentStep);
 
   return (
@@ -156,7 +166,7 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
                     border: '3px solid rgba(255, 255, 255, 0.6)'
                   }}
                 >
-                  {currentStep.step_number}
+                  {stepNumber}
                 </div>
               </div>
 
@@ -167,7 +177,7 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
                     color: '#003049',
                     fontFamily: 'var(--font-geist-sans)'
                   }}>
-                    Step {currentStep.step_number}: {currentStep.step_name}
+                    Step {stepNumber}: {stepName}
                   </h3>
                 </div>
                 <div className="flex items-center gap-4 text-base font-semibold" style={{ color: '#669BBC' }}>
@@ -177,7 +187,7 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
                           color: agentColor,
                           border: `1px solid ${agentColor}40`
                         }}>
-                    {currentStep.step_type}
+                    {stepType}
                   </span>
                 </div>
               </div>
@@ -227,7 +237,7 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
             color: '#003049'
           }}
         >
-          <div className="prose max-w-none animate-fade-in" key={currentStep.step_number}>
+          <div className="prose max-w-none animate-fade-in" key={stepNumber}>
             <p className="text-lg leading-relaxed mb-6" style={{ color: '#003049' }}>
               {narrative}
             </p>
@@ -245,7 +255,7 @@ export default function WorkflowVisualization({ steps, agentColor }: Props) {
                      background: 'rgba(0, 48, 73, 0.05)',
                      border: '1px solid rgba(0, 48, 73, 0.1)'
                    }}>
-                {formatDetailsForAccordion(currentStep.details)}
+                {formatDetailsForAccordion(details)}
               </div>
             </div>
           </div>
