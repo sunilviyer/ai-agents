@@ -82,6 +82,41 @@ function formatDetailsForAccordion(details: Record<string, unknown>): React.Reac
 
     if (Array.isArray(value)) {
       if (value.length === 0) return null;
+
+      // Check if array contains objects (not primitives)
+      const hasObjects = value.some(item => typeof item === 'object' && item !== null);
+
+      if (hasObjects) {
+        // Format array of objects with nested formatting
+        return (
+          <div key={key} className="mb-3">
+            <div className="font-semibold mb-1" style={{ color: '#003049' }}>{formatLabel(key)}:</div>
+            <div className="space-y-3 pl-4">
+              {value.slice(0, 5).map((item, idx) => (
+                <div key={idx} className="p-3 rounded-lg border-l-2"
+                     style={{
+                       background: 'rgba(102, 155, 188, 0.08)',
+                       borderColor: 'rgba(102, 155, 188, 0.3)'
+                     }}>
+                  <div className="text-sm font-semibold mb-2" style={{ color: '#669BBC' }}>
+                    {formatLabel(key).replace(/s$/, '')} {idx + 1}
+                  </div>
+                  {typeof item === 'object' && item !== null &&
+                    Object.entries(item as Record<string, unknown>).map(([k, v]) => formatValue(k, v))
+                  }
+                </div>
+              ))}
+              {value.length > 5 && (
+                <div className="text-sm italic" style={{ color: '#669BBC' }}>
+                  ... and {value.length - 5} more
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      // Array of primitives - simple list
       return (
         <div key={key} className="mb-3">
           <div className="font-semibold mb-1" style={{ color: '#003049' }}>{formatLabel(key)}:</div>
