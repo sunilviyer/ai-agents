@@ -7,10 +7,10 @@ interface CaseStudy {
   id: string;
   title: string;
   description: string;
-  created_at: string;
-  input_parameters: Record<string, unknown>;
-  output_result: Record<string, unknown>;
-  execution_trace: ExecutionStep[];
+  createdAt: string;
+  inputParameters: Record<string, unknown>;
+  outputResult: Record<string, unknown>;
+  executionTrace: ExecutionStep[];
 }
 
 interface ExecutionStep {

@@ -15,10 +15,10 @@ interface CaseStudy {
   id: string;
   title: string;
   description: string;
-  created_at: string;
-  input_parameters: Record<string, unknown>;
-  output_result: Record<string, unknown>;
-  execution_trace: ExecutionStep[];
+  createdAt: string;
+  inputParameters: Record<string, unknown>;
+  outputResult: Record<string, unknown>;
+  executionTrace: ExecutionStep[];
 }
 
 interface Props {
@@ -81,7 +81,7 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
           </p>
         )}
         <p className="text-sm" style={{ color: '#669BBC' }}>
-          Generated: {formatDate(caseStudy.created_at)}
+          Generated: {formatDate(caseStudy.createdAt)}
         </p>
       </div>
 
@@ -92,7 +92,7 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
         </h4>
         <div className="font-mono text-sm overflow-x-auto">
           <pre className="whitespace-pre-wrap" style={{ color: '#669BBC' }}>
-            {JSON.stringify(caseStudy.input_parameters, null, 2)}
+            {JSON.stringify(caseStudy.inputParameters, null, 2)}
           </pre>
         </div>
       </div>
@@ -104,13 +104,13 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
         </h4>
         <div className="font-mono text-sm overflow-x-auto max-h-96 overflow-y-auto">
           <pre className="whitespace-pre-wrap" style={{ color: '#669BBC' }}>
-            {JSON.stringify(caseStudy.output_result, null, 2)}
+            {JSON.stringify(caseStudy.outputResult, null, 2)}
           </pre>
         </div>
       </div>
 
       {/* Execution Trace Toggle */}
-      {caseStudy.execution_trace && caseStudy.execution_trace.length > 0 && (
+      {caseStudy.executionTrace && caseStudy.executionTrace.length > 0 && (
         <>
           <button
             onClick={() => setShowTrace(!showTrace)}
@@ -124,7 +124,7 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
               <span className="text-2xl">{showTrace ? '📖' : '📋'}</span>
               <span>
                 {showTrace ? 'Hide' : 'Show'} Execution Trace
-                ({caseStudy.execution_trace.length} steps)
+                ({caseStudy.executionTrace.length} steps)
               </span>
             </span>
             <span className="text-2xl transform transition-transform duration-300"
@@ -136,7 +136,7 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
           {/* Execution Steps */}
           {showTrace && (
             <div className="mt-6 space-y-4 animate-fade-in">
-              {caseStudy.execution_trace.map((step) => (
+              {caseStudy.executionTrace.map((step) => (
                 <div key={step.step_number} className="glass-card p-6">
                   <button
                     onClick={() => toggleStep(step.step_number)}
