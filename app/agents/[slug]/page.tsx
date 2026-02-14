@@ -2,6 +2,9 @@ import { notFound } from 'next/navigation';
 import CaseStudyList from '@/app/components/CaseStudyList';
 import BackButton from '@/app/components/BackButton';
 import ScoutEasel from '@/app/components/ScoutEasel';
+import MatcherEasel from '@/app/components/MatcherEasel';
+import QuillEasel from '@/app/components/QuillEasel';
+import ChatInterface from '@/app/components/ChatInterface';
 
 interface PageProps {
   params: Promise<{
@@ -110,8 +113,40 @@ export default async function AgentPage({ params }: PageProps) {
           </div>
         )}
 
-        {/* Case Studies */}
-        <CaseStudyList agentSlug={dbSlug} agentName={agent.name} agentColor={agent.color} />
+        {/* Matcher Workflow Animation - Only for Matcher agent */}
+        {slug === 'matcher' && (
+          <div className="mb-12">
+            <MatcherEasel />
+          </div>
+        )}
+
+        {/* Quill Workflow Animation - Only for Quill agent */}
+        {slug === 'quill' && (
+          <div className="mb-12">
+            <QuillEasel />
+          </div>
+        )}
+
+        {/* Live Chat Interface - Only for Sage (Gita Guide) agent */}
+        {slug === 'sage' ? (
+          <div className="space-y-12">
+            <ChatInterface agentColor={agent.color} />
+
+            {/* Example Conversations Section */}
+            <div>
+              <h2 className="text-4xl font-bold mb-4" style={{ color: '#FDF0D5' }}>
+                Example Conversations
+              </h2>
+              <p className="text-lg mb-8" style={{ color: '#669BBC' }}>
+                Explore these pre-run conversations for inspiration before asking your own questions.
+              </p>
+              <CaseStudyList agentSlug={dbSlug} agentName={agent.name} agentColor={agent.color} />
+            </div>
+          </div>
+        ) : (
+          /* Case Studies for other agents */
+          <CaseStudyList agentSlug={dbSlug} agentName={agent.name} agentColor={agent.color} />
+        )}
       </div>
     </main>
   );

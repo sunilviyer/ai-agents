@@ -6,6 +6,7 @@ import CaseStudyCard from './CaseStudyCard';
 interface CaseStudy {
   id: string;
   title: string;
+  subtitle?: string;
   description: string;
   createdAt: string;
   inputParameters: Record<string, unknown>;
@@ -132,7 +133,7 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor }: Prop
             >
               <div className="text-xs opacity-80 mb-2 whitespace-nowrap">Case {index + 1}</div>
               <div className="text-sm font-bold leading-tight break-words hyphens-auto" style={{ wordBreak: 'break-word' }}>
-                {caseStudy.title.split(' - ')[0]}
+                {caseStudy.subtitle || caseStudy.title.split(' - ')[0]}
               </div>
             </button>
           ))}
