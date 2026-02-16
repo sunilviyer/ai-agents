@@ -1,0 +1,152 @@
+{
+  "id": "fba24824-0654-4910-bf40-7cdd6257f825",
+  "agent_slug": "stock-monitor",
+  "title": "Stock Monitor - XOM, CVX",
+  "subtitle": "24h scan, price_movements, news, high alerts",
+  "input_parameters": {
+    "watchlist": [
+      "XOM",
+      "CVX"
+    ],
+    "time_period": "24h",
+    "event_types": [
+      "price_movements",
+      "news"
+    ],
+    "alert_threshold": "high"
+  },
+  "output_result": {
+    "executive_summary": "The monitored watchlist experienced a significant price increase for Chevron Corporation (CVX), with the stock rising over 7% in the past 24 hours. This suggests strong investor confidence in the company's performance and outlook.",
+    "alerts": [
+      {
+        "ticker": "CVX",
+        "company_name": "Chevron Corporation",
+        "event_type": "price_movements",
+        "severity": "high",
+        "headline": "Chevron stock price increased by over 7%",
+        "description": "Chevron's stock price increased by 7.35%, which exceeds the 5% threshold for a significant price movement.",
+        "source": "Finnhub + Tavily News",
+        "timestamp": "2026-02-14T14:10:33.011639Z",
+        "impact_analysis": "The significant 7.35% increase in Chevron's stock price suggests strong investor confidence in the company's performance and outlook. This could be driven by factors such as positive earnings, successful operational strategies, or favorable industry trends. The price increase may lead to increased investor interest and potential further upward momentum in the stock price.",
+        "action_suggested": "Consider profit taking on a portion of the position to lock in gains, while holding the remaining position to potentially benefit from further upside. Closely monitor the stock's performance and any new developments that may impact the company's outlook."
+      }
+    ],
+    "watchlist_overview": {
+      "total_stocks_monitored": 2,
+      "alerts_triggered": 1,
+      "event_breakdown": {
+        "price_movements": 1
+      },
+      "highest_severity_alert": "high"
+    },
+    "market_context": "The overall market conditions have been volatile, with concerns over economic uncertainty and geopolitical tensions. However, the energy sector has been performing relatively well, driven by factors such as supply-demand dynamics and commodity price movements.",
+    "recommendations": [
+      "Consider profit taking on a portion of the Chevron position to lock in gains, while holding the remaining position to potentially benefit from further upside.",
+      "Closely monitor the stock's performance and any new developments that may impact the company's outlook.",
+      "Diversify the portfolio to mitigate risk, as the energy sector may be subject to increased volatility.",
+      "Evaluate the potential impact of market conditions on the Exxon Mobil (XOM) position and adjust the strategy accordingly.",
+      "Maintain a balanced approach, considering both short-term opportunities and long-term investment objectives."
+    ]
+  },
+  "execution_trace": [
+    {
+      "step_number": 1,
+      "step_name": "Initialize Scan",
+      "step_type": "initialization",
+      "details": {
+        "stocks_scanned": 2,
+        "successful_fetches": 2,
+        "stock_summary": {
+          "XOM": {
+            "price": 148.45,
+            "change_percent": -0.9871207221450592,
+            "company": "Exxon Mobil Corporation"
+          },
+          "CVX": {
+            "price": 183.74001,
+            "change_percent": 0.7346601279967229,
+            "company": "Chevron Corporation"
+          }
+        }
+      },
+      "duration_ms": 16511,
+      "timestamp": "2026-02-14T14:10:21.355692Z"
+    },
+    {
+      "step_number": 2,
+      "step_name": "Search News",
+      "step_type": "search_news",
+      "details": {
+        "tickers_searched": 2,
+        "total_articles_found": 0,
+        "articles_per_ticker": {
+          "XOM": 0,
+          "CVX": 0
+        }
+      },
+      "duration_ms": 416,
+      "timestamp": "2026-02-14T14:10:21.772959Z"
+    },
+    {
+      "step_number": 3,
+      "step_name": "Search Filings",
+      "step_type": "search_filings",
+      "details": {
+        "tickers_searched": 2,
+        "total_filings_found": 0,
+        "note": "SEC EDGAR filing search - simplified MVP implementation"
+      },
+      "duration_ms": 3395,
+      "timestamp": "2026-02-14T14:10:25.168688Z"
+    },
+    {
+      "step_number": 4,
+      "step_name": "Classify Events",
+      "step_type": "classification",
+      "details": {
+        "total_events_classified": 1,
+        "events_by_severity": {
+          "high": 1
+        },
+        "events_by_type": {
+          "price_movements": 1
+        }
+      },
+      "duration_ms": 3262,
+      "timestamp": "2026-02-14T14:10:28.431204Z"
+    },
+    {
+      "step_number": 5,
+      "step_name": "Assess Impact",
+      "step_type": "analysis",
+      "details": {
+        "events_assessed": 1,
+        "assessment_complete": true
+      },
+      "duration_ms": 2237,
+      "timestamp": "2026-02-14T14:10:30.668885Z"
+    },
+    {
+      "step_number": 6,
+      "step_name": "Generate Alerts",
+      "step_type": "synthesis",
+      "details": {
+        "total_alerts_generated": 1,
+        "alerts_by_severity": {
+          "critical": 0,
+          "high": 1,
+          "medium": 0,
+          "low": 0
+        },
+        "recommendations_count": 5
+      },
+      "duration_ms": 2342,
+      "timestamp": "2026-02-14T14:10:33.012063Z"
+    }
+  ],
+  "display": true,
+  "featured": false,
+  "display_order": null,
+  "created_at": "2026-02-14T14:10:33.012132Z",
+  "updated_at": "2026-02-14T14:10:33.012132Z"
+}

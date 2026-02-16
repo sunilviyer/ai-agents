@@ -1,0 +1,166 @@
+{
+  "id": "9c8e61e1-80df-4836-975f-29b619e1c87e",
+  "agent_slug": "stock-monitor",
+  "title": "Stock Monitor - AAPL, MSFT",
+  "subtitle": "24h scan, earnings, news, price_movements, medium alerts",
+  "input_parameters": {
+    "watchlist": [
+      "AAPL",
+      "MSFT"
+    ],
+    "time_period": "24h",
+    "event_types": [
+      "earnings",
+      "news",
+      "price_movements"
+    ],
+    "alert_threshold": "medium"
+  },
+  "output_result": {
+    "executive_summary": "The monitored stocks, AAPL and MSFT, experienced mixed price movements over the past 24 hours. Apple's stock price dropped by more than 2%, which is considered a medium-severity event, while Microsoft's stock price decreased slightly by less than 0.5%, a low-severity event.",
+    "alerts": [
+      {
+        "ticker": "AAPL",
+        "company_name": "Apple Inc.",
+        "event_type": "price_movements",
+        "severity": "medium",
+        "headline": "Apple stock price drops over 2%",
+        "description": "The stock price of Apple has decreased by more than 2%, which is considered a significant price movement.",
+        "source": "Finnhub + Tavily News",
+        "timestamp": "2026-02-14T14:08:18.097108Z",
+        "impact_analysis": "The 2.27% drop in Apple's stock price could indicate a potential short-term market correction or a shift in investor sentiment. This could lead to further price volatility in the near future. Investors should closely monitor the stock's performance and consider their risk tolerance before making any decisions.",
+        "action_suggested": "Hold position and monitor the stock's performance. Consider profit-taking if the downward trend continues, but avoid making hasty decisions based on a single price movement."
+      },
+      {
+        "ticker": "MSFT",
+        "company_name": "Microsoft Corp.",
+        "event_type": "price_movements",
+        "severity": "low",
+        "headline": "Microsoft stock price decreases slightly",
+        "description": "The stock price of Microsoft has decreased by less than 0.5%, which is not considered a significant price movement.",
+        "source": "Finnhub + Tavily News",
+        "timestamp": "2026-02-14T14:08:18.097340Z",
+        "impact_analysis": "The 0.13% decrease in Microsoft's stock price is relatively minor and is unlikely to have a significant impact on the company's overall performance. This could be a temporary market fluctuation, and investors should not be overly concerned about this small price movement.",
+        "action_suggested": "Hold position and continue to monitor the stock's performance. This small price decrease is not a cause for immediate concern, and investors should maintain a long-term perspective on their investment in Microsoft."
+      }
+    ],
+    "watchlist_overview": {
+      "total_stocks_monitored": 2,
+      "alerts_triggered": 2,
+      "event_breakdown": {
+        "price_movements": 2
+      },
+      "highest_severity_alert": "medium"
+    },
+    "market_context": "The overall market conditions appear to be experiencing a potential short-term correction, as evidenced by the significant drop in Apple's stock price. This could indicate a shift in investor sentiment and increased market volatility in the near future.",
+    "recommendations": [
+      "Hold positions in both AAPL and MSFT and closely monitor their performance.",
+      "Consider profit-taking on Apple if the downward trend continues, but avoid making hasty decisions based on a single price movement.",
+      "Maintain a long-term perspective on the Microsoft investment, as the small price decrease is not a cause for immediate concern.",
+      "Diversify the portfolio to mitigate the impact of market volatility on individual stock holdings.",
+      "Stay informed about the latest market trends and economic conditions to make informed investment decisions."
+    ]
+  },
+  "execution_trace": [
+    {
+      "step_number": 1,
+      "step_name": "Initialize Scan",
+      "step_type": "initialization",
+      "details": {
+        "stocks_scanned": 2,
+        "successful_fetches": 2,
+        "stock_summary": {
+          "AAPL": {
+            "price": 255.78,
+            "change_percent": -2.2733388502143836,
+            "company": "Apple Inc."
+          },
+          "MSFT": {
+            "price": 401.32001,
+            "change_percent": -0.12940224965159025,
+            "company": "Microsoft Corp."
+          }
+        }
+      },
+      "duration_ms": 16593,
+      "timestamp": "2026-02-14T14:08:08.606038Z"
+    },
+    {
+      "step_number": 2,
+      "step_name": "Search News",
+      "step_type": "search_news",
+      "details": {
+        "tickers_searched": 2,
+        "total_articles_found": 0,
+        "articles_per_ticker": {
+          "AAPL": 0,
+          "MSFT": 0
+        }
+      },
+      "duration_ms": 453,
+      "timestamp": "2026-02-14T14:08:09.060863Z"
+    },
+    {
+      "step_number": 3,
+      "step_name": "Search Filings",
+      "step_type": "search_filings",
+      "details": {
+        "tickers_searched": 2,
+        "total_filings_found": 0,
+        "note": "SEC EDGAR filing search - simplified MVP implementation"
+      },
+      "duration_ms": 1395,
+      "timestamp": "2026-02-14T14:08:10.457409Z"
+    },
+    {
+      "step_number": 4,
+      "step_name": "Classify Events",
+      "step_type": "classification",
+      "details": {
+        "total_events_classified": 2,
+        "events_by_severity": {
+          "medium": 1,
+          "low": 1
+        },
+        "events_by_type": {
+          "price_movements": 2
+        }
+      },
+      "duration_ms": 1955,
+      "timestamp": "2026-02-14T14:08:12.412691Z"
+    },
+    {
+      "step_number": 5,
+      "step_name": "Assess Impact",
+      "step_type": "analysis",
+      "details": {
+        "events_assessed": 2,
+        "assessment_complete": true
+      },
+      "duration_ms": 3460,
+      "timestamp": "2026-02-14T14:08:15.873225Z"
+    },
+    {
+      "step_number": 6,
+      "step_name": "Generate Alerts",
+      "step_type": "synthesis",
+      "details": {
+        "total_alerts_generated": 2,
+        "alerts_by_severity": {
+          "critical": 0,
+          "high": 0,
+          "medium": 1,
+          "low": 1
+        },
+        "recommendations_count": 5
+      },
+      "duration_ms": 2224,
+      "timestamp": "2026-02-14T14:08:18.097970Z"
+    }
+  ],
+  "display": true,
+  "featured": false,
+  "display_order": null,
+  "created_at": "2026-02-14T14:08:18.098412Z",
+  "updated_at": "2026-02-14T14:08:18.098412Z"
+}

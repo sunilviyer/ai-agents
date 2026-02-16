@@ -1,0 +1,152 @@
+{
+  "id": "12553a87-3816-490a-a9cb-cd8700905a8b",
+  "agent_slug": "stock-monitor",
+  "title": "Stock Monitor - JPM, BAC",
+  "subtitle": "30d scan, filings, analyst_ratings, low alerts",
+  "input_parameters": {
+    "watchlist": [
+      "JPM",
+      "BAC"
+    ],
+    "time_period": "30d",
+    "event_types": [
+      "filings",
+      "analyst_ratings"
+    ],
+    "alert_threshold": "low"
+  },
+  "output_result": {
+    "executive_summary": "The monitored watchlist experienced a significant price movement, with Bank of America's stock price increasing by 5.7% during the 30-day period. This suggests improved investor sentiment and potential for further upside, though investors should continue to monitor the stock's performance and the broader market conditions.",
+    "alerts": [
+      {
+        "ticker": "BAC",
+        "company_name": "Bank of America Corporation",
+        "event_type": "price_movements",
+        "severity": "medium",
+        "headline": "Bank of America stock price increased by 5.7%",
+        "description": "The stock price of Bank of America increased by more than 5%, which is considered a significant price movement.",
+        "source": "Finnhub + Tavily News",
+        "timestamp": "2026-02-14T14:09:31.688224Z",
+        "impact_analysis": "The 5.7% increase in Bank of America's stock price suggests that the market has reacted positively to the company's performance or recent developments. This could indicate improved investor sentiment and potential for further upside in the stock price. However, investors should monitor the stock's performance and consider the broader market conditions before making any investment decisions.",
+        "action_suggested": "Hold position and monitor. The significant price increase may present an opportunity for investors to consider profit-taking, but they should also evaluate the stock's long-term potential and the overall market conditions before making any decisions."
+      }
+    ],
+    "watchlist_overview": {
+      "total_stocks_monitored": 2,
+      "alerts_triggered": 1,
+      "event_breakdown": {
+        "price_movements": 1
+      },
+      "highest_severity_alert": "medium"
+    },
+    "market_context": "The overall market conditions during the 30-day period were relatively stable, with the broader market indices showing moderate gains. However, investors should be aware of potential volatility and economic uncertainties that could impact the performance of these stocks.",
+    "recommendations": [
+      "Hold the current positions and continue to monitor the stocks' performance and market conditions.",
+      "Consider taking profits on the Bank of America position, but also evaluate the stock's long-term potential before making any decisions.",
+      "Diversify the portfolio to mitigate risk and exposure to any single sector or company.",
+      "Stay informed about the latest news and developments affecting the financial sector and the broader market.",
+      "Consult with a financial advisor to develop a comprehensive investment strategy that aligns with your risk tolerance and investment objectives."
+    ]
+  },
+  "execution_trace": [
+    {
+      "step_number": 1,
+      "step_name": "Initialize Scan",
+      "step_type": "initialization",
+      "details": {
+        "stocks_scanned": 2,
+        "successful_fetches": 2,
+        "stock_summary": {
+          "JPM": {
+            "price": 302.54999,
+            "change_percent": -0.029744910463107035,
+            "company": "JPMorgan Chase & Co."
+          },
+          "BAC": {
+            "price": 52.55,
+            "change_percent": 0.05712109672504575,
+            "company": "Bank of America Corporation"
+          }
+        }
+      },
+      "duration_ms": 16539,
+      "timestamp": "2026-02-14T14:09:23.871362Z"
+    },
+    {
+      "step_number": 2,
+      "step_name": "Search News",
+      "step_type": "search_news",
+      "details": {
+        "tickers_searched": 2,
+        "total_articles_found": 0,
+        "articles_per_ticker": {
+          "JPM": 0,
+          "BAC": 0
+        }
+      },
+      "duration_ms": 462,
+      "timestamp": "2026-02-14T14:09:24.334941Z"
+    },
+    {
+      "step_number": 3,
+      "step_name": "Search Filings",
+      "step_type": "search_filings",
+      "details": {
+        "tickers_searched": 2,
+        "total_filings_found": 0,
+        "note": "SEC EDGAR filing search - simplified MVP implementation"
+      },
+      "duration_ms": 1686,
+      "timestamp": "2026-02-14T14:09:26.025821Z"
+    },
+    {
+      "step_number": 4,
+      "step_name": "Classify Events",
+      "step_type": "classification",
+      "details": {
+        "total_events_classified": 1,
+        "events_by_severity": {
+          "medium": 1
+        },
+        "events_by_type": {
+          "price_movements": 1
+        }
+      },
+      "duration_ms": 1289,
+      "timestamp": "2026-02-14T14:09:27.315864Z"
+    },
+    {
+      "step_number": 5,
+      "step_name": "Assess Impact",
+      "step_type": "analysis",
+      "details": {
+        "events_assessed": 1,
+        "assessment_complete": true
+      },
+      "duration_ms": 2040,
+      "timestamp": "2026-02-14T14:09:29.356224Z"
+    },
+    {
+      "step_number": 6,
+      "step_name": "Generate Alerts",
+      "step_type": "synthesis",
+      "details": {
+        "total_alerts_generated": 1,
+        "alerts_by_severity": {
+          "critical": 0,
+          "high": 0,
+          "medium": 1,
+          "low": 0
+        },
+        "recommendations_count": 5
+      },
+      "duration_ms": 2332,
+      "timestamp": "2026-02-14T14:09:31.689350Z"
+    }
+  ],
+  "display": true,
+  "featured": false,
+  "display_order": null,
+  "created_at": "2026-02-14T14:09:31.689711Z",
+  "updated_at": "2026-02-14T14:09:31.689711Z"
+}

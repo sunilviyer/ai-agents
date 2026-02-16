@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import CaseStudyList from '@/app/components/CaseStudyList';
 import BackButton from '@/app/components/BackButton';
 import ScoutEasel from '@/app/components/ScoutEasel';
+import TickerEasel from '@/app/components/TickerEasel';
 import MatcherEasel from '@/app/components/MatcherEasel';
 import QuillEasel from '@/app/components/QuillEasel';
 import ChatInterface from '@/app/components/ChatInterface';
@@ -110,6 +111,13 @@ export default async function AgentPage({ params }: PageProps) {
         {slug === 'scout' && (
           <div className="mb-12">
             <ScoutEasel />
+          </div>
+        )}
+
+        {/* Ticker Workflow Animation - Only for Ticker agent */}
+        {slug === 'ticker' && (
+          <div className="mb-12">
+            <TickerEasel />
           </div>
         )}
 
