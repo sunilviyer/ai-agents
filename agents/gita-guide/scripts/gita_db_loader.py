@@ -27,6 +27,7 @@ USAGE:
 =============================================================================
 """
 
+import os
 import requests
 import json
 import time
@@ -48,13 +49,18 @@ except ImportError:
 # =============================================================================
 # Update these with YOUR PostgreSQL database credentials
 
+# Database config — loaded from environment variables.
+# Set PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD in your shell or .env file.
+# Or set DATABASE_URL as a full connection string.
 DB_CONFIG = {
-    "host": "ep-purple-flower-aix6l70h-pooler.c-4.us-east-1.aws.neon.tech",
-    "port": 5432,
-    "dbname": "neondb",
-    "user": "neondb_owner",
-    "password": "npg_yxzjXk0L8Ofp"
+    "host": os.environ.get("PGHOST", ""),
+    "port": int(os.environ.get("PGPORT", "5432")),
+    "dbname": os.environ.get("PGDATABASE", "neondb"),
+    "user": os.environ.get("PGUSER", "neondb_owner"),
+    "password": os.environ.get("PGPASSWORD", ""),
 }
+if not DB_CONFIG["password"]:
+    raise EnvironmentError("PGPASSWORD environment variable is not set. See .env.example.")
 
 # API base URL (free, no API key needed)
 API_BASE = "https://vedicscriptures.github.io"

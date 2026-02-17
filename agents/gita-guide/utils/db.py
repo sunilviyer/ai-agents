@@ -11,13 +11,28 @@ from psycopg2.extras import RealDictCursor
 
 
 def get_db_connection():
-    """Get PostgreSQL database connection."""
+    """Get PostgreSQL database connection.
+
+    Requires the following environment variables (set in agents/gita-guide/.env):
+        PGHOST, PGDATABASE, PGUSER, PGPASSWORD
+    Or a DATABASE_URL connection string.
+    """
+    # Prefer a full DATABASE_URL if set, otherwise fall back to individual PG vars
+    database_url = os.environ.get("DATABASE_URL")
+    if database_url:
+        return psycopg2.connect(database_url, cursor_factory=RealDictCursor)
+
+    password = os.environ.get("PGPASSWORD") or os.environ.get("POSTGRES_PASSWORD")
+    if not password:
+        raise EnvironmentError(
+            "Database password not set. Set PGPASSWORD or DATABASE_URL in your .env file."
+        )
     return psycopg2.connect(
-        host="ep-purple-flower-aix6l70h-pooler.c-4.us-east-1.aws.neon.tech",
-        port=5432,
-        dbname="neondb",
-        user="neondb_owner",
-        password=os.environ.get("POSTGRES_PASSWORD", "npg_yxzjXk0L8Ofp"),
+        host=os.environ.get("PGHOST", "ep-purple-flower-aix6l70h-pooler.c-4.us-east-1.aws.neon.tech"),
+        port=int(os.environ.get("PGPORT", "5432")),
+        dbname=os.environ.get("PGDATABASE", "neondb"),
+        user=os.environ.get("PGUSER", "neondb_owner"),
+        password=password,
         cursor_factory=RealDictCursor
     )
 

@@ -12,8 +12,12 @@ import json
 import psycopg2
 from pathlib import Path
 
-# Database connection string (use owner account for write operations)
-DB_CONNECTION = "postgresql://neondb_owner:npg_yxzjXk0L8Ofp@ep-purple-flower-aix6l70h-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require"
+# Database connection string — loaded from environment variable.
+# Set DATABASE_URL in your .env file or shell before running.
+# Example: export DATABASE_URL="postgresql://neondb_owner:PASSWORD@host/neondb?sslmode=require"
+DB_CONNECTION = os.environ.get("DATABASE_URL")
+if not DB_CONNECTION:
+    raise EnvironmentError("DATABASE_URL environment variable is not set. See .env.example.")
 
 
 def import_case_study(file_path: str, conn, display_order: int = None, featured: bool = False):
