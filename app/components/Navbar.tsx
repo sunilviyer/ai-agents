@@ -12,7 +12,7 @@ interface NavbarProps {
 // Sun icon (light mode)
 function SunIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
       <circle cx="8" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.5"/>
       <line x1="8" y1="1" x2="8" y2="2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
       <line x1="8" y1="13.5" x2="8" y2="15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -29,7 +29,7 @@ function SunIcon() {
 // Moon icon (dark mode)
 function MoonIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+    <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
       <path d="M7.5 1.5A6 6 0 1 0 13.5 7.5 4.5 4.5 0 0 1 7.5 1.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
     </svg>
   );
@@ -38,7 +38,7 @@ function MoonIcon() {
 // Home icon
 function HomeIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
       <path d="M8 1.5L1.5 7.5H3.5V14H6.5V10H9.5V14H12.5V7.5H14.5L8 1.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round"/>
     </svg>
   );
@@ -46,36 +46,35 @@ function HomeIcon() {
 
 export default function Navbar({ agentName, agentColor, status, showBack = true }: NavbarProps) {
   const { theme, toggle } = useTheme();
-  const isDarkBg = false; // text color inherits from CSS vars
 
   return (
     <nav className="navbar">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 
-        {/* LEFT — back arrow + home icon */}
+        {/* LEFT — back arrow to agents home */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '64px' }}>
           {showBack && (
             <a
               href="/"
-              aria-label="Home"
+              aria-label="Back to agents"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.4rem',
-                fontSize: '0.85rem',
+                gap: '0.3rem',
+                fontSize: '0.82rem',
                 fontWeight: 600,
                 color: 'var(--text-body)',
                 textDecoration: 'none',
-                opacity: 0.70,
+                opacity: 0.65,
                 transition: 'opacity 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-              onMouseLeave={e => (e.currentTarget.style.opacity = '0.70')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '0.65')}
             >
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
                 <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <HomeIcon />
+              <span style={{ fontSize: '0.78rem' }}>Agents</span>
             </a>
           )}
         </div>
@@ -115,14 +114,48 @@ export default function Navbar({ agentName, agentColor, status, showBack = true 
           )}
         </div>
 
-        {/* RIGHT — theme toggle only */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', minWidth: '64px' }}>
+        {/* RIGHT — home link + theme toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'flex-end', minWidth: '64px' }}>
+          {/* suniliyer.ca home link */}
+          <a
+            href="https://www.suniliyer.ca"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="suniliyer.ca"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 32,
+              height: 32,
+              borderRadius: '50%',
+              border: '1px solid var(--glass-border)',
+              background: 'var(--glass-light)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              color: 'var(--text-body)',
+              textDecoration: 'none',
+              opacity: 0.80,
+              transition: 'all 0.2s ease',
+              flexShrink: 0,
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; (e.currentTarget as HTMLElement).style.transform = 'scale(1.08)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '0.80'; (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; }}
+          >
+            <HomeIcon />
+          </a>
+
+          {/* theme toggle with label */}
           <button
             className="theme-toggle"
             onClick={toggle}
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            style={{ width: 'auto', borderRadius: '100px', padding: '0 0.6rem', gap: '0.35rem', display: 'flex', alignItems: 'center' }}
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+            <span style={{ fontSize: '0.70rem', fontWeight: 700, letterSpacing: '0.03em' }}>
+              {theme === 'dark' ? 'Light' : 'Dark'}
+            </span>
           </button>
         </div>
       </div>
