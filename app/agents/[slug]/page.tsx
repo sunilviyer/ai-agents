@@ -13,7 +13,8 @@ const agentInfo: Record<string, {
   color: string;
   description: string;
   status: 'live' | 'demo';
-  bgClass: string;
+  bgImage: string;
+  glassVar: string;
   isDark: boolean;
 }> = {
   scout: {
@@ -21,7 +22,8 @@ const agentInfo: Record<string, {
     color: '#003049',
     description: 'Fraud Trends Investigator',
     status: 'demo',
-    bgClass: 'bg-scout',
+    bgImage: '/background/scout-agent.png',
+    glassVar: 'rgba(255,255,255,0.14)',
     isDark: true,
   },
   ticker: {
@@ -29,7 +31,8 @@ const agentInfo: Record<string, {
     color: '#780000',
     description: 'Stock Portfolio Monitor',
     status: 'demo',
-    bgClass: 'bg-ticker',
+    bgImage: '/background/ticker-agent.png',
+    glassVar: 'rgba(255,255,255,0.35)',
     isDark: false,
   },
   matcher: {
@@ -37,7 +40,8 @@ const agentInfo: Record<string, {
     color: '#669BBC',
     description: 'House Finder with School Ratings',
     status: 'demo',
-    bgClass: 'bg-matcher',
+    bgImage: '/background/matcher-agent.png',
+    glassVar: 'rgba(255,255,255,0.35)',
     isDark: false,
   },
   quill: {
@@ -45,7 +49,8 @@ const agentInfo: Record<string, {
     color: '#C1121F',
     description: 'Article Editor & SEO Optimizer',
     status: 'demo',
-    bgClass: 'bg-quill',
+    bgImage: '/background/quill-agent.png',
+    glassVar: 'rgba(255,255,255,0.35)',
     isDark: false,
   },
   sage: {
@@ -53,7 +58,8 @@ const agentInfo: Record<string, {
     color: '#5a3e2b',
     description: 'Bhagavad Gita Spiritual Guide',
     status: 'live',
-    bgClass: 'bg-sage',
+    bgImage: '/background/sage-agent.png',
+    glassVar: 'rgba(255,255,255,0.25)',
     isDark: false,
   },
 };
@@ -74,7 +80,18 @@ export default async function AgentPage({ params }: PageProps) {
   const dbSlug = slugMapping[slug];
 
   return (
-    <div className={`min-h-screen ${agent.bgClass}`} style={{ color: agent.isDark ? 'white' : 'var(--text-body)' }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        backgroundImage: `url('${agent.bgImage}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center 40%',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'scroll',
+        color: agent.isDark ? 'white' : 'var(--text-body)',
+        '--glass-bg': agent.glassVar,
+      } as React.CSSProperties}
+    >
       {/* Sticky navbar */}
       <Navbar
         agentName={agent.name}
