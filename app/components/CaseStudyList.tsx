@@ -75,7 +75,13 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor, isDark
   if (error) {
     return (
       <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>⚠️</div>
+        <div style={{
+          width: 40, height: 40, borderRadius: '50%',
+          border: `2px solid #ef4444`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 0.75rem',
+          fontSize: '1.1rem', fontWeight: 800, color: '#ef4444',
+        }}>!</div>
         <h2 style={{ color: textHead, margin: '0 0 0.5rem', fontSize: '1.2rem' }}>Error Loading Case Studies</h2>
         <p style={{ color: textMeta, margin: 0, fontSize: '0.85rem' }}>{error}</p>
       </div>
@@ -85,7 +91,13 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor, isDark
   if (caseStudies.length === 0) {
     return (
       <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📭</div>
+        <div style={{
+          width: 40, height: 40, borderRadius: '50%',
+          border: `2px solid ${agentColor}40`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 0.75rem',
+          fontSize: '0.7rem', fontWeight: 800, color: agentColor, letterSpacing: '-0.01em',
+        }}>—</div>
         <h2 style={{ color: textHead, margin: '0 0 0.5rem', fontSize: '1.2rem' }}>No Case Studies Yet</h2>
         <p style={{ color: textMeta, margin: 0, fontSize: '0.85rem' }}>
           {agentName} doesn&apos;t have any pre-run demonstrations available yet. Check back soon!

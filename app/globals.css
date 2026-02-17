@@ -1,34 +1,56 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DESIGN TOKENS
+   DESIGN TOKENS — light mode (default)
    ============================================================ */
 :root {
-  /* Agent accent colors — used as TINTS only */
   --agent-scout:   #669BBC;
   --agent-ticker:  #22c55e;
   --agent-matcher: #f97316;
   --agent-quill:   #8b5cf6;
   --agent-sage:    #C1121F;
 
-  /* Glass system */
-  --glass-light:   rgba(255, 255, 255, 0.58);
-  --glass-medium:  rgba(255, 255, 255, 0.40);
-  --glass-dark:    rgba(255, 255, 255, 0.18);
-  --glass-border:  rgba(255, 255, 255, 0.72);
-  --glass-shadow:  0 8px 32px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.08);
-  --glass-specular: inset 1px 1px 0 rgba(255, 255, 255, 0.85);
+  /* Glass — more visible at lower opacity with stronger border */
+  --glass-light:   rgba(255, 255, 255, 0.35);
+  --glass-medium:  rgba(255, 255, 255, 0.25);
+  --glass-dark:    rgba(255, 255, 255, 0.14);
+  --glass-border:  rgba(255, 255, 255, 0.65);
+  --glass-shadow:  0 8px 32px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.10);
+  --glass-specular: inset 1px 1px 0 rgba(255, 255, 255, 0.80);
 
-  /* Typography — dark on light */
+  /* Typography */
   --text-heading:  #1a1a2e;
   --text-body:     #3d3d5c;
   --text-meta:     #6b6b8a;
-  --text-muted:    rgba(61, 61, 92, 0.6);
+  --text-muted:    rgba(61, 61, 92, 0.55);
 
-  /* Typography — light on dark (Scout) */
-  --text-heading-inv: #ffffff;
-  --text-body-inv:    rgba(255, 255, 255, 0.88);
-  --text-meta-inv:    rgba(255, 255, 255, 0.60);
+  /* Home page bg */
+  --home-bg: #eeecea;
+
+  /* Navbar */
+  --navbar-bg: rgba(255, 255, 255, 0.72);
+  --navbar-border: rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+[data-theme="dark"] {
+  --glass-light:   rgba(20, 20, 35, 0.55);
+  --glass-medium:  rgba(20, 20, 35, 0.45);
+  --glass-dark:    rgba(10, 10, 20, 0.70);
+  --glass-border:  rgba(255, 255, 255, 0.12);
+  --glass-shadow:  0 8px 32px rgba(0, 0, 0, 0.40), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --glass-specular: inset 1px 1px 0 rgba(255, 255, 255, 0.08);
+
+  --text-heading:  #f0f0f5;
+  --text-body:     rgba(240, 240, 245, 0.82);
+  --text-meta:     rgba(240, 240, 245, 0.52);
+  --text-muted:    rgba(240, 240, 245, 0.35);
+
+  --home-bg: #0f0f1a;
+  --navbar-bg: rgba(15, 15, 26, 0.80);
+  --navbar-border: rgba(255, 255, 255, 0.08);
 }
 
 /* ============================================================
@@ -36,9 +58,10 @@
    ============================================================ */
 *, ::before, ::after { box-sizing: border-box; }
 
+html { transition: background-color 0.25s ease, color 0.25s ease; }
+
 body {
   margin: 0;
-  background: var(--page-bg, #f5f4f0);
   color: var(--text-body);
   font-family: var(--font-geist-sans, system-ui, sans-serif);
   min-height: 100vh;
@@ -48,47 +71,40 @@ body {
 
 /* ============================================================
    AGENT PAGE BACKGROUNDS
-   Per-agent photo background with slow breathe animation
+   background-attachment: scroll (not fixed) for correct rendering
+   The element itself is the scroll container so the image shows through
    ============================================================ */
-.bg-scout {
-  background: url('/background/scout-agent.png') center/cover no-repeat fixed;
-  animation: bg-breathe 14s ease-in-out infinite alternate;
-  --glass-bg: var(--glass-dark);
-  --page-text-mode: dark-bg;
-}
-.bg-ticker {
-  background: url('/background/ticker-agent.png') center/cover no-repeat fixed;
-  animation: bg-breathe 14s ease-in-out infinite alternate;
-  --glass-bg: var(--glass-light);
-}
-.bg-matcher {
-  background: url('/background/matcher-agent.png') center/cover no-repeat fixed;
-  animation: bg-breathe 14s ease-in-out infinite alternate;
-  --glass-bg: var(--glass-light);
-}
-.bg-quill {
-  background: url('/background/quill-agent.png') center/cover no-repeat fixed;
-  animation: bg-breathe 14s ease-in-out infinite alternate;
-  --glass-bg: var(--glass-light);
-}
+.bg-scout,
+.bg-ticker,
+.bg-matcher,
+.bg-quill,
 .bg-sage {
-  background: url('/background/sage-agent.png') center/cover no-repeat fixed;
-  animation: bg-breathe 14s ease-in-out infinite alternate;
-  --glass-bg: var(--glass-medium);
+  background-attachment: scroll;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  min-height: 100vh;
+  animation: bg-breathe 16s ease-in-out infinite alternate;
 }
 
+.bg-scout   { background-image: url('/background/scout-agent.png');   --glass-bg: var(--glass-dark); }
+.bg-ticker  { background-image: url('/background/ticker-agent.png');  --glass-bg: var(--glass-light); }
+.bg-matcher { background-image: url('/background/matcher-agent.png'); --glass-bg: var(--glass-light); }
+.bg-quill   { background-image: url('/background/quill-agent.png');   --glass-bg: var(--glass-light); }
+.bg-sage    { background-image: url('/background/sage-agent.png');    --glass-bg: var(--glass-medium); }
+
 @keyframes bg-breathe {
-  0%   { background-size: 100%; background-position: center center; }
-  100% { background-size: 112%; background-position: center top; }
+  0%   { background-size: 100%; background-position: center 40%; }
+  100% { background-size: 115%; background-position: center 55%; }
 }
 
 /* ============================================================
    HOME PAGE — animated gradient blobs
    ============================================================ */
 .bg-home {
-  background: #f0eee8;
+  background: var(--home-bg);
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .bg-home::before,
@@ -96,49 +112,58 @@ body {
   content: '';
   position: fixed;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.30;
+  filter: blur(90px);
+  opacity: 0.28;
   pointer-events: none;
   z-index: 0;
 }
 
 .bg-home::before {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #b3c8d8 0%, #d4c5f0 50%, transparent 70%);
-  top: -200px;
-  right: -100px;
-  animation: blob-drift-a 20s ease-in-out infinite alternate;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, #aac3d6 0%, #cdb8e8 50%, transparent 70%);
+  top: -250px;
+  right: -150px;
+  animation: blob-drift-a 22s ease-in-out infinite alternate;
 }
 
 .bg-home::after {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #f0c4a8 0%, #f5d5b0 50%, transparent 70%);
-  bottom: -150px;
-  left: -100px;
-  animation: blob-drift-b 24s ease-in-out infinite alternate;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, #e8c4a0 0%, #f0d4b0 50%, transparent 70%);
+  bottom: -180px;
+  left: -120px;
+  animation: blob-drift-b 26s ease-in-out infinite alternate;
+}
+
+[data-theme="dark"] .bg-home::before {
+  background: radial-gradient(circle, #1a3a5c 0%, #2a1a5c 50%, transparent 70%);
+  opacity: 0.50;
+}
+[data-theme="dark"] .bg-home::after {
+  background: radial-gradient(circle, #3a1a0a 0%, #4a2a1a 50%, transparent 70%);
+  opacity: 0.45;
 }
 
 @keyframes blob-drift-a {
-  0%   { transform: translate(0,   0)   scale(1.0); }
-  50%  { transform: translate(-60px, 80px) scale(1.15); }
-  100% { transform: translate(40px, -40px) scale(0.95); }
+  0%   { transform: translate(0, 0) scale(1.0); }
+  50%  { transform: translate(-70px, 90px) scale(1.18); }
+  100% { transform: translate(50px, -50px) scale(0.92); }
 }
-
 @keyframes blob-drift-b {
-  0%   { transform: translate(0,   0)   scale(1.0); }
-  50%  { transform: translate(80px, -60px) scale(1.1); }
-  100% { transform: translate(-40px, 40px) scale(1.05); }
+  0%   { transform: translate(0, 0) scale(1.0); }
+  50%  { transform: translate(90px, -70px) scale(1.12); }
+  100% { transform: translate(-50px, 50px) scale(1.08); }
 }
 
 /* ============================================================
    GLASS COMPONENTS
+   Visible frosted glass over the background image
    ============================================================ */
 .glass-panel {
   background: var(--glass-bg, var(--glass-light));
-  backdrop-filter: blur(20px) saturate(1.6);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
   border-radius: 20px;
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow), var(--glass-specular);
@@ -146,17 +171,11 @@ body {
 
 .glass-card {
   background: var(--glass-bg, var(--glass-light));
-  backdrop-filter: blur(16px) saturate(1.5);
-  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
   border-radius: 16px;
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-}
-
-/* Scout override — darker bg needs lighter glass */
-.bg-scout .glass-panel,
-.bg-scout .glass-card {
-  --glass-bg: var(--glass-dark);
 }
 
 /* ============================================================
@@ -166,41 +185,27 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.70);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.60);
-  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.08);
-  height: 60px;
+  background: var(--navbar-bg);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border-bottom: 1px solid var(--navbar-border);
+  box-shadow: 0 1px 16px rgba(0, 0, 0, 0.06);
+  height: 56px;
   display: flex;
   align-items: center;
-  padding: 0 1.5rem;
+  padding: 0 1.25rem;
 }
-
-.bg-scout .navbar {
-  background: rgba(20, 40, 65, 0.65);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-/* ============================================================
-   TYPOGRAPHY MODES
-   ============================================================ */
-
-/* Dark-background text (Scout) */
-.bg-scout .text-heading { color: var(--text-heading-inv) !important; }
-.bg-scout .text-body    { color: var(--text-body-inv)    !important; }
-.bg-scout .text-meta    { color: var(--text-meta-inv)    !important; }
 
 /* ============================================================
    ROBOT ORB
    ============================================================ */
 .robot-orb {
-  width: 240px;
-  height: 240px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   background: var(--glass-bg, var(--glass-light));
-  backdrop-filter: blur(20px) saturate(1.6);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
   border: 1.5px solid var(--glass-border);
   box-shadow: var(--glass-shadow), var(--glass-specular);
   display: flex;
@@ -210,60 +215,46 @@ body {
 }
 
 @media (max-width: 767px) {
-  .robot-orb {
-    width: 180px;
-    height: 180px;
-  }
+  .robot-orb { width: 160px; height: 160px; }
 }
 
 /* ============================================================
-   PIPELINE STRIP
+   PIPELINE STRIP — single horizontal line, centered
    ============================================================ */
 .pipeline-strip {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0;
-  flex-wrap: wrap;
-  row-gap: 0.5rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
+.pipeline-strip::-webkit-scrollbar { display: none; }
 
 .pipeline-chip {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.9rem;
+  gap: 0.35rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 100px;
   background: var(--glass-bg, var(--glass-light));
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--chip-color, rgba(255,255,255,0.6));
-  font-size: 0.78rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  font-size: 0.76rem;
   font-weight: 600;
   color: var(--text-heading);
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.bg-scout .pipeline-chip {
-  color: white;
-  border-color: rgba(255,255,255,0.30);
-}
-
-.pipeline-arrow {
-  font-size: 0.9rem;
-  padding: 0 0.2rem;
-  color: var(--arrow-color, #aaa);
   flex-shrink: 0;
 }
 
-@media (max-width: 767px) {
-  .pipeline-strip {
-    gap: 0.3rem;
-  }
-  .pipeline-chip {
-    font-size: 0.72rem;
-    padding: 0.35rem 0.7rem;
-  }
+.pipeline-arrow {
+  font-size: 0.85rem;
+  padding: 0 0.15rem;
+  color: var(--text-meta);
+  flex-shrink: 0;
 }
 
 /* ============================================================
@@ -283,28 +274,26 @@ body {
 .demo-tab {
   flex-shrink: 0;
   scroll-snap-align: start;
-  padding: 0.55rem 1.2rem;
+  padding: 0.5rem 1.1rem;
   border-radius: 100px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   border: 1.5px solid transparent;
   background: var(--glass-bg, var(--glass-light));
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: var(--text-body);
   transition: all 0.2s ease;
 }
 
-.bg-scout .demo-tab { color: var(--text-body-inv); }
-
 .demo-tab.active {
   border-color: var(--tab-color, #888);
   color: var(--tab-color, #333);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
 }
 
-.bg-scout .demo-tab.active { color: white; }
+[data-theme="dark"] .demo-tab.active { color: white; }
 
 /* ============================================================
    3-PANEL CASE STUDY LAYOUT
@@ -316,65 +305,59 @@ body {
   align-items: start;
 }
 
-.case-panel-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: var(--panel-arrow-color, #aaa);
-  padding-top: 2rem;
-  align-self: flex-start;
-}
-
 @media (max-width: 1023px) {
-  .case-panels {
-    grid-template-columns: 1fr;
-  }
+  .case-panels { grid-template-columns: 1fr; }
 }
 
 .panel-label {
-  font-size: 0.72rem;
+  font-size: 0.70rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 0.75rem;
+  letter-spacing: 0.09em;
+  margin-bottom: 0.85rem;
   display: flex;
   align-items: center;
   gap: 0.4rem;
   color: var(--text-meta);
 }
 
-.bg-scout .panel-label { color: var(--text-meta-inv); }
-
 /* ============================================================
    EXECUTION STEPS (Process panel)
+   Step name always visible; click expands detail
    ============================================================ */
 .step-timeline {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .step-pill {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.55rem;
   padding: 0.5rem 0.75rem;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.60);
+  background: var(--glass-bg, var(--glass-light));
+  border: 1px solid var(--glass-border);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
   font-size: 0.82rem;
+  width: 100%;
+  text-align: left;
 }
 
 .step-pill:hover {
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.50);
   transform: translateX(2px);
+}
+
+[data-theme="dark"] .step-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .step-pill.expanded {
   border-radius: 10px 10px 0 0;
+  border-bottom-color: transparent;
 }
 
 .step-number {
@@ -384,31 +367,43 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 700;
   flex-shrink: 0;
   color: white;
 }
 
+.step-name {
+  flex: 1;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.step-expand-icon {
+  font-size: 0.6rem;
+  color: var(--text-meta);
+  flex-shrink: 0;
+}
+
 .step-detail {
-  background: rgba(255, 255, 255, 0.30);
-  border: 1px solid rgba(255, 255, 255, 0.50);
+  background: var(--glass-bg, var(--glass-light));
+  border: 1px solid var(--glass-border);
   border-top: none;
   border-radius: 0 0 10px 10px;
-  padding: 0.75rem;
-  font-size: 0.78rem;
-  line-height: 1.5;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.77rem;
+  line-height: 1.55;
   color: var(--text-body);
   margin-top: -1px;
 }
 
-.bg-scout .step-pill { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.20); }
-.bg-scout .step-pill:hover { background: rgba(255,255,255,0.20); }
-.bg-scout .step-detail { color: var(--text-body-inv); background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.15); }
-
 .duration-badge {
   margin-left: auto;
-  font-size: 0.65rem;
+  font-size: 0.63rem;
   font-weight: 600;
   color: var(--text-meta);
   background: rgba(0,0,0,0.06);
@@ -418,7 +413,7 @@ body {
   flex-shrink: 0;
 }
 
-.bg-scout .duration-badge { color: var(--text-meta-inv); background: rgba(255,255,255,0.12); }
+[data-theme="dark"] .duration-badge { background: rgba(255,255,255,0.10); }
 
 /* ============================================================
    PARAM CHIPS (Input panel)
@@ -426,19 +421,17 @@ body {
 .param-row {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.2rem;
   margin-bottom: 0.75rem;
 }
 
 .param-label {
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   color: var(--text-meta);
 }
-
-.bg-scout .param-label { color: var(--text-meta-inv); }
 
 .param-value {
   font-size: 0.85rem;
@@ -446,19 +439,17 @@ body {
   line-height: 1.4;
 }
 
-.bg-scout .param-value { color: var(--text-body-inv); }
-
 .param-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.35rem;
   margin-top: 0.2rem;
 }
 
 .param-chip {
-  font-size: 0.75rem;
+  font-size: 0.73rem;
   font-weight: 600;
-  padding: 0.2rem 0.6rem;
+  padding: 0.18rem 0.55rem;
   border-radius: 100px;
   border: 1px solid;
 }
@@ -467,9 +458,9 @@ body {
    CHAT INTERFACE
    ============================================================ */
 .chat-window {
-  background: var(--glass-light);
-  backdrop-filter: blur(24px) saturate(1.8);
-  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  background: var(--glass-bg, var(--glass-light));
+  backdrop-filter: blur(28px) saturate(1.8);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8);
   border-radius: 20px 20px 0 0;
   border: 1px solid var(--glass-border);
   border-bottom: none;
@@ -477,54 +468,64 @@ body {
   display: flex;
   flex-direction: column;
   height: 55svh;
-  min-height: 400px;
+  min-height: 380px;
 }
 
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 1.25rem;
+  padding: 1.1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.7rem;
   scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,0.15) transparent;
+  scrollbar-color: rgba(0,0,0,0.12) transparent;
 }
-
-.chat-messages::-webkit-scrollbar { width: 6px; }
-.chat-messages::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+.chat-messages::-webkit-scrollbar { width: 5px; }
+.chat-messages::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
 
 .chat-bubble-user {
   align-self: flex-end;
-  max-width: 80%;
-  padding: 0.65rem 1rem;
+  max-width: 78%;
+  padding: 0.6rem 0.95rem;
   border-radius: 18px 18px 4px 18px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1.45;
   color: white;
 }
 
 .chat-bubble-agent {
   align-self: flex-start;
-  max-width: 82%;
-  padding: 0.65rem 1rem;
+  max-width: 80%;
+  padding: 0.6rem 0.95rem;
   border-radius: 18px 18px 18px 4px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1.45;
-  background: rgba(255,255,255,0.75);
-  border: 1px solid rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.65);
+  border: 1px solid rgba(255,255,255,0.80);
   color: var(--text-body);
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
+[data-theme="dark"] .chat-bubble-agent {
+  background: rgba(30, 30, 50, 0.70);
+  border-color: rgba(255,255,255,0.10);
+  color: var(--text-body);
+}
+
 .chat-input-bar {
-  border-top: 1px solid rgba(255,255,255,0.5);
-  padding: 0.85rem 1rem;
+  border-top: 1px solid var(--glass-border);
+  padding: 0.75rem 1rem;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 0.5rem;
   align-items: center;
-  background: rgba(255,255,255,0.50);
+  background: rgba(255,255,255,0.40);
+  border-radius: 0 0 0 0;
+}
+
+[data-theme="dark"] .chat-input-bar {
+  background: rgba(20,20,35,0.40);
 }
 
 .chat-input {
@@ -542,8 +543,8 @@ body {
 .chat-input::placeholder { color: var(--text-muted); }
 
 .chat-submit {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -551,12 +552,12 @@ body {
   align-items: center;
   justify-content: center;
   color: white;
+  font-size: 1rem;
   transition: all 0.2s ease;
   flex-shrink: 0;
 }
-
 .chat-submit:hover { transform: scale(1.08); filter: brightness(1.1); }
-.chat-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.chat-submit:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
 
 /* ============================================================
    HOME PAGE AGENT TILES
@@ -568,23 +569,22 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 2rem 1.5rem 1.5rem;
+  padding: 2rem 1.25rem 1.5rem;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.60);
-  backdrop-filter: blur(18px) saturate(1.5);
-  -webkit-backdrop-filter: blur(18px) saturate(1.5);
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.08), inset 1px 1px 0 rgba(255,255,255,0.9);
+  background: var(--glass-light);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10), var(--glass-specular);
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
   text-decoration: none;
   color: inherit;
 }
 
 .agent-tile:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.8),
-              inset 1px 1px 0 rgba(255,255,255,0.9);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.14), var(--glass-specular);
 }
 
 .agent-tile-accent {
@@ -592,14 +592,12 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 3px;
   border-radius: 0 0 20px 20px;
-  opacity: 0.7;
+  opacity: 0.6;
+  transition: opacity 0.28s ease;
 }
-
-.agent-tile:hover .agent-tile-accent {
-  opacity: 1;
-}
+.agent-tile:hover .agent-tile-accent { opacity: 1; }
 
 /* ============================================================
    STATUS BADGE
@@ -608,9 +606,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.25rem 0.75rem;
+  padding: 0.2rem 0.65rem;
   border-radius: 100px;
-  font-size: 0.72rem;
+  font-size: 0.70rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -619,20 +617,52 @@ body {
 .status-badge.live {
   background: rgba(34, 197, 94, 0.15);
   color: #15803d;
-  border: 1px solid rgba(34, 197, 94, 0.30);
+  border: 1px solid rgba(34, 197, 94, 0.28);
+}
+
+[data-theme="dark"] .status-badge.live {
+  background: rgba(34, 197, 94, 0.20);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.35);
 }
 
 .status-badge.demo {
   background: rgba(59, 130, 246, 0.12);
   color: #1d4ed8;
-  border: 1px solid rgba(59, 130, 246, 0.25);
+  border: 1px solid rgba(59, 130, 246, 0.22);
 }
 
-/* Dark bg overrides */
-.bg-scout .status-badge.demo {
-  background: rgba(255,255,255,0.15);
-  color: rgba(255,255,255,0.9);
-  border-color: rgba(255,255,255,0.25);
+[data-theme="dark"] .status-badge.demo {
+  background: rgba(99, 160, 255, 0.18);
+  color: #93c5fd;
+  border-color: rgba(99, 160, 255, 0.30);
+}
+
+/* ============================================================
+   THEME TOGGLE BUTTON
+   ============================================================ */
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-light);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-body);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  background: rgba(255,255,255,0.55);
+  transform: scale(1.08);
+}
+[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(255,255,255,0.12);
 }
 
 /* ============================================================
@@ -644,44 +674,27 @@ body {
 }
 
 @keyframes blink {
-  0%, 90%, 100% { transform: scaleY(1); }
-  95%           { transform: scaleY(0.1); }
+  0%, 88%, 100% { transform: scaleY(1); }
+  94%           { transform: scaleY(0.08); }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes float-orb {
-  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.5; }
-  50%      { transform: translateY(-120px) translateX(15px); opacity: 0.8; }
-}
-
-.robot-breathe { animation: breathe 3s ease-in-out infinite; }
-.robot-blink   { transform-origin: center; animation: blink 4s ease-in-out infinite; }
-.animate-fade-in { animation: fade-in 0.35s ease-out; }
-
-/* Floating ambient orbs (home page) */
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: float-orb var(--dur, 8s) ease-in-out infinite;
-  animation-delay: var(--delay, 0s);
-  opacity: 0;
-}
+.robot-breathe  { animation: breathe 3.2s ease-in-out infinite; }
+.robot-blink    { transform-origin: center; animation: blink 4.5s ease-in-out infinite; }
+.animate-fade-in { animation: fade-in 0.32s ease-out; }
 
 /* ============================================================
    UTILITY
    ============================================================ */
 .section-z { position: relative; z-index: 1; }
 
-/* Thin scrollbar everywhere */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,0.15) transparent;
+  scrollbar-color: rgba(0,0,0,0.12) transparent;
 }
-
-*::-webkit-scrollbar { width: 6px; height: 6px; }
-*::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+*::-webkit-scrollbar { width: 5px; height: 5px; }
+*::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }

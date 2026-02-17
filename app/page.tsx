@@ -7,7 +7,7 @@ const agents = [
     color: '#669BBC',
     description: 'Fraud Trends Investigator',
     status: 'demo' as const,
-    emoji: '🔍',
+    initial: 'S',
     tagline: 'Mines industry & regulatory sources to surface emerging fraud patterns.',
     pipeline: ['Plan Strategy', 'Industry Sources', 'Regulatory Data', 'Synthesize Report'],
   },
@@ -17,7 +17,7 @@ const agents = [
     color: '#22c55e',
     description: 'Stock Portfolio Monitor',
     status: 'demo' as const,
-    emoji: '📈',
+    initial: 'T',
     tagline: 'Watches your portfolio 24/7, alerting you to earnings events and price swings.',
     pipeline: ['Load Watchlist', 'Fetch Market Data', 'Analyze Events', 'Generate Alerts'],
   },
@@ -27,7 +27,7 @@ const agents = [
     color: '#f97316',
     description: 'House Finder with School Ratings',
     status: 'demo' as const,
-    emoji: '🏠',
+    initial: 'M',
     tagline: 'Combines MLS listings with school ratings to score your perfect home match.',
     pipeline: ['Parse Criteria', 'Search Listings', 'Rate Schools', 'Score Matches'],
   },
@@ -37,7 +37,7 @@ const agents = [
     color: '#8b5cf6',
     description: 'Article Editor & SEO Optimizer',
     status: 'demo' as const,
-    emoji: '✏️',
+    initial: 'Q',
     tagline: 'Rewrites and polishes articles for clarity, engagement, and SEO performance.',
     pipeline: ['Analyze Article', 'Extract Keywords', 'Rewrite & Enhance', 'SEO Check'],
   },
@@ -47,17 +47,17 @@ const agents = [
     color: '#C1121F',
     description: 'Bhagavad Gita Spiritual Guide',
     status: 'live' as const,
-    emoji: '🕉️',
+    initial: 'S',
     tagline: 'Answers your deepest questions through the wisdom of the Bhagavad Gita.',
     pipeline: ['Receive Question', 'Search Verses', 'Select Teachings', 'Compose Answer'],
   },
 ];
 
 const techStack = [
-  { icon: '🤖', name: 'Claude AI', sub: 'Anthropic' },
-  { icon: '🔗', name: 'LangChain', sub: 'Framework' },
-  { icon: '⚡', name: 'Next.js 15', sub: 'Frontend' },
-  { icon: '🐘', name: 'PostgreSQL', sub: 'Neon Database' },
+  { name: 'Claude AI', sub: 'Anthropic' },
+  { name: 'LangChain', sub: 'Framework' },
+  { name: 'Next.js 15', sub: 'Frontend' },
+  { name: 'PostgreSQL', sub: 'Neon Database' },
 ];
 
 export default function Home() {
@@ -161,7 +161,7 @@ export default function Home() {
                 style={{ background: agent.color }}
               />
 
-              {/* Emoji avatar */}
+              {/* Initial avatar */}
               <div style={{
                 width: 64,
                 height: 64,
@@ -171,10 +171,14 @@ export default function Home() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.8rem',
+                fontSize: '1.5rem',
+                fontWeight: 800,
+                color: agent.color,
+                letterSpacing: '-0.02em',
                 marginBottom: '1rem',
+                fontFamily: 'inherit',
               }}>
-                {agent.emoji}
+                {agent.initial}
               </div>
 
               {/* Name + badge */}
@@ -260,12 +264,22 @@ export default function Home() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               {[
-                { icon: '📥', label: 'Input', desc: 'User parameters & context' },
-                { icon: '⚙️', label: 'Process', desc: 'Multi-step agent reasoning' },
-                { icon: '📤', label: 'Output', desc: 'Structured, actionable results' },
-              ].map(({ icon, label, desc }) => (
+                { label: 'Input', desc: 'User parameters & context' },
+                { label: 'Process', desc: 'Multi-step agent reasoning' },
+                { label: 'Output', desc: 'Structured, actionable results' },
+              ].map(({ label, desc }) => (
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>{icon}</span>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: '6px',
+                    background: 'rgba(102,155,188,0.15)',
+                    border: '1px solid rgba(102,155,188,0.25)',
+                    flexShrink: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '0.65rem', fontWeight: 800,
+                    color: '#669BBC', letterSpacing: '-0.01em',
+                  }}>
+                    {label[0]}
+                  </div>
                   <div>
                     <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-heading)' }}>{label}</span>
                     <span style={{ fontSize: '0.82rem', color: 'var(--text-meta)', marginLeft: '0.4rem' }}>{desc}</span>
@@ -283,7 +297,7 @@ export default function Home() {
           gap: '0.75rem',
           justifyContent: 'center',
         }}>
-          {techStack.map(({ icon, name, sub }) => (
+          {techStack.map(({ name, sub }) => (
             <div key={name} style={{
               display: 'flex',
               alignItems: 'center',
@@ -296,7 +310,6 @@ export default function Home() {
               boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
               fontSize: '0.82rem',
             }}>
-              <span>{icon}</span>
               <span style={{ fontWeight: 700, color: 'var(--text-heading)' }}>{name}</span>
               <span style={{ color: 'var(--text-meta)' }}>{sub}</span>
             </div>

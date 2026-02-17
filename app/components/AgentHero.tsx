@@ -1,6 +1,6 @@
 'use client';
 
-// Robot SVGs — inline, adapted for orb display (same SVGs, but smaller viewBox wrapper)
+// Robot SVGs — inline, adapted for orb display
 function ScoutRobot() {
   return (
     <svg viewBox="0 0 160 220" style={{ width: '75%', height: '75%' }}>
@@ -127,44 +127,13 @@ function SageRobot() {
   );
 }
 
-// Pipeline step definitions per agent
-const pipelines: Record<string, { icon: string; label: string }[]> = {
-  scout: [
-    { icon: '🗺️', label: 'Plan Strategy' },
-    { icon: '🏭', label: 'Industry Sources' },
-    { icon: '📋', label: 'Regulatory Data' },
-    { icon: '🎓', label: 'Academic Sources' },
-    { icon: '🔍', label: 'Extract Findings' },
-    { icon: '📊', label: 'Synthesize Report' },
-  ],
-  ticker: [
-    { icon: '📋', label: 'Load Watchlist' },
-    { icon: '📡', label: 'Fetch Market Data' },
-    { icon: '🧠', label: 'Analyze Events' },
-    { icon: '🚨', label: 'Generate Alerts' },
-    { icon: '📈', label: 'Recommendations' },
-  ],
-  matcher: [
-    { icon: '🔎', label: 'Parse Criteria' },
-    { icon: '🏠', label: 'Search Listings' },
-    { icon: '🏫', label: 'Rate Schools' },
-    { icon: '🎯', label: 'Score Matches' },
-    { icon: '📋', label: 'Present Results' },
-  ],
-  quill: [
-    { icon: '📖', label: 'Analyze Article' },
-    { icon: '🔑', label: 'Extract Keywords' },
-    { icon: '✏️', label: 'Rewrite & Enhance' },
-    { icon: '🔍', label: 'SEO Check' },
-    { icon: '✅', label: 'Final Polish' },
-  ],
-  sage: [
-    { icon: '🙏', label: 'Receive Question' },
-    { icon: '📚', label: 'Search Verses' },
-    { icon: '🧘', label: 'Select Teachings' },
-    { icon: '💬', label: 'Compose Answer' },
-    { icon: '🌟', label: 'Suggest Journey' },
-  ],
+// Pipeline step labels per agent — no emoji
+const pipelines: Record<string, string[]> = {
+  scout:   ['Plan Strategy', 'Industry Sources', 'Regulatory Data', 'Academic Sources', 'Extract Findings', 'Synthesize Report'],
+  ticker:  ['Load Watchlist', 'Fetch Market Data', 'Analyze Events', 'Generate Alerts', 'Recommendations'],
+  matcher: ['Parse Criteria', 'Search Listings', 'Rate Schools', 'Score Matches', 'Present Results'],
+  quill:   ['Analyze Article', 'Extract Keywords', 'Rewrite & Enhance', 'SEO Check', 'Final Polish'],
+  sage:    ['Receive Question', 'Search Verses', 'Select Teachings', 'Compose Answer', 'Suggest Journey'],
 };
 
 interface AgentHeroProps {
@@ -177,88 +146,80 @@ interface AgentHeroProps {
 
 export default function AgentHero({ slug, agentName, agentColor, description, status }: AgentHeroProps) {
   const steps = pipelines[slug] ?? [];
-  const isDark = slug === 'scout';
-
-  const textHead = isDark ? 'white' : 'var(--text-heading)';
-  const textBody = isDark ? 'rgba(255,255,255,0.85)' : 'var(--text-body)';
 
   return (
-    <div style={{ padding: '2.5rem 0 2rem' }}>
-      {/* Two-column hero */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '2.5rem',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-      }}>
-        {/* Robot orb */}
-        <div className="robot-orb" style={{ '--glass-bg': isDark ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.55)' } as React.CSSProperties}>
+    <div style={{ padding: '2rem 0 2.5rem', textAlign: 'center' }}>
+
+      {/* Robot orb — centered */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+        <div
+          className="robot-orb"
+          style={{ '--glass-bg': 'var(--glass-light)' } as React.CSSProperties}
+        >
           {slug === 'scout'   && <ScoutRobot />}
           {slug === 'ticker'  && <TickerRobot />}
           {slug === 'matcher' && <MatcherRobot />}
           {slug === 'quill'   && <QuillRobot />}
           {slug === 'sage'    && <SageRobot />}
         </div>
+      </div>
 
-        {/* Text */}
-        <div style={{ flex: 1, minWidth: '220px', maxWidth: '480px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-            <h1 style={{
-              margin: 0,
-              fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
-              fontWeight: 800,
-              letterSpacing: '-0.03em',
-              color: textHead,
-              lineHeight: 1,
-            }}>
-              {agentName}
-            </h1>
-            <span className={`status-badge ${status}`}>
-              {status === 'live' ? '● Live Chat' : '● Demos'}
-            </span>
-          </div>
-
-          <p style={{
-            margin: '0 0 1.5rem',
-            fontSize: '1.05rem',
-            fontWeight: 500,
-            color: agentColor,
-            opacity: 0.9,
+      {/* Header block — centered */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', justifyContent: 'center', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+          <h1 style={{
+            margin: 0,
+            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
+            color: 'var(--text-heading)',
+            lineHeight: 1,
           }}>
-            {description}
-          </p>
-
-          {/* Pipeline strip */}
-          <div className="pipeline-strip">
-            {steps.map((step, i) => (
-              <span key={i} style={{ display: 'flex', alignItems: 'center' }}>
-                <span
-                  className="pipeline-chip"
-                  style={{
-                    '--chip-color': agentColor + '55',
-                  } as React.CSSProperties}
-                >
-                  <span>{step.icon}</span>
-                  <span style={{ color: isDark ? 'rgba(255,255,255,0.9)' : 'var(--text-heading)' }}>{step.label}</span>
-                </span>
-                {i < steps.length - 1 && (
-                  <span className="pipeline-arrow" style={{ color: agentColor + '99' }}>→</span>
-                )}
-              </span>
-            ))}
-          </div>
-
-          <p style={{
-            margin: '1.25rem 0 0',
-            fontSize: '0.82rem',
-            color: isDark ? 'rgba(255,255,255,0.5)' : 'var(--text-meta)',
-          }}>
-            {status === 'live'
-              ? 'Live AI — ask anything below'
-              : 'Pre-run case studies showing real agent outputs'}
-          </p>
+            {agentName}
+          </h1>
+          <span className={`status-badge ${status}`}>
+            {status === 'live' ? '● Live Chat' : '● Demos'}
+          </span>
         </div>
+
+        <p style={{
+          margin: '0 auto',
+          fontSize: '1rem',
+          fontWeight: 500,
+          color: agentColor,
+          opacity: 0.9,
+          maxWidth: '480px',
+        }}>
+          {description}
+        </p>
+
+        <p style={{
+          margin: '0.6rem auto 0',
+          fontSize: '0.8rem',
+          color: 'var(--text-meta)',
+          maxWidth: '400px',
+        }}>
+          {status === 'live'
+            ? 'Live AI — ask anything below'
+            : 'Pre-run case studies showing real agent outputs'}
+        </p>
+      </div>
+
+      {/* Pipeline — single horizontal scrollable line */}
+      <div className="pipeline-strip">
+        {steps.map((step, i) => (
+          <span key={i} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+            <span
+              className="pipeline-chip"
+              style={{ '--chip-color': agentColor + '45' } as React.CSSProperties}
+            >
+              {step}
+            </span>
+            {i < steps.length - 1 && (
+              <span className="pipeline-arrow" style={{ color: agentColor + '80' }}>→</span>
+            )}
+          </span>
+        ))}
       </div>
     </div>
   );

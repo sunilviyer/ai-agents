@@ -171,7 +171,16 @@ export default function ChatInterface({ agentColor }: Props) {
               padding: '2rem 0',
               textAlign: 'center',
             }}>
-              <span style={{ fontSize: '2.5rem' }}>🕉️</span>
+              <div style={{
+                width: 44, height: 44, borderRadius: '50%',
+                background: agentColor + '15',
+                border: `2px solid ${agentColor}30`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1rem', fontWeight: 800, color: agentColor,
+                fontFamily: 'Georgia, serif',
+              }}>
+                ॐ
+              </div>
               <p style={{ margin: 0, fontSize: '0.9rem', color: textMeta, maxWidth: '320px', lineHeight: 1.55 }}>
                 Ask me anything about the Bhagavad Gita — dharma, karma, meditation, or how to apply these teachings in your life.
               </p>
