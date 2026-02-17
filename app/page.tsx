@@ -152,7 +152,18 @@ const techStack = [
 
 export default function Home() {
   return (
-    <main className="bg-home min-h-screen" style={{ color: 'var(--text-body)' }}>
+    <main
+      className="bg-home"
+      style={{
+        minHeight: '100vh',
+        color: 'var(--text-body)',
+        backgroundImage: "url('/background/homepage-agent.webp')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'scroll',
+      }}
+    >
       {/* All content sits above the animated blobs */}
       <div className="section-z" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem 5rem' }}>
 

@@ -86,11 +86,11 @@ body {
   min-height: 100vh;
 }
 
-.bg-scout   { background-image: url('/background/scout-agent.png');   --glass-bg: var(--glass-dark); }
-.bg-ticker  { background-image: url('/background/ticker-agent.png');  --glass-bg: var(--glass-light); }
-.bg-matcher { background-image: url('/background/matcher-agent.png'); --glass-bg: var(--glass-light); }
-.bg-quill   { background-image: url('/background/quill-agent.png');   --glass-bg: var(--glass-light); }
-.bg-sage    { background-image: url('/background/sage-agent.png');    --glass-bg: var(--glass-medium); }
+.bg-scout   { background-image: url('/background/scout-agent.webp');   --glass-bg: var(--glass-dark); }
+.bg-ticker  { background-image: url('/background/ticker-agent.webp');  --glass-bg: var(--glass-light); }
+.bg-matcher { background-image: url('/background/matcher-agent.webp'); --glass-bg: var(--glass-light); }
+.bg-quill   { background-image: url('/background/quill-agent.webp');   --glass-bg: var(--glass-light); }
+.bg-sage    { background-image: url('/background/sage-agent.webp');    --glass-bg: var(--glass-medium); }
 
 /* ============================================================
    HOME PAGE — animated gradient blobs
@@ -374,9 +374,9 @@ body {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-heading);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.3;
 }
 
 .step-expand-icon {

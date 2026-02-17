@@ -117,9 +117,24 @@ function ProcessPanel({ caseStudy, agentColor }: Props) {
                 className={`step-pill${isOpen ? ' expanded' : ''}`}
                 onClick={() => setExpanded(isOpen ? null : step.step_number)}
               >
-                <span className="step-number" style={{ background: agentColor }}>
-                  {step.step_number}
-                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+                  <span className="step-number" style={{ background: agentColor }}>
+                    {step.step_number}
+                  </span>
+                  {step.step_type && (
+                    <span style={{
+                      fontSize: '0.52rem',
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.04em',
+                      color: agentColor,
+                      marginTop: '0.15rem',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {step.step_type.replace(/_/g, ' ')}
+                    </span>
+                  )}
+                </div>
                 <span className="step-name">{step.step_name}</span>
                 {step.duration_ms != null && (
                   <span className="duration-badge">{formatDuration(step.duration_ms)}</span>
@@ -347,6 +362,9 @@ export default function CaseStudyCard({ caseStudy, agentColor, isDark }: Props) 
           fontWeight: 700,
           color: 'var(--text-heading)',
           letterSpacing: '-0.02em',
+          whiteSpace: 'normal',
+          wordBreak: 'break-word',
+          lineHeight: 1.35,
         }}>
           {caseStudy.title}
         </h3>
