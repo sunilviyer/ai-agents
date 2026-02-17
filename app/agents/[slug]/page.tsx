@@ -1,175 +1,124 @@
 import { notFound } from 'next/navigation';
 import CaseStudyList from '@/app/components/CaseStudyList';
-import BackButton from '@/app/components/BackButton';
-import ScoutEasel from '@/app/components/ScoutEasel';
-import TickerEasel from '@/app/components/TickerEasel';
-import MatcherEasel from '@/app/components/MatcherEasel';
-import QuillEasel from '@/app/components/QuillEasel';
-import SageEasel from '@/app/components/SageEasel';
+import AgentHero from '@/app/components/AgentHero';
+import Navbar from '@/app/components/Navbar';
 import ChatInterface from '@/app/components/ChatInterface';
 
 interface PageProps {
-  params: Promise<{
-    slug: string;
-  }>;
+  params: Promise<{ slug: string }>;
 }
 
-const agentInfo: Record<string, { name: string; color: string; description: string; status: 'live' | 'demo' }> = {
-  'scout': {
+const agentInfo: Record<string, {
+  name: string;
+  color: string;
+  description: string;
+  status: 'live' | 'demo';
+  bgClass: string;
+  isDark: boolean;
+}> = {
+  scout: {
     name: 'Scout',
     color: '#669BBC',
     description: 'Fraud Trends Investigator',
-    status: 'demo'
+    status: 'demo',
+    bgClass: 'bg-scout',
+    isDark: true,
   },
-  'ticker': {
+  ticker: {
     name: 'Ticker',
     color: '#22c55e',
     description: 'Stock Portfolio Monitor',
-    status: 'demo'
+    status: 'demo',
+    bgClass: 'bg-ticker',
+    isDark: false,
   },
-  'matcher': {
+  matcher: {
     name: 'Matcher',
     color: '#f97316',
     description: 'House Finder with School Ratings',
-    status: 'demo'
+    status: 'demo',
+    bgClass: 'bg-matcher',
+    isDark: false,
   },
-  'quill': {
+  quill: {
     name: 'Quill',
     color: '#8b5cf6',
     description: 'Article Editor & SEO Optimizer',
-    status: 'demo'
+    status: 'demo',
+    bgClass: 'bg-quill',
+    isDark: false,
   },
-  'sage': {
+  sage: {
     name: 'Sage',
     color: '#C1121F',
     description: 'Bhagavad Gita Spiritual Guide',
-    status: 'live'
-  }
+    status: 'live',
+    bgClass: 'bg-sage',
+    isDark: false,
+  },
 };
 
-// Map friendly slugs to database agent_slug
 const slugMapping: Record<string, string> = {
-  'scout': 'fraud-trends',
-  'ticker': 'stock-monitor',
-  'matcher': 'house-finder',
-  'quill': 'article-editor',
-  'sage': 'gita-guide'
+  scout:   'fraud-trends',
+  ticker:  'stock-monitor',
+  matcher: 'house-finder',
+  quill:   'article-editor',
+  sage:    'gita-guide',
 };
 
 export default async function AgentPage({ params }: PageProps) {
   const { slug } = await params;
-
   const agent = agentInfo[slug];
-  if (!agent) {
-    notFound();
-  }
+  if (!agent) notFound();
 
   const dbSlug = slugMapping[slug];
 
   return (
-    <main className="min-h-screen relative overflow-hidden">
-      {/* Floating Embers Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="ember"
-            style={{
-              left: `${Math.random() * 100}%`,
-              bottom: `-10%`,
-              animationDelay: `${Math.random() * 8}s`,
-              animationDuration: `${6 + Math.random() * 4}s`
-            }}
-          />
-        ))}
-      </div>
+    <div className={`min-h-screen ${agent.bgClass}`} style={{ color: agent.isDark ? 'white' : 'var(--text-body)' }}>
+      {/* Sticky navbar */}
+      <Navbar
+        agentName={agent.name}
+        agentColor={agent.color}
+        status={agent.status}
+      />
 
-      <div className="container mx-auto px-6 py-16 relative z-10">
-        {/* Header */}
-        <div className="mb-12">
-          <BackButton />
+      {/* Page content */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem 4rem' }}>
 
-          <div className="glass-panel p-12">
-            <div className="flex items-center gap-4 mb-4">
-              <h1 className="text-6xl font-bold" style={{ color: agent.color }}>
-                {agent.name}
-              </h1>
-              <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                agent.status === 'live'
-                  ? 'bg-green-500 text-white'
-                  : 'bg-blue-500 text-white'
-              }`}>
-                {agent.status === 'live' ? 'LIVE CHAT' : 'PRE-RUN DEMOS'}
-              </span>
-            </div>
-            <p className="text-2xl" style={{ color: '#FDF0D5' }}>
-              {agent.description}
-            </p>
-          </div>
-        </div>
+        {/* Hero: robot orb + pipeline strip */}
+        <AgentHero
+          slug={slug}
+          agentName={agent.name}
+          agentColor={agent.color}
+          description={agent.description}
+          status={agent.status}
+        />
 
-        {/* Scout Workflow Animation - Only for Scout agent */}
-        {slug === 'scout' && (
-          <div className="mb-12">
-            <ScoutEasel />
-          </div>
-        )}
-
-        {/* Ticker Workflow Animation - Only for Ticker agent */}
-        {slug === 'ticker' && (
-          <div className="mb-12">
-            <TickerEasel />
-          </div>
-        )}
-
-        {/* Matcher Workflow Animation - Only for Matcher agent */}
-        {slug === 'matcher' && (
-          <div className="mb-12">
-            <MatcherEasel />
-          </div>
-        )}
-
-        {/* Quill Workflow Animation - Only for Quill agent */}
-        {slug === 'quill' && (
-          <div className="mb-12">
-            <QuillEasel />
-          </div>
-        )}
-
-        {/* Sage Workflow Animation - Only for Sage agent */}
-        {slug === 'sage' && (
-          <div className="mb-12">
-            <SageEasel />
-          </div>
-        )}
-
-        {/* Live Chat Interface - Only for Sage (Gita Guide) agent */}
+        {/* SAGE: chat first, then example conversations */}
         {slug === 'sage' ? (
-          <div className="space-y-12">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
             <ChatInterface agentColor={agent.color} />
-
-            {/* Example Conversations Section */}
-            <div>
-              <h2 className="text-4xl font-bold mb-4" style={{ color: '#FDF0D5' }}>
-                Example Conversations
-              </h2>
-              <p className="text-lg mb-8" style={{ color: '#669BBC' }}>
-                Explore these pre-run conversations for inspiration before asking your own questions.
-              </p>
-              <CaseStudyList agentSlug={dbSlug} agentName={agent.name} agentColor={agent.color} />
-            </div>
+            <CaseStudyList
+              agentSlug={dbSlug}
+              agentName={agent.name}
+              agentColor={agent.color}
+              isDark={agent.isDark}
+              sectionLabel="Example Conversations"
+            />
           </div>
         ) : (
-          /* Case Studies for other agents */
-          <CaseStudyList agentSlug={dbSlug} agentName={agent.name} agentColor={agent.color} />
+          <CaseStudyList
+            agentSlug={dbSlug}
+            agentName={agent.name}
+            agentColor={agent.color}
+            isDark={agent.isDark}
+          />
         )}
       </div>
-    </main>
+    </div>
   );
 }
 
 export async function generateStaticParams() {
-  return Object.keys(agentInfo).map((slug) => ({
-    slug,
-  }));
+  return Object.keys(agentInfo).map((slug) => ({ slug }));
 }

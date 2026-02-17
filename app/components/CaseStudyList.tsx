@@ -27,9 +27,11 @@ interface Props {
   agentSlug: string;
   agentName: string;
   agentColor: string;
+  isDark?: boolean;
+  sectionLabel?: string;
 }
 
-export default function CaseStudyList({ agentSlug, agentName, agentColor }: Props) {
+export default function CaseStudyList({ agentSlug, agentName, agentColor, isDark = false, sectionLabel }: Props) {
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,112 +41,109 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor }: Prop
     async function fetchCaseStudies() {
       try {
         const response = await fetch(`/api/agents/${agentSlug}/case-studies?includeTrace=true`);
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch case studies: ${response.statusText}`);
-        }
-
+        if (!response.ok) throw new Error(`Failed to fetch case studies: ${response.statusText}`);
         const data = await response.json();
         setCaseStudies(data.caseStudies || []);
       } catch (err) {
-        console.error('Error fetching case studies:', err);
         setError(err instanceof Error ? err.message : 'Failed to load case studies');
       } finally {
         setLoading(false);
       }
     }
-
     fetchCaseStudies();
   }, [agentSlug]);
 
+  const textHead = isDark ? 'white' : 'var(--text-heading)';
+  const textMeta = isDark ? 'rgba(255,255,255,0.55)' : 'var(--text-meta)';
+
   if (loading) {
     return (
-      <div className="glass-panel p-12">
-        <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-t-transparent"
-               style={{ borderColor: `${agentColor} transparent ${agentColor} ${agentColor}` }} />
-          <span className="ml-4 text-xl" style={{ color: '#FDF0D5' }}>
-            Loading case studies...
-          </span>
-        </div>
+      <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center' }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: '50%',
+          border: `3px solid ${agentColor}`,
+          borderTopColor: 'transparent',
+          animation: 'spin 0.8s linear infinite',
+          margin: '0 auto 1rem',
+        }} />
+        <p style={{ color: textMeta, margin: 0 }}>Loading case studies…</p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="glass-panel p-12">
-        <div className="text-center">
-          <div className="text-5xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold mb-2" style={{ color: '#FDF0D5' }}>
-            Error Loading Case Studies
-          </h2>
-          <p style={{ color: '#669BBC' }}>{error}</p>
-        </div>
+      <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>⚠️</div>
+        <h2 style={{ color: textHead, margin: '0 0 0.5rem', fontSize: '1.2rem' }}>Error Loading Case Studies</h2>
+        <p style={{ color: textMeta, margin: 0, fontSize: '0.85rem' }}>{error}</p>
       </div>
     );
   }
 
   if (caseStudies.length === 0) {
     return (
-      <div className="glass-panel p-12">
-        <div className="text-center">
-          <div className="text-5xl mb-4">📭</div>
-          <h2 className="text-2xl font-bold mb-2" style={{ color: '#FDF0D5' }}>
-            No Case Studies Yet
-          </h2>
-          <p style={{ color: '#669BBC' }}>
-            This agent doesn't have any pre-run demonstrations available yet.
-            Check back soon!
-          </p>
-        </div>
+      <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📭</div>
+        <h2 style={{ color: textHead, margin: '0 0 0.5rem', fontSize: '1.2rem' }}>No Case Studies Yet</h2>
+        <p style={{ color: textMeta, margin: 0, fontSize: '0.85rem' }}>
+          {agentName} doesn&apos;t have any pre-run demonstrations available yet. Check back soon!
+        </p>
       </div>
     );
   }
 
   return (
     <div>
-      <div className="mb-8">
-        <h2 className="text-4xl font-bold" style={{ color: '#FDF0D5' }}>
-          Case Studies
+      {/* Section header */}
+      <div style={{ marginBottom: '1.25rem' }}>
+        <h2 style={{
+          margin: 0,
+          fontSize: '1.5rem',
+          fontWeight: 700,
+          color: textHead,
+          letterSpacing: '-0.02em',
+        }}>
+          {sectionLabel ?? 'Case Studies'}
         </h2>
-        <p className="text-lg mt-2" style={{ color: '#669BBC' }}>
-          {caseStudies.length} pre-run demonstration{caseStudies.length !== 1 ? 's' : ''} available
+        <p style={{ margin: '0.25rem 0 0', fontSize: '0.82rem', color: textMeta }}>
+          {caseStudies.length} pre-run demonstration{caseStudies.length !== 1 ? 's' : ''}
         </p>
       </div>
 
-      {/* TABS FOR CASE STUDIES */}
-      <div className="mb-8">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3"
-             style={{ gridAutoRows: '1fr' }}>
-          {caseStudies.map((caseStudy, index) => (
-            <button
-              key={caseStudy.id}
-              onClick={() => setActiveTab(index)}
-              className="px-4 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center text-center min-h-[100px]"
-              style={{
-                background: activeTab === index
-                  ? `linear-gradient(135deg, ${agentColor} 0%, ${agentColor}dd 100%)`
-                  : 'rgba(0, 48, 73, 0.5)',
-                color: '#FDF0D5',
-                border: activeTab === index ? `2px solid ${agentColor}` : '1px solid rgba(102, 155, 188, 0.3)',
-                boxShadow: activeTab === index ? `0 8px 24px ${agentColor}50` : 'none'
-              }}
-            >
-              <div className="text-xs opacity-80 mb-2 whitespace-nowrap">Case {index + 1}</div>
-              <div className="text-sm font-bold leading-tight break-words hyphens-auto" style={{ wordBreak: 'break-word' }}>
-                {caseStudy.subtitle || caseStudy.title.split(' - ')[0]}
-              </div>
-            </button>
-          ))}
-        </div>
+      {/* Tab selector */}
+      <div className="demo-tabs" style={{ marginBottom: '1.25rem' }}>
+        {caseStudies.map((cs, index) => (
+          <button
+            key={cs.id}
+            className={`demo-tab ${activeTab === index ? 'active' : ''}`}
+            style={{
+              '--tab-color': agentColor,
+            } as React.CSSProperties}
+            onClick={() => setActiveTab(index)}
+          >
+            <span style={{
+              fontSize: '0.68rem',
+              opacity: 0.6,
+              display: 'block',
+              marginBottom: '0.15rem',
+            }}>
+              Demo {index + 1}
+            </span>
+            <span style={{ fontSize: '0.82rem' }}>
+              {cs.subtitle || cs.title.split(' - ')[0].substring(0, 28)}
+            </span>
+          </button>
+        ))}
       </div>
 
-      {/* ACTIVE CASE STUDY */}
-      <div className="animate-fade-in">
+      {/* Active case study — 3-panel layout */}
+      <div className="animate-fade-in" key={caseStudies[activeTab].id}>
         <CaseStudyCard
           caseStudy={caseStudies[activeTab]}
           agentColor={agentColor}
+          isDark={isDark}
         />
       </div>
     </div>

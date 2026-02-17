@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import WorkflowVisualization from './WorkflowVisualization';
 
 interface ExecutionStep {
   step_number: number;
@@ -25,464 +24,382 @@ interface CaseStudy {
 interface Props {
   caseStudy: CaseStudy;
   agentColor: string;
+  isDark?: boolean;
 }
 
-export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+function formatDuration(ms: number | null): string {
+  if (!ms) return '';
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(1)}s`;
+}
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+  });
+}
+
+// ── INPUT PANEL ──────────────────────────────────────────
+function InputPanel({ caseStudy, agentColor, isDark }: Props) {
+  const p = caseStudy.inputParameters;
+  const textBody = isDark ? 'rgba(255,255,255,0.85)' : 'var(--text-body)';
+
+  // Generic renderer
+  const renderValue = (val: unknown): React.ReactNode => {
+    if (Array.isArray(val)) {
+      return (
+        <div className="param-chips">
+          {val.map((v, i) => (
+            <span key={i} className="param-chip" style={{
+              color: agentColor,
+              borderColor: agentColor + '40',
+              background: agentColor + '12',
+            }}>{String(v)}</span>
+          ))}
+        </div>
+      );
+    }
+    if (typeof val === 'string' && val.length > 200) {
+      return <span style={{ color: textBody, fontSize: '0.8rem' }}>{val.substring(0, 200)}…</span>;
+    }
+    return <span style={{ color: textBody }}>{String(val)}</span>;
   };
 
-  const toggleSection = (section: string) => {
-    setExpandedSection(expandedSection === section ? null : section);
-  };
-
-  // Extract relevant data - Article Editor (Quill)
-  const originalText = caseStudy.inputParameters?.original_text as string;
-  const targetKeywords = caseStudy.inputParameters?.target_keywords as string;
-  const targetAudience = caseStudy.inputParameters?.target_audience as string;
-
-  const tldr = caseStudy.outputResult?.tldr as string;
-  const keyLearnings = caseStudy.outputResult?.key_learnings as string[];
-  const enhancedArticle = caseStudy.outputResult?.enhanced_article as string;
-  const editorNotes = caseStudy.outputResult?.editor_notes as string;
-
-  // Extract relevant data - Stock Monitor (Ticker)
-  const watchlist = caseStudy.inputParameters?.watchlist as string[];
-  const timePeriod = caseStudy.inputParameters?.time_period as string;
-  const eventTypes = caseStudy.inputParameters?.event_types as string[];
-  const alertThreshold = caseStudy.inputParameters?.alert_threshold as string;
-
-  const executiveSummary = caseStudy.outputResult?.executive_summary as string;
-  const alerts = caseStudy.outputResult?.alerts as Array<{
-    ticker: string;
-    company_name: string;
-    event_type: string;
-    severity: string;
-    headline: string;
-    description: string;
-    impact_analysis: string;
-    action_suggested: string;
-  }>;
-  const recommendations = caseStudy.outputResult?.recommendations as string[];
-  const marketContext = caseStudy.outputResult?.market_context as string;
-
-  // Extract relevant data - Gita Guide (Sage)
-  const gitaQuestion = caseStudy.inputParameters?.question as string;
-  const gitaExecutiveSummary = caseStudy.outputResult?.executive_summary as string;
-  const gitaAnswer = caseStudy.outputResult?.answer as string;
-  const gitaRelevantVerses = caseStudy.outputResult?.relevant_verses as Array<{
-    chapter: number;
-    verse_number: number;
-    verse_id: string;
-    sanskrit_text: string;
-    transliteration: string;
-    english_translation: string;
-    relevance_to_question: string;
-  }>;
-  const gitaSuggestedQuestions = caseStudy.outputResult?.suggested_next_questions as string[];
-
-  // Determine which type of content to show
-  const isArticleEditor = !!(originalText || targetKeywords);
-  const isStockMonitor = !!(watchlist && watchlist.length > 0);
-  const isGitaGuide = !!(gitaQuestion);
+  const entries = Object.entries(p).filter(([, v]) => v != null && v !== '');
 
   return (
-    <div className="glass-panel p-8">
-      {/* Header */}
-      <div className="mb-6">
-        <h3 className="text-3xl font-bold mb-3" style={{ color: agentColor }}>
+    <div className="glass-panel" style={{ padding: '1.25rem' }}>
+      <div className="panel-label">
+        <span>📥</span> Input
+      </div>
+      {entries.map(([key, val]) => (
+        <div key={key} className="param-row">
+          <span className="param-label">{key.replace(/_/g, ' ')}</span>
+          <div className="param-value">{renderValue(val)}</div>
+        </div>
+      ))}
+      <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.3)' }}>
+        <span style={{ fontSize: '0.72rem', color: isDark ? 'rgba(255,255,255,0.4)' : 'var(--text-meta)' }}>
+          {formatDate(caseStudy.createdAt)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ── PROCESS PANEL ─────────────────────────────────────────
+function ProcessPanel({ caseStudy, agentColor, isDark }: Props) {
+  const [expanded, setExpanded] = useState<number | null>(null);
+  const steps = caseStudy.executionTrace ?? [];
+
+  const totalDuration = steps.reduce((sum, s) => sum + (s.duration_ms ?? 0), 0);
+
+  return (
+    <div className="glass-panel" style={{ padding: '1.25rem' }}>
+      <div className="panel-label" style={{ justifyContent: 'space-between' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span>⚙️</span> Process
+        </span>
+        {totalDuration > 0 && (
+          <span style={{
+            fontSize: '0.65rem',
+            color: isDark ? 'rgba(255,255,255,0.4)' : 'var(--text-meta)',
+          }}>
+            {formatDuration(totalDuration)} total
+          </span>
+        )}
+      </div>
+
+      <div className="step-timeline">
+        {steps.map((step) => {
+          const isOpen = expanded === step.step_number;
+          const detailText = step.details
+            ? Object.entries(step.details)
+                .filter(([, v]) => v != null && String(v).trim())
+                .map(([k, v]) => `${k.replace(/_/g, ' ')}: ${typeof v === 'string' ? v.substring(0, 150) : JSON.stringify(v).substring(0, 150)}`)
+                .slice(0, 3)
+                .join(' • ')
+            : '';
+
+          return (
+            <div key={step.step_number}>
+              <button
+                className={`step-pill ${isOpen ? 'expanded' : ''}`}
+                onClick={() => setExpanded(isOpen ? null : step.step_number)}
+                style={{ width: '100%', textAlign: 'left', background: 'none', cursor: 'pointer', border: 'none', padding: 0 }}
+              >
+                <div className="step-pill" style={{ width: '100%' }}>
+                  <span className="step-number" style={{ background: agentColor }}>
+                    {step.step_number}
+                  </span>
+                  <span style={{
+                    flex: 1,
+                    fontSize: '0.80rem',
+                    fontWeight: 600,
+                    color: isDark ? 'rgba(255,255,255,0.88)' : 'var(--text-heading)',
+                  }}>
+                    {step.step_name}
+                  </span>
+                  {step.duration_ms != null && (
+                    <span className="duration-badge">{formatDuration(step.duration_ms)}</span>
+                  )}
+                  <span style={{
+                    fontSize: '0.65rem',
+                    marginLeft: '0.25rem',
+                    opacity: 0.5,
+                    color: isDark ? 'white' : 'inherit',
+                  }}>
+                    {isOpen ? '▲' : '▼'}
+                  </span>
+                </div>
+              </button>
+              {isOpen && detailText && (
+                <div className="step-detail">
+                  {detailText}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── OUTPUT PANEL ──────────────────────────────────────────
+function OutputPanel({ caseStudy, agentColor, isDark }: Props) {
+  const [showMore, setShowMore] = useState(false);
+  const out = caseStudy.outputResult;
+  const textBody = isDark ? 'rgba(255,255,255,0.85)' : 'var(--text-body)';
+  const textMeta = isDark ? 'rgba(255,255,255,0.5)' : 'var(--text-meta)';
+
+  // Try to find a prominent summary field
+  const summary =
+    (out?.executive_summary as string) ||
+    (out?.tldr as string) ||
+    (out?.answer as string) ||
+    null;
+
+  const keyLearnings = out?.key_learnings as string[] | null;
+  const recommendations = out?.recommendations as string[] | null;
+  const alerts = out?.alerts as Array<{ ticker: string; headline: string; severity: string }> | null;
+  const verses = out?.relevant_verses as Array<{ verse_id: string; english_translation: string }> | null;
+  const suggestedQ = out?.suggested_next_questions as string[] | null;
+  const editorNotes = out?.editor_notes as string | null;
+  const matchedProperties = out?.matched_properties as Array<{ address?: string; price?: number; match_score?: number }> | null;
+  const marketContext = out?.market_context as string | null;
+
+  return (
+    <div className="glass-panel" style={{ padding: '1.25rem' }}>
+      <div className="panel-label">
+        <span>📤</span> Output
+      </div>
+
+      {/* Summary hero */}
+      {summary && (
+        <div style={{
+          padding: '0.85rem',
+          borderRadius: '12px',
+          background: agentColor + '12',
+          border: `1px solid ${agentColor}30`,
+          marginBottom: '0.85rem',
+        }}>
+          <p style={{
+            margin: 0,
+            fontSize: '0.85rem',
+            lineHeight: 1.55,
+            color: textBody,
+          }}>
+            {showMore ? summary : summary.substring(0, 280) + (summary.length > 280 ? '…' : '')}
+          </p>
+          {summary.length > 280 && (
+            <button
+              onClick={() => setShowMore(!showMore)}
+              style={{
+                marginTop: '0.5rem',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: agentColor,
+                padding: 0,
+              }}
+            >
+              {showMore ? 'Show less ↑' : 'Read more ↓'}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Key learnings */}
+      {keyLearnings && keyLearnings.length > 0 && (
+        <div style={{ marginBottom: '0.75rem' }}>
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: textMeta, marginBottom: '0.35rem' }}>Key Learnings</div>
+          <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+            {keyLearnings.slice(0, 3).map((l, i) => (
+              <li key={i} style={{ fontSize: '0.8rem', color: textBody, lineHeight: 1.4 }}>{l}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Stock alerts */}
+      {alerts && alerts.length > 0 && (
+        <div style={{ marginBottom: '0.75rem' }}>
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: textMeta, marginBottom: '0.35rem' }}>
+            Alerts ({alerts.length})
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            {alerts.slice(0, 3).map((alert, i) => (
+              <div key={i} style={{
+                padding: '0.5rem 0.75rem',
+                borderRadius: '8px',
+                background: 'rgba(255,255,255,0.3)',
+                borderLeft: `3px solid ${
+                  alert.severity === 'high' || alert.severity === 'critical' ? '#ef4444' :
+                  alert.severity === 'medium' ? '#f59e0b' : '#10b981'
+                }`,
+                fontSize: '0.78rem',
+                color: textBody,
+              }}>
+                <span style={{ fontWeight: 700, color: agentColor }}>{alert.ticker}</span>
+                {' '}{alert.headline?.substring(0, 80)}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Recommendations */}
+      {recommendations && recommendations.length > 0 && (
+        <div style={{ marginBottom: '0.75rem' }}>
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: textMeta, marginBottom: '0.35rem' }}>Recommendations</div>
+          <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+            {recommendations.slice(0, 3).map((r, i) => (
+              <li key={i} style={{ display: 'flex', gap: '0.4rem', fontSize: '0.78rem', color: textBody }}>
+                <span style={{ color: agentColor, flexShrink: 0 }}>✓</span>
+                <span>{r}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Market context */}
+      {marketContext && (
+        <div style={{ marginBottom: '0.75rem', fontSize: '0.78rem', color: textBody, lineHeight: 1.4 }}>
+          {marketContext.substring(0, 150)}{marketContext.length > 150 ? '…' : ''}
+        </div>
+      )}
+
+      {/* Matched properties */}
+      {matchedProperties && matchedProperties.length > 0 && (
+        <div style={{ marginBottom: '0.75rem' }}>
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: textMeta, marginBottom: '0.35rem' }}>
+            Top Matches
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+            {matchedProperties.slice(0, 3).map((prop, i) => (
+              <div key={i} style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '0.4rem 0.6rem',
+                borderRadius: '8px',
+                background: 'rgba(255,255,255,0.3)',
+                fontSize: '0.78rem',
+                color: textBody,
+              }}>
+                <span>{prop.address?.substring(0, 40) ?? `Property ${i + 1}`}</span>
+                {prop.match_score != null && (
+                  <span style={{ fontWeight: 700, color: agentColor }}>{prop.match_score}%</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Gita verses */}
+      {verses && verses.length > 0 && (
+        <div style={{ marginBottom: '0.75rem' }}>
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: textMeta, marginBottom: '0.35rem' }}>
+            Referenced Verses
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            {verses.slice(0, 2).map((v, i) => (
+              <div key={i} style={{
+                padding: '0.5rem',
+                borderRadius: '8px',
+                background: agentColor + '10',
+                border: `1px solid ${agentColor}25`,
+                fontSize: '0.75rem',
+                color: textBody,
+              }}>
+                <div style={{ fontWeight: 700, color: agentColor, marginBottom: '0.2rem' }}>{v.verse_id}</div>
+                <div style={{ lineHeight: 1.4 }}>{v.english_translation?.substring(0, 100)}…</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Editor notes */}
+      {editorNotes && (
+        <div style={{ marginBottom: '0.75rem', fontSize: '0.78rem', color: textBody, lineHeight: 1.4, fontStyle: 'italic' }}>
+          {editorNotes.substring(0, 150)}{editorNotes.length > 150 ? '…' : ''}
+        </div>
+      )}
+
+      {/* Suggested questions */}
+      {suggestedQ && suggestedQ.length > 0 && (
+        <div>
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: textMeta, marginBottom: '0.35rem' }}>
+            Continue Your Journey
+          </div>
+          <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            {suggestedQ.slice(0, 2).map((q, i) => (
+              <li key={i} style={{ display: 'flex', gap: '0.35rem', fontSize: '0.75rem', color: textBody }}>
+                <span style={{ color: agentColor }}>→</span>
+                <span style={{ fontStyle: 'italic' }}>{q}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── MAIN CARD ─────────────────────────────────────────────
+export default function CaseStudyCard({ caseStudy, agentColor, isDark }: Props) {
+  return (
+    <div className="animate-fade-in">
+      {/* Title row */}
+      <div style={{ marginBottom: '1rem' }}>
+        <h3 style={{
+          margin: 0,
+          fontSize: '1.15rem',
+          fontWeight: 700,
+          color: isDark ? 'white' : 'var(--text-heading)',
+          letterSpacing: '-0.02em',
+        }}>
           {caseStudy.title}
         </h3>
         {caseStudy.description && (
-          <p className="text-lg mb-4" style={{ color: '#FDF0D5' }}>
+          <p style={{ margin: '0.25rem 0 0', fontSize: '0.85rem', color: isDark ? 'rgba(255,255,255,0.6)' : 'var(--text-meta)' }}>
             {caseStudy.description}
           </p>
         )}
-        <p className="text-sm" style={{ color: '#669BBC' }}>
-          Generated: {formatDate(caseStudy.createdAt)}
-        </p>
       </div>
 
-      {/* Input Parameters Section - Article Editor */}
-      {isArticleEditor && (
-        <div className="mb-6">
-          <button
-            onClick={() => toggleSection('input')}
-            className="w-full flex items-center justify-between p-4 rounded-lg transition-all"
-            style={{
-              background: expandedSection === 'input'
-                ? `linear-gradient(135deg, ${agentColor}20, ${agentColor}10)`
-                : 'rgba(0, 48, 73, 0.3)',
-              border: `1px solid ${expandedSection === 'input' ? agentColor : 'rgba(102, 155, 188, 0.3)'}`
-            }}
-          >
-            <h4 className="text-xl font-bold" style={{ color: '#FDF0D5' }}>
-              📝 Input Parameters
-            </h4>
-            <span style={{ color: agentColor }}>{expandedSection === 'input' ? '▼' : '▶'}</span>
-          </button>
-
-          {expandedSection === 'input' && (
-            <div className="mt-4 p-6 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)' }}>
-              {targetKeywords && (
-                <div className="mb-4">
-                  <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Target Keywords:</p>
-                  <p className="text-base" style={{ color: '#FDF0D5' }}>{targetKeywords}</p>
-                </div>
-              )}
-              {targetAudience && (
-                <div className="mb-4">
-                  <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Target Audience:</p>
-                  <p className="text-base" style={{ color: '#FDF0D5' }}>{targetAudience}</p>
-                </div>
-              )}
-              {originalText && (
-                <div>
-                  <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Original Text Preview:</p>
-                  <div className="p-4 rounded bg-black bg-opacity-20 font-mono text-sm overflow-auto max-h-60" style={{ color: '#669BBC' }}>
-                    {originalText.substring(0, 500)}...
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Input Parameters Section - Stock Monitor */}
-      {isStockMonitor && (
-        <div className="mb-6">
-          <button
-            onClick={() => toggleSection('input')}
-            className="w-full flex items-center justify-between p-4 rounded-lg transition-all"
-            style={{
-              background: expandedSection === 'input'
-                ? `linear-gradient(135deg, ${agentColor}20, ${agentColor}10)`
-                : 'rgba(0, 48, 73, 0.3)',
-              border: `1px solid ${expandedSection === 'input' ? agentColor : 'rgba(102, 155, 188, 0.3)'}`
-            }}
-          >
-            <h4 className="text-xl font-bold" style={{ color: '#FDF0D5' }}>
-              📊 Monitoring Parameters
-            </h4>
-            <span style={{ color: agentColor }}>{expandedSection === 'input' ? '▼' : '▶'}</span>
-          </button>
-
-          {expandedSection === 'input' && (
-            <div className="mt-4 p-6 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)' }}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {watchlist && (
-                  <div>
-                    <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Watchlist:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {watchlist.map((ticker, idx) => (
-                        <span key={idx} className="px-3 py-1 rounded-full text-sm font-bold"
-                              style={{ background: agentColor, color: '#003049' }}>
-                          {ticker}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {timePeriod && (
-                  <div>
-                    <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Time Period:</p>
-                    <p className="text-base" style={{ color: '#FDF0D5' }}>{timePeriod}</p>
-                  </div>
-                )}
-                {eventTypes && (
-                  <div>
-                    <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Event Types:</p>
-                    <p className="text-base" style={{ color: '#FDF0D5' }}>{eventTypes.join(', ')}</p>
-                  </div>
-                )}
-                {alertThreshold && (
-                  <div>
-                    <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Alert Threshold:</p>
-                    <p className="text-base capitalize" style={{ color: '#FDF0D5' }}>{alertThreshold}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Output Results Section - Article Editor */}
-      {isArticleEditor && (
-        <div className="mb-6">
-          <button
-            onClick={() => toggleSection('output')}
-            className="w-full flex items-center justify-between p-4 rounded-lg transition-all"
-            style={{
-              background: expandedSection === 'output'
-                ? `linear-gradient(135deg, ${agentColor}20, ${agentColor}10)`
-                : 'rgba(0, 48, 73, 0.3)',
-              border: `1px solid ${expandedSection === 'output' ? agentColor : 'rgba(102, 155, 188, 0.3)'}`
-            }}
-          >
-            <h4 className="text-xl font-bold" style={{ color: '#FDF0D5' }}>
-              ✨ Enhancement Results
-            </h4>
-            <span style={{ color: agentColor }}>{expandedSection === 'output' ? '▼' : '▶'}</span>
-          </button>
-
-          {expandedSection === 'output' && (
-            <div className="mt-4 p-6 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)' }}>
-              {tldr && (
-                <div className="mb-4">
-                  <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>TL;DR:</p>
-                  <p className="text-base italic" style={{ color: '#FDF0D5' }}>{tldr}</p>
-                </div>
-              )}
-              {keyLearnings && keyLearnings.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Key Learnings:</p>
-                  <ul className="list-disc list-inside space-y-2">
-                    {keyLearnings.map((learning, idx) => (
-                      <li key={idx} className="text-base" style={{ color: '#FDF0D5' }}>{learning}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {editorNotes && (
-                <div className="mb-4">
-                  <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Editor Notes:</p>
-                  <p className="text-base" style={{ color: '#FDF0D5' }}>{editorNotes}</p>
-                </div>
-              )}
-              {enhancedArticle && (
-                <div>
-                  <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Enhanced Article Preview:</p>
-                  <div className="p-4 rounded bg-black bg-opacity-20 font-mono text-sm overflow-auto max-h-60" style={{ color: '#669BBC' }}>
-                    {enhancedArticle.substring(0, 500)}...
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Output Results Section - Stock Monitor */}
-      {isStockMonitor && (
-        <div className="mb-6">
-          <button
-            onClick={() => toggleSection('output')}
-            className="w-full flex items-center justify-between p-4 rounded-lg transition-all"
-            style={{
-              background: expandedSection === 'output'
-                ? `linear-gradient(135deg, ${agentColor}20, ${agentColor}10)`
-                : 'rgba(0, 48, 73, 0.3)',
-              border: `1px solid ${expandedSection === 'output' ? agentColor : 'rgba(102, 155, 188, 0.3)'}`
-            }}
-          >
-            <h4 className="text-xl font-bold" style={{ color: '#FDF0D5' }}>
-              🚨 Alerts & Analysis
-            </h4>
-            <span style={{ color: agentColor }}>{expandedSection === 'output' ? '▼' : '▶'}</span>
-          </button>
-
-          {expandedSection === 'output' && (
-            <div className="mt-4 p-6 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)' }}>
-              {executiveSummary && (
-                <div className="mb-6 p-4 rounded-lg" style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
-                  <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Executive Summary:</p>
-                  <p className="text-base" style={{ color: '#FDF0D5' }}>{executiveSummary}</p>
-                </div>
-              )}
-
-              {alerts && alerts.length > 0 && (
-                <div className="mb-6">
-                  <p className="text-sm font-semibold mb-3" style={{ color: agentColor }}>
-                    Alerts ({alerts.length}):
-                  </p>
-                  <div className="space-y-4">
-                    {alerts.map((alert, idx) => (
-                      <div key={idx} className="p-4 rounded-lg border-l-4"
-                           style={{
-                             background: 'rgba(0, 0, 0, 0.2)',
-                             borderLeftColor: alert.severity === 'high' || alert.severity === 'critical' ? '#ef4444' :
-                                            alert.severity === 'medium' ? '#f59e0b' : '#10b981'
-                           }}>
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <span className="font-bold text-lg" style={{ color: '#FDF0D5' }}>
-                              {alert.ticker}
-                            </span>
-                            <span className="ml-2 text-sm" style={{ color: '#669BBC' }}>
-                              {alert.company_name}
-                            </span>
-                          </div>
-                          <span className="px-2 py-1 rounded text-xs font-bold uppercase"
-                                style={{
-                                  background: alert.severity === 'high' || alert.severity === 'critical' ? '#ef4444' :
-                                            alert.severity === 'medium' ? '#f59e0b' : '#10b981',
-                                  color: 'white'
-                                }}>
-                            {alert.severity}
-                          </span>
-                        </div>
-                        <h5 className="font-bold mb-2" style={{ color: agentColor }}>{alert.headline}</h5>
-                        <p className="text-sm mb-3" style={{ color: '#FDF0D5' }}>{alert.description}</p>
-                        <div className="text-sm mb-2" style={{ color: '#669BBC' }}>
-                          <strong style={{ color: agentColor }}>Impact:</strong> {alert.impact_analysis}
-                        </div>
-                        <div className="text-sm p-3 rounded" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#FDF0D5' }}>
-                          <strong style={{ color: agentColor }}>Recommended Action:</strong> {alert.action_suggested}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {marketContext && (
-                <div className="mb-6">
-                  <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Market Context:</p>
-                  <p className="text-base" style={{ color: '#FDF0D5' }}>{marketContext}</p>
-                </div>
-              )}
-
-              {recommendations && recommendations.length > 0 && (
-                <div>
-                  <p className="text-sm font-semibold mb-3" style={{ color: agentColor }}>Recommendations:</p>
-                  <ul className="space-y-2">
-                    {recommendations.map((rec, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <span className="mr-2" style={{ color: agentColor }}>✓</span>
-                        <span className="text-base" style={{ color: '#FDF0D5' }}>{rec}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Question & Answer Section - Gita Guide */}
-      {isGitaGuide && (
-        <div className="mb-6">
-          {/* The Question */}
-          <div className="mb-4 p-4 rounded-lg" style={{ background: `${agentColor}15`, border: `1px solid ${agentColor}40` }}>
-            <p className="text-sm font-semibold mb-1" style={{ color: agentColor }}>Question Asked:</p>
-            <p className="text-xl font-bold" style={{ color: '#FDF0D5' }}>&ldquo;{gitaQuestion}&rdquo;</p>
-          </div>
-
-          {/* Executive Summary */}
-          {gitaExecutiveSummary && (
-            <div className="mb-4 p-4 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.4)' }}>
-              <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Summary:</p>
-              <p className="text-base italic" style={{ color: '#FDF0D5' }}>{gitaExecutiveSummary}</p>
-            </div>
-          )}
-
-          {/* Full Answer */}
-          {gitaAnswer && (
-            <div className="mb-6">
-              <button
-                onClick={() => toggleSection('answer')}
-                className="w-full flex items-center justify-between p-4 rounded-lg transition-all"
-                style={{
-                  background: expandedSection === 'answer'
-                    ? `linear-gradient(135deg, ${agentColor}20, ${agentColor}10)`
-                    : 'rgba(0, 48, 73, 0.3)',
-                  border: `1px solid ${expandedSection === 'answer' ? agentColor : 'rgba(102, 155, 188, 0.3)'}`
-                }}
-              >
-                <h4 className="text-xl font-bold" style={{ color: '#FDF0D5' }}>
-                  🕉️ Teaching
-                </h4>
-                <span style={{ color: agentColor }}>{expandedSection === 'answer' ? '▼' : '▶'}</span>
-              </button>
-
-              {expandedSection === 'answer' && (
-                <div className="mt-4 p-6 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)' }}>
-                  <p className="text-base whitespace-pre-wrap leading-relaxed" style={{ color: '#FDF0D5' }}>{gitaAnswer}</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Relevant Verses */}
-          {gitaRelevantVerses && gitaRelevantVerses.length > 0 && (
-            <div className="mb-6">
-              <button
-                onClick={() => toggleSection('verses')}
-                className="w-full flex items-center justify-between p-4 rounded-lg transition-all"
-                style={{
-                  background: expandedSection === 'verses'
-                    ? `linear-gradient(135deg, ${agentColor}20, ${agentColor}10)`
-                    : 'rgba(0, 48, 73, 0.3)',
-                  border: `1px solid ${expandedSection === 'verses' ? agentColor : 'rgba(102, 155, 188, 0.3)'}`
-                }}
-              >
-                <h4 className="text-xl font-bold" style={{ color: '#FDF0D5' }}>
-                  📖 Referenced Verses ({gitaRelevantVerses.length})
-                </h4>
-                <span style={{ color: agentColor }}>{expandedSection === 'verses' ? '▼' : '▶'}</span>
-              </button>
-
-              {expandedSection === 'verses' && (
-                <div className="mt-4 space-y-4">
-                  {gitaRelevantVerses.map((verse, idx) => (
-                    <div key={idx} className="p-4 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)', border: `1px solid ${agentColor}30` }}>
-                      <p className="text-sm font-bold mb-2" style={{ color: agentColor }}>
-                        BG {verse.chapter}.{verse.verse_number} — {verse.verse_id}
-                      </p>
-                      {verse.sanskrit_text && (
-                        <p className="text-base mb-2 font-medium" style={{ color: '#FDF0D5' }}>{verse.sanskrit_text}</p>
-                      )}
-                      {verse.transliteration && (
-                        <p className="text-sm italic mb-2" style={{ color: '#669BBC' }}>{verse.transliteration}</p>
-                      )}
-                      <p className="text-sm mb-2" style={{ color: '#FDF0D5' }}>{verse.english_translation}</p>
-                      {verse.relevance_to_question && (
-                        <p className="text-xs" style={{ color: '#669BBC' }}>
-                          <span style={{ color: agentColor }}>Relevance: </span>{verse.relevance_to_question}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Suggested Questions */}
-          {gitaSuggestedQuestions && gitaSuggestedQuestions.length > 0 && (
-            <div className="p-4 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)' }}>
-              <p className="text-sm font-semibold mb-3" style={{ color: agentColor }}>Continue Your Journey:</p>
-              <ul className="space-y-2">
-                {gitaSuggestedQuestions.map((q, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span style={{ color: agentColor }}>→</span>
-                    <span className="text-sm" style={{ color: '#FDF0D5' }}>{q}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Execution Workflow - Always Visible */}
-      {caseStudy.executionTrace && caseStudy.executionTrace.length > 0 && (
-        <div className="animate-fade-in">
-          <WorkflowVisualization steps={caseStudy.executionTrace} agentColor={agentColor} />
-        </div>
-      )}
-
+      {/* 3-panel layout */}
+      <div className="case-panels">
+        <InputPanel   caseStudy={caseStudy} agentColor={agentColor} isDark={isDark} />
+        <ProcessPanel caseStudy={caseStudy} agentColor={agentColor} isDark={isDark} />
+        <OutputPanel  caseStudy={caseStudy} agentColor={agentColor} isDark={isDark} />
+      </div>
     </div>
   );
 }
