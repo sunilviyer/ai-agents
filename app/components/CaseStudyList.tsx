@@ -127,9 +127,9 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor, isDark
       {/* Tab selector */}
       <div className="demo-tabs" style={{ marginBottom: '1.25rem' }}>
         {caseStudies.map((cs, index) => {
-          // Extract short label: first part of title before ' - ', truncated
-          const topic = cs.title.split(' - ')[0].trim();
-          const label = topic.length > 22 ? topic.substring(0, 21) + '…' : topic;
+          // Prefer subtitle (e.g. the specific question); fall back to part after ' - ' in title
+          const raw = cs.subtitle || cs.title.split(' - ').slice(1).join(' - ').trim() || cs.title;
+          const label = raw.length > 28 ? raw.substring(0, 27) + '…' : raw;
           return (
             <button
               key={cs.id}

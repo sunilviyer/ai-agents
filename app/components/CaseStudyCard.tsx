@@ -364,7 +364,7 @@ function OutputPanel({ caseStudy, agentColor }: Props) {
 export default function CaseStudyCard({ caseStudy, agentColor, isDark }: Props) {
   return (
     <div className="animate-fade-in">
-      {/* Title row */}
+      {/* Title row — prefer subtitle (specific question) over full title */}
       <div style={{ marginBottom: '1rem' }}>
         <h3 style={{
           margin: 0,
@@ -376,13 +376,8 @@ export default function CaseStudyCard({ caseStudy, agentColor, isDark }: Props) 
           wordBreak: 'break-word',
           lineHeight: 1.35,
         }}>
-          {caseStudy.title}
+          {caseStudy.subtitle || caseStudy.title}
         </h3>
-        {(caseStudy.subtitle || caseStudy.description) && (
-          <p style={{ margin: '0.2rem 0 0', fontSize: '0.84rem', color: 'var(--text-meta)' }}>
-            {caseStudy.subtitle || caseStudy.description}
-          </p>
-        )}
       </div>
 
       {/* 3-panel layout */}
