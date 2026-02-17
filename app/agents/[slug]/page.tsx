@@ -5,6 +5,7 @@ import ScoutEasel from '@/app/components/ScoutEasel';
 import TickerEasel from '@/app/components/TickerEasel';
 import MatcherEasel from '@/app/components/MatcherEasel';
 import QuillEasel from '@/app/components/QuillEasel';
+import SageEasel from '@/app/components/SageEasel';
 import ChatInterface from '@/app/components/ChatInterface';
 
 interface PageProps {
@@ -132,6 +133,13 @@ export default async function AgentPage({ params }: PageProps) {
         {slug === 'quill' && (
           <div className="mb-12">
             <QuillEasel />
+          </div>
+        )}
+
+        {/* Sage Workflow Animation - Only for Sage agent */}
+        {slug === 'sage' && (
+          <div className="mb-12">
+            <SageEasel />
           </div>
         )}
 

@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "source": "Bhagavad Gita - Curated Selection",
+    "total_verses": 100,
+    "chapters": 18,
+    "description": "Essential verses from the Bhagavad Gita covering key philosophical concepts"
+  },
+  "verses": [
+    {
+      "chapter": 1,
+      "verse": 1,
+      "verse_id": "BG1.1",
+      "sanskrit": "धर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सवः।\nमामकाः पाण्डवाश्चैव किमकुर्वत सञ्जय॥",
+      "transliteration": "dharma-kṣetre kuru-kṣetre samavetā yuyutsavaḥ\nmāmakāḥ pāṇḍavāś caiva kim akurvata sañjaya",
+      "translation": "On the holy plain of Kurukshetra, when my sons and the sons of Pandu assembled together, eager for battle, what did they do, O Sanjaya?",
+      "commentary": "This opening verse sets the stage for the entire Bhagavad Gita. Kurukshetra is not just a battlefield but dharma-kshetra (field of righteousness), symbolizing the eternal struggle between good and evil."
+    },
+    {
+      "chapter": 2,
+      "verse": 11,
+      "verse_id": "BG2.11",
+      "sanskrit": "अशोच्यानन्वशोचस्त्वं प्रज्ञावादांश्च भाषसे।\nगतासूनगतासूंश्च नानुशोचन्ति पण्डिताः॥",
+      "transliteration": "aśocyān anvaśocas tvaṁ prajñā-vādāṁś ca bhāṣase\ngatāsūn agatāsūṁś ca nānuśocanti paṇḍitāḥ",
+      "translation": "You grieve for those who should not be grieved for, yet speak words of wisdom. The wise grieve neither for the living nor for the dead.",
+      "commentary": "Krishna begins his teaching by addressing Arjuna's grief. True wisdom lies in understanding the eternal nature of the soul."
+    },
+    {
+      "chapter": 2,
+      "verse": 13,
+      "verse_id": "BG2.13",
+      "sanskrit": "देहिनोऽस्मिन्यथा देहे कौमारं यौवनं जरा।\nतथा देहान्तरप्राप्तिर्धीरस्तत्र न मुह्यति॥",
+      "transliteration": "dehino 'smin yathā dehe kaumāraṁ yauvanaṁ jarā\ntathā dehāntara-prāptir dhīras tatra na muhyati",
+      "translation": "Just as the embodied soul continuously passes from childhood to youth to old age, similarly, at the time of death, the soul passes into another body. The wise are not deluded by this.",
+      "commentary": "This verse establishes the immortality of the soul and the reality of reincarnation, fundamental concepts in Vedic philosophy."
+    },
+    {
+      "chapter": 2,
+      "verse": 47,
+      "verse_id": "BG2.47",
+      "sanskrit": "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।\nमा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥",
+      "transliteration": "karmaṇy-evādhikāras te mā phaleṣu kadācana\nmā karma-phala-hetur bhūr mā te saṅgo 'stvakarmaṇi",
+      "translation": "You have a right to perform your prescribed duty, but you are not entitled to the fruits of action. Never consider yourself to be the cause of the results of your activities, nor be attached to inaction.",
+      "commentary": "Perhaps the most famous verse of the Gita, this teaches the essence of Karma Yoga - performing duty without attachment to results. This is the foundation of selfless action."
+    },
+    {
+      "chapter": 2,
+      "verse": 56,
+      "verse_id": "BG2.56",
+      "sanskrit": "दुःखेष्वनुद्विग्नमनाः सुखेषु विगतस्पृहः।\nवीतरागभयक्रोधः स्थितधीर्मुनिरुच्यते॥",
+      "transliteration": "duḥkheṣv anudvigna-manāḥ sukheṣu vigata-spṛhaḥ\nvīta-rāga-bhaya-krodhaḥ sthita-dhīr munir ucyate",
+      "translation": "One whose mind remains undisturbed amidst misery, who does not crave for pleasure, and who is free from attachment, fear and anger, is called a sage of steady wisdom.",
+      "commentary": "This describes the sthitaprajna - the person of steady wisdom who has achieved perfect equanimity."
+    },
+    {
+      "chapter": 3,
+      "verse": 5,
+      "verse_id": "BG3.5",
+      "sanskrit": "न हि कश्चित्क्षणमपि जातु तिष्ठत्यकर्मकृत्।\nकार्यते ह्यवशः कर्म सर्वः प्रकृतिजैर्गुणैः॥",
+      "transliteration": "na hi kaścit kṣaṇam api jātu tiṣṭhaty akarma-kṛt\nkāryate hy avaśaḥ karma sarvaḥ prakṛti-jair guṇaiḥ",
+      "translation": "All beings are compelled to act by their nature, which consists of the three modes of material nature. Therefore, no one can refrain from doing something, not even for a moment.",
+      "commentary": "This verse explains that action is inevitable due to the influence of the three gunas of prakriti."
+    },
+    {
+      "chapter": 3,
+      "verse": 35,
+      "verse_id": "BG3.35",
+      "sanskrit": "श्रेयान्स्वधर्मो विगुणः परधर्मात्स्वनुष्ठितात्।\nस्वधर्मे निधनं श्रेयः परधर्मो भयावहः॥",
+      "transliteration": "śreyān sva-dharmo viguṇaḥ para-dharmāt sv-anuṣṭhitāt\nsva-dharme nidhanaṁ śreyaḥ para-dharmo bhayāvahaḥ",
+      "translation": "It is better to perform one's own duty, even though imperfectly, than to accept another's duty and perform it perfectly. Even death in the course of performing one's own duty is better, for to follow another's path is dangerous.",
+      "commentary": "This powerful verse emphasizes the importance of following one's svadharma - one's own duty based on nature and position."
+    },
+    {
+      "chapter": 4,
+      "verse": 7,
+      "verse_id": "BG4.7",
+      "sanskrit": "यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।\nअभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम्॥",
+      "transliteration": "yadā yadā hi dharmasya glānir bhavati bhārata\nabhyutthānam adharmasya tadātmānaṁ sṛjāmy aham",
+      "translation": "Whenever there is a decline of righteousness and a rise of unrighteousness, O Arjuna, at that time I manifest Myself.",
+      "commentary": "This famous verse explains the purpose of divine incarnations - to restore dharma when it declines."
+    },
+    {
+      "chapter": 4,
+      "verse": 8,
+      "verse_id": "BG4.8",
+      "sanskrit": "परित्राणाय साधूनां विनाशाय च दुष्कृताम्।\nधर्मसंस्थापनार्थाय सम्भवामि युगे युगे॥",
+      "transliteration": "paritrāṇāya sādhūnāṁ vināśāya ca duṣkṛtām\ndharma-saṁsthāpanārthāya sambhavāmi yuge yuge",
+      "translation": "For the protection of the good, for the destruction of the wicked, and for the establishment of righteousness, I appear millennium after millennium.",
+      "commentary": "This verse completes the explanation of divine incarnation, emphasizing the three-fold purpose."
+    },
+    {
+      "chapter": 6,
+      "verse": 5,
+      "verse_id": "BG6.5",
+      "sanskrit": "उद्धरेदात्मनात्मानं नात्मानमवसादयेत्।\nआत्मैव ह्यात्मनो बन्धुरात्मैव रिपुरात्मनः॥",
+      "transliteration": "uddhared ātmanātmānaṁ nātmānam avasādayet\nātmaiva hy ātmano bandhur ātmaiva ripur ātmanaḥ",
+      "translation": "Elevate yourself through the power of your mind, and not degrade yourself, for the mind can be the friend and also the enemy of the self.",
+      "commentary": "This verse teaches the importance of self-mastery and control over one's own mind."
+    },
+    {
+      "chapter": 6,
+      "verse": 35,
+      "verse_id": "BG6.35",
+      "sanskrit": "असंशयं महाबाहो मनो दुर्निग्रहं चलम्।\nअभ्यासेन तु कौन्तेय वैराग्येण च गृह्यते॥",
+      "transliteration": "asaṁśayaṁ mahā-bāho mano durnigrahaṁ calam\nabhyāsena tu kaunteya vairāgyeṇa ca gṛhyate",
+      "translation": "Undoubtedly, O mighty-armed one, the mind is restless and difficult to control. But it can be controlled, O son of Kunti, through practice and detachment.",
+      "commentary": "Krishna acknowledges the difficulty of controlling the mind but provides the solution - abhyasa (practice) and vairagya (detachment)."
+    },
+    {
+      "chapter": 9,
+      "verse": 22,
+      "verse_id": "BG9.22",
+      "sanskrit": "अनन्याश्चिन्तयन्तो मां ये जनाः पर्युपासते।\nतेषां नित्याभियुक्तानां योगक्षेमं वहाम्यहम्॥",
+      "transliteration": "ananyāś cintayanto māṁ ye janāḥ paryupāsate\nteṣāṁ nityābhiyuktānāṁ yoga-kṣemaṁ vahāmy aham",
+      "translation": "To those who worship Me with devotion, meditating on My transcendental form—to them I carry what they lack and preserve what they have.",
+      "commentary": "This verse promises divine protection and providence for sincere devotees who worship with single-minded devotion."
+    },
+    {
+      "chapter": 9,
+      "verse": 27,
+      "verse_id": "BG9.27",
+      "sanskrit": "यत्करोषि यदश्नासि यज्जुहोषि ददासि यत्।\nयत्तपस्यसि कौन्तेय तत्कुरुष्व मदर्पणम्॥",
+      "transliteration": "yat karoṣi yad aśnāsi yaj juhoṣi dadāsi yat\nyat tapasyasi kaunteya tat kuruṣva mad-arpaṇam",
+      "translation": "Whatever you do, whatever you eat, whatever you offer in sacrifice, whatever you give, whatever austerities you perform—do all this, O son of Kunti, as an offering to Me.",
+      "commentary": "This verse teaches the practice of offering all actions to God, transforming ordinary activities into spiritual practice."
+    },
+    {
+      "chapter": 11,
+      "verse": 7,
+      "verse_id": "BG11.7",
+      "sanskrit": "इहैकस्थं जगत्कृत्स्नं पश्याद्य सचराचरम्।\nमम देहे गुडाकेश यच्चान्यद्द्रष्टुमिच्छसि॥",
+      "transliteration": "ihaika-sthaṁ jagat kṛtsnaṁ paśyādya sa-carācaram\nmama dehe guḍākeśa yac cānyad draṣṭum icchasi",
+      "translation": "Behold now, O Arjuna, the entire universe, with all its moving and non-moving beings, assembled together in My body. And whatever else you desire to see, behold it all.",
+      "commentary": "Krishna offers to show Arjuna the vishvarupa - His cosmic universal form containing all of creation."
+    },
+    {
+      "chapter": 12,
+      "verse": 13,
+      "verse_id": "BG12.13",
+      "sanskrit": "अद्वेष्टा सर्वभूतानां मैत्रः करुण एव च।\nनिर्ममो निरहंकारः समदुःखसुखः क्षमी॥",
+      "transliteration": "adveṣṭā sarva-bhūtānāṁ maitraḥ karuṇa eva ca\nnirmamo nirahaṅkāraḥ sama-duḥkha-sukhaḥ kṣamī",
+      "translation": "One who is not envious but a compassionate friend to all living entities, who does not think himself a proprietor, who is free from false ego and equal in both happiness and distress, who is forgiving...",
+      "commentary": "This begins a series of verses describing the qualities of a true devotee."
+    },
+    {
+      "chapter": 13,
+      "verse": 1,
+      "verse_id": "BG13.1",
+      "sanskrit": "इदं शरीरं कौन्तेय क्षेत्रमित्यभिधीयते।\nएतद्यो वेत्ति तं प्राहुः क्षेत्रज्ञ इति तद्विदः॥",
+      "transliteration": "idaṁ śarīraṁ kaunteya kṣetram ity abhidhīyate\netad yo vetti taṁ prāhuḥ kṣetra-jña iti tad-vidaḥ",
+      "translation": "This body, O son of Kunti, is called the field, and one who knows this body is called the knower of the field.",
+      "commentary": "This verse introduces the distinction between the body (kshetra - field) and the soul (kshetra-jna - knower of the field)."
+    },
+    {
+      "chapter": 14,
+      "verse": 5,
+      "verse_id": "BG14.5",
+      "sanskrit": "सत्त्वं रजस्तम इति गुणाः प्रकृतिसम्भवाः।\nनिबध्नन्ति महाबाहो देहे देहिनमव्ययम्॥",
+      "transliteration": "sattvaṁ rajas tama iti guṇāḥ prakṛti-sambhavāḥ\nnibadhnanti mahā-bāho dehe dehinam avyayam",
+      "translation": "The three gunas born of prakriti—sattva, rajas, and tamas—bind the imperishable soul to the body, O mighty-armed one.",
+      "commentary": "This verse explains how the three modes of material nature bind the eternal soul to the material body."
+    },
+    {
+      "chapter": 15,
+      "verse": 7,
+      "verse_id": "BG15.7",
+      "sanskrit": "ममैवांशो जीवलोके जीवभूतः सनातनः।\nमनःषष्ठानीन्द्रियाणि प्रकृतिस्थानि कर्षति॥",
+      "transliteration": "mamaivāṁśo jīva-loke jīva-bhūtaḥ sanātanaḥ\nmanaḥ-ṣaṣṭhānīndriyāṇi prakṛti-sthāni karṣati",
+      "translation": "The living entities in this conditioned world are My eternal fragmental parts. Due to conditioned life, they struggle very hard with the six senses, which include the mind.",
+      "commentary": "This verse reveals the relationship between the individual soul and the Supreme - the soul is an eternal part of God."
+    },
+    {
+      "chapter": 16,
+      "verse": 1,
+      "verse_id": "BG16.1",
+      "sanskrit": "अभयं सत्त्वसंशुद्धिर्ज्ञानयोगव्यवस्थितिः।\nदानं दमश्च यज्ञश्च स्वाध्यायस्तप आर्जवम्॥",
+      "transliteration": "abhayaṁ sattva-saṁśuddhir jñāna-yoga-vyavasthitiḥ\ndānaṁ damaś ca yajñaś ca svādhyāyas tapa ārjavam",
+      "translation": "Fearlessness, purity of heart, steadfastness in knowledge and yoga, charity, control of the senses, sacrifice, study of the scriptures, austerity, and simplicity...",
+      "commentary": "This begins a list of divine qualities that lead to spiritual advancement."
+    },
+    {
+      "chapter": 17,
+      "verse": 3,
+      "verse_id": "BG17.3",
+      "sanskrit": "सत्त्वानुरूपा सर्वस्य श्रद्धा भवति भारत।\nश्रद्धामयोऽयं पुरुषो यो यच्छ्रद्धः स एव सः॥",
+      "transliteration": "sattvānurūpā sarvasya śraddhā bhavati bhārata\nśraddhā-mayo 'yaṁ puruṣo yo yac-chraddhaḥ sa eva saḥ",
+      "translation": "According to one's nature, O Bharata, each person's faith is of a particular type. A person is known by the faith they possess; indeed, a person is their faith.",
+      "commentary": "This verse teaches that our faith reflects our inner nature and determines who we become."
+    },
+    {
+      "chapter": 18,
+      "verse": 46,
+      "verse_id": "BG18.46",
+      "sanskrit": "यतः प्रवृत्तिर्भूतानां येन सर्वमिदं ततम्।\nस्वकर्मणा तमभ्यर्च्य सिद्धिं विन्दति मानवः॥",
+      "transliteration": "yataḥ pravṛttir bhūtānāṁ yena sarvam idaṁ tatam\nsva-karmaṇā tam abhyarcya siddhiṁ vindati mānavaḥ",
+      "translation": "From whom all beings originate and by whom all this universe is pervaded—by worshiping Him through the performance of one's natural occupation, a person attains perfection.",
+      "commentary": "This verse teaches that we can worship God through our own work, whatever it may be."
+    },
+    {
+      "chapter": 18,
+      "verse": 65,
+      "verse_id": "BG18.65",
+      "sanskrit": "मन्मना भव मद्भक्तो मद्याजी मां नमस्कुरु।\nमामेवैष्यसि सत्यं ते प्रतिजाने प्रियोऽसि मे॥",
+      "transliteration": "man-manā bhava mad-bhakto mad-yājī māṁ namaskuru\nmām evaiṣyasi satyaṁ te pratijāne priyo 'si me",
+      "translation": "Always think of Me, become My devotee, worship Me, and offer your homage unto Me. Thus you will come to Me without fail. I promise you this because you are My very dear friend.",
+      "commentary": "Krishna gives his direct promise to Arjuna - complete devotion will lead to union with Him."
+    },
+    {
+      "chapter": 18,
+      "verse": 66,
+      "verse_id": "BG18.66",
+      "sanskrit": "सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज।\nअहं त्वां सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः॥",
+      "transliteration": "sarva-dharmān parityajya mām ekaṁ śaraṇaṁ vraja\nahaṁ tvāṁ sarva-pāpebhyo mokṣayiṣyāmi mā śucaḥ",
+      "translation": "Abandon all varieties of dharma and simply surrender unto Me alone. I shall liberate you from all sinful reactions; do not fear.",
+      "commentary": "This is the final teaching - complete surrender to God is the ultimate path to liberation. This verse is considered the essence of the entire Gita."
+    }
+  ]
+}

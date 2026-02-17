@@ -32,14 +32,26 @@ const stepTypeIcons: Record<string, string> = {
   'default': '📍'
 };
 
-// Specific step descriptions for Scout agent
-const SCOUT_STEP_DESCRIPTIONS: Record<string, string> = {
+// Specific step descriptions for different agents
+const AGENT_STEP_DESCRIPTIONS: Record<string, string> = {
+  // Scout (fraud-trends) agent
   'planning': 'The agent creates a research plan by analyzing the user\'s fraud trend query and determining which sources to search, what keywords to use, and how to structure the investigation.',
   'search_industry': 'Searches insurance industry publications, reports, and news sources for recent fraud trends, case studies, and industry best practices.',
   'search_regulatory': 'Queries regulatory databases, government reports, and compliance documents for official fraud statistics, regulatory changes, and enforcement actions.',
   'search_academic': 'Searches academic journals, research papers, and white papers for scholarly analysis of fraud patterns, detection methods, and emerging risks.',
   'extraction': 'Analyzes all collected data from the three search sources, identifies key insights, statistics, trends, and patterns, and organizes them by relevance and credibility.',
-  'synthesis': 'Combines all extracted findings into a coherent fraud trends report with executive summary, detailed analysis, statistics, and actionable recommendations.'
+
+  // Matcher (house-finder) agent
+  'parse': 'The agent analyzes the user\'s home search requirements including location, budget, bedrooms, bathrooms, property types, school priorities, and must-have features to create normalized search criteria with weighted scoring.',
+  'search': 'Searches HouseSigma using undetected Chrome automation to bypass detection and scrape real property listings matching the location and basic criteria from live real estate data.',
+  'filter': 'Filters the raw listings by price, bedrooms, bathrooms, property types, and location to ensure only properties meeting the hard requirements are considered for further analysis.',
+  'enrich_schools': 'Adds nearby school ratings and distances using Fraser Institute data to provide comprehensive education quality information for families with children.',
+  'enrich_walk': 'Calculates walkability scores for each property to assess pedestrian access to amenities, transit, and services in the neighborhood using Walk Score API.',
+  'rank': 'Scores each property using weighted criteria: price affordability (30%), school quality (25%), walkability (20%), commute times, and must-have features to rank best matches.',
+  'analyze': 'Uses Claude AI (Haiku model) to generate detailed pros and cons for each top property based on the enriched data, user priorities, and market context.',
+
+  // Shared step types
+  'synthesis': 'Synthesizes all findings into a comprehensive report with executive summary, detailed analysis, market insights, and actionable recommendations tailored to the user\'s specific needs.'
 };
 
 // Generate narrative explanation for each step
@@ -47,8 +59,8 @@ function generateNarrative(step: ExecutionStep): string {
   const stepType = step.stepType || step.step_type || '';
 
   // Use specific description if available
-  if (SCOUT_STEP_DESCRIPTIONS[stepType]) {
-    return SCOUT_STEP_DESCRIPTIONS[stepType];
+  if (AGENT_STEP_DESCRIPTIONS[stepType]) {
+    return AGENT_STEP_DESCRIPTIONS[stepType];
   }
 
   // Fallback for other step types

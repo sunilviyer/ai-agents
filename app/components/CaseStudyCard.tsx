@@ -74,9 +74,25 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
   const recommendations = caseStudy.outputResult?.recommendations as string[];
   const marketContext = caseStudy.outputResult?.market_context as string;
 
+  // Extract relevant data - Gita Guide (Sage)
+  const gitaQuestion = caseStudy.inputParameters?.question as string;
+  const gitaExecutiveSummary = caseStudy.outputResult?.executive_summary as string;
+  const gitaAnswer = caseStudy.outputResult?.answer as string;
+  const gitaRelevantVerses = caseStudy.outputResult?.relevant_verses as Array<{
+    chapter: number;
+    verse_number: number;
+    verse_id: string;
+    sanskrit_text: string;
+    transliteration: string;
+    english_translation: string;
+    relevance_to_question: string;
+  }>;
+  const gitaSuggestedQuestions = caseStudy.outputResult?.suggested_next_questions as string[];
+
   // Determine which type of content to show
   const isArticleEditor = !!(originalText || targetKeywords);
   const isStockMonitor = !!(watchlist && watchlist.length > 0);
+  const isGitaGuide = !!(gitaQuestion);
 
   return (
     <div className="glass-panel p-8">
@@ -349,6 +365,112 @@ export default function CaseStudyCard({ caseStudy, agentColor }: Props) {
                   </ul>
                 </div>
               )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Question & Answer Section - Gita Guide */}
+      {isGitaGuide && (
+        <div className="mb-6">
+          {/* The Question */}
+          <div className="mb-4 p-4 rounded-lg" style={{ background: `${agentColor}15`, border: `1px solid ${agentColor}40` }}>
+            <p className="text-sm font-semibold mb-1" style={{ color: agentColor }}>Question Asked:</p>
+            <p className="text-xl font-bold" style={{ color: '#FDF0D5' }}>&ldquo;{gitaQuestion}&rdquo;</p>
+          </div>
+
+          {/* Executive Summary */}
+          {gitaExecutiveSummary && (
+            <div className="mb-4 p-4 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.4)' }}>
+              <p className="text-sm font-semibold mb-2" style={{ color: agentColor }}>Summary:</p>
+              <p className="text-base italic" style={{ color: '#FDF0D5' }}>{gitaExecutiveSummary}</p>
+            </div>
+          )}
+
+          {/* Full Answer */}
+          {gitaAnswer && (
+            <div className="mb-6">
+              <button
+                onClick={() => toggleSection('answer')}
+                className="w-full flex items-center justify-between p-4 rounded-lg transition-all"
+                style={{
+                  background: expandedSection === 'answer'
+                    ? `linear-gradient(135deg, ${agentColor}20, ${agentColor}10)`
+                    : 'rgba(0, 48, 73, 0.3)',
+                  border: `1px solid ${expandedSection === 'answer' ? agentColor : 'rgba(102, 155, 188, 0.3)'}`
+                }}
+              >
+                <h4 className="text-xl font-bold" style={{ color: '#FDF0D5' }}>
+                  🕉️ Teaching
+                </h4>
+                <span style={{ color: agentColor }}>{expandedSection === 'answer' ? '▼' : '▶'}</span>
+              </button>
+
+              {expandedSection === 'answer' && (
+                <div className="mt-4 p-6 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)' }}>
+                  <p className="text-base whitespace-pre-wrap leading-relaxed" style={{ color: '#FDF0D5' }}>{gitaAnswer}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Relevant Verses */}
+          {gitaRelevantVerses && gitaRelevantVerses.length > 0 && (
+            <div className="mb-6">
+              <button
+                onClick={() => toggleSection('verses')}
+                className="w-full flex items-center justify-between p-4 rounded-lg transition-all"
+                style={{
+                  background: expandedSection === 'verses'
+                    ? `linear-gradient(135deg, ${agentColor}20, ${agentColor}10)`
+                    : 'rgba(0, 48, 73, 0.3)',
+                  border: `1px solid ${expandedSection === 'verses' ? agentColor : 'rgba(102, 155, 188, 0.3)'}`
+                }}
+              >
+                <h4 className="text-xl font-bold" style={{ color: '#FDF0D5' }}>
+                  📖 Referenced Verses ({gitaRelevantVerses.length})
+                </h4>
+                <span style={{ color: agentColor }}>{expandedSection === 'verses' ? '▼' : '▶'}</span>
+              </button>
+
+              {expandedSection === 'verses' && (
+                <div className="mt-4 space-y-4">
+                  {gitaRelevantVerses.map((verse, idx) => (
+                    <div key={idx} className="p-4 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)', border: `1px solid ${agentColor}30` }}>
+                      <p className="text-sm font-bold mb-2" style={{ color: agentColor }}>
+                        BG {verse.chapter}.{verse.verse_number} — {verse.verse_id}
+                      </p>
+                      {verse.sanskrit_text && (
+                        <p className="text-base mb-2 font-medium" style={{ color: '#FDF0D5' }}>{verse.sanskrit_text}</p>
+                      )}
+                      {verse.transliteration && (
+                        <p className="text-sm italic mb-2" style={{ color: '#669BBC' }}>{verse.transliteration}</p>
+                      )}
+                      <p className="text-sm mb-2" style={{ color: '#FDF0D5' }}>{verse.english_translation}</p>
+                      {verse.relevance_to_question && (
+                        <p className="text-xs" style={{ color: '#669BBC' }}>
+                          <span style={{ color: agentColor }}>Relevance: </span>{verse.relevance_to_question}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Suggested Questions */}
+          {gitaSuggestedQuestions && gitaSuggestedQuestions.length > 0 && (
+            <div className="p-4 rounded-lg" style={{ background: 'rgba(0, 48, 73, 0.3)' }}>
+              <p className="text-sm font-semibold mb-3" style={{ color: agentColor }}>Continue Your Journey:</p>
+              <ul className="space-y-2">
+                {gitaSuggestedQuestions.map((q, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span style={{ color: agentColor }}>→</span>
+                    <span className="text-sm" style={{ color: '#FDF0D5' }}>{q}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
