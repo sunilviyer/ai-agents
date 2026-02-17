@@ -128,31 +128,24 @@ function ProcessPanel({ caseStudy, agentColor }: Props) {
                 .join('\n')
             : '';
 
+          // Build combined label: "Type · Name" (type title-cased, name as-is)
+          const typeLabel = type
+            ? type.split('_').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+            : '';
+          const combinedName = typeLabel && name
+            ? `${typeLabel} · ${name}`
+            : name || typeLabel;
+
           return (
             <div key={key}>
               <button
                 className={`step-pill${isOpen ? ' expanded' : ''}`}
                 onClick={() => setExpanded(isOpen ? null : key)}
               >
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
-                  <span className="step-number" style={{ background: agentColor }}>
-                    {num}
-                  </span>
-                  {type && (
-                    <span style={{
-                      fontSize: '0.52rem',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.04em',
-                      color: agentColor,
-                      marginTop: '0.15rem',
-                      whiteSpace: 'nowrap',
-                    }}>
-                      {type.replace(/_/g, ' ')}
-                    </span>
-                  )}
-                </div>
-                <span className="step-name">{name}</span>
+                <span className="step-number" style={{ background: agentColor, flexShrink: 0 }}>
+                  {num}
+                </span>
+                <span className="step-name">{combinedName}</span>
                 {dur != null && (
                   <span className="duration-badge">{formatDuration(dur)}</span>
                 )}
