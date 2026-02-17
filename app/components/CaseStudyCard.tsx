@@ -3,18 +3,25 @@
 import { useState } from 'react';
 
 interface ExecutionStep {
-  step_number: number;
-  step_name: string;
-  step_type: string;
-  details: Record<string, unknown>;
-  duration_ms: number | null;
-  timestamp: string;
+  // API returns camelCase
+  stepNumber?: number;
+  stepName?: string;
+  stepType?: string;
+  details?: Record<string, unknown>;
+  durationMs?: number | null;
+  timestamp?: string;
+  // Legacy snake_case fallbacks
+  step_number?: number;
+  step_name?: string;
+  step_type?: string;
+  duration_ms?: number | null;
 }
 
 interface CaseStudy {
   id: string;
   title: string;
-  description: string;
+  subtitle?: string;
+  description?: string;
   createdAt: string;
   inputParameters: Record<string, unknown>;
   outputResult: Record<string, unknown>;
@@ -87,7 +94,12 @@ function InputPanel({ caseStudy, agentColor }: Props) {
 function ProcessPanel({ caseStudy, agentColor }: Props) {
   const [expanded, setExpanded] = useState<number | null>(null);
   const steps = caseStudy.executionTrace ?? [];
-  const totalDuration = steps.reduce((sum, s) => sum + (s.duration_ms ?? 0), 0);
+  // Support both camelCase (API) and snake_case (legacy) field names
+  const getNum = (s: ExecutionStep) => s.stepNumber ?? s.step_number ?? 0;
+  const getName = (s: ExecutionStep) => s.stepName ?? s.step_name ?? '';
+  const getType = (s: ExecutionStep) => s.stepType ?? s.step_type ?? '';
+  const getDuration = (s: ExecutionStep) => s.durationMs ?? s.duration_ms ?? null;
+  const totalDuration = steps.reduce((sum, s) => sum + (getDuration(s) ?? 0), 0);
 
   return (
     <div className="glass-panel" style={{ padding: '1.1rem' }}>
@@ -101,8 +113,13 @@ function ProcessPanel({ caseStudy, agentColor }: Props) {
       </div>
 
       <div className="step-timeline">
-        {steps.map((step) => {
-          const isOpen = expanded === step.step_number;
+        {steps.map((step, idx) => {
+          const num = getNum(step);
+          const name = getName(step);
+          const type = getType(step);
+          const dur = getDuration(step);
+          const key = num || idx;
+          const isOpen = expanded === key;
           const detailText = step.details
             ? Object.entries(step.details)
                 .filter(([, v]) => v != null && String(v).trim())
@@ -112,16 +129,16 @@ function ProcessPanel({ caseStudy, agentColor }: Props) {
             : '';
 
           return (
-            <div key={step.step_number}>
+            <div key={key}>
               <button
                 className={`step-pill${isOpen ? ' expanded' : ''}`}
-                onClick={() => setExpanded(isOpen ? null : step.step_number)}
+                onClick={() => setExpanded(isOpen ? null : key)}
               >
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
                   <span className="step-number" style={{ background: agentColor }}>
-                    {step.step_number}
+                    {num}
                   </span>
-                  {step.step_type && (
+                  {type && (
                     <span style={{
                       fontSize: '0.52rem',
                       fontWeight: 700,
@@ -131,13 +148,13 @@ function ProcessPanel({ caseStudy, agentColor }: Props) {
                       marginTop: '0.15rem',
                       whiteSpace: 'nowrap',
                     }}>
-                      {step.step_type.replace(/_/g, ' ')}
+                      {type.replace(/_/g, ' ')}
                     </span>
                   )}
                 </div>
-                <span className="step-name">{step.step_name}</span>
-                {step.duration_ms != null && (
-                  <span className="duration-badge">{formatDuration(step.duration_ms)}</span>
+                <span className="step-name">{name}</span>
+                {dur != null && (
+                  <span className="duration-badge">{formatDuration(dur)}</span>
                 )}
                 <span className="step-expand-icon">{isOpen ? '▲' : '▼'}</span>
               </button>
@@ -368,9 +385,9 @@ export default function CaseStudyCard({ caseStudy, agentColor, isDark }: Props) 
         }}>
           {caseStudy.title}
         </h3>
-        {caseStudy.description && (
+        {(caseStudy.subtitle || caseStudy.description) && (
           <p style={{ margin: '0.2rem 0 0', fontSize: '0.84rem', color: 'var(--text-meta)' }}>
-            {caseStudy.description}
+            {caseStudy.subtitle || caseStudy.description}
           </p>
         )}
       </div>

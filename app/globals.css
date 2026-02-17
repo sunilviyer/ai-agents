@@ -321,7 +321,13 @@ body {
   display: grid;
   grid-template-columns: 1fr 1.2fr 1fr;
   gap: 1rem;
-  align-items: start;
+  align-items: stretch;
+}
+
+/* Each panel fills the grid row height */
+.case-panels > * {
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 1023px) {

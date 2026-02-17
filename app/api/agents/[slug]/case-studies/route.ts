@@ -108,6 +108,7 @@ export async function GET(
         subtitle,
         input_parameters,
         output_result,
+        execution_trace,
         display,
         featured,
         display_order,
@@ -151,6 +152,7 @@ export async function GET(
         subtitle: string | null;
         input_parameters: unknown;
         output_result: unknown;
+        execution_trace: unknown[] | null;
         display: boolean;
         featured: boolean;
         display_order: number | null;
@@ -255,22 +257,27 @@ export async function GET(
     // STEP 6: Format response (Story 5.3)
     // =========================================================================
     const caseStudies: CaseStudy<unknown, unknown>[] = caseStudiesResult.rows.map(
-      (row) => ({
-        id: row.id,
-        agentSlug: row.agent_slug,
-        title: row.title,
-        subtitle: row.subtitle || undefined,
-        inputParameters: row.input_parameters,
-        outputResult: row.output_result,
-        executionTrace: includeTrace
-          ? executionStepsMap.get(row.id) || []
-          : [],
-        display: row.display,
-        featured: row.featured,
-        displayOrder: row.display_order || undefined,
-        createdAt: row.created_at,
-        updatedAt: row.updated_at,
-      })
+      (row) => {
+        // Prefer execution_steps table; fall back to execution_trace JSONB column
+        const stepsFromTable = includeTrace ? executionStepsMap.get(row.id) || [] : [];
+        const traceFromColumn = (row.execution_trace as ExecutionStep[] | null) || [];
+        const executionTrace = stepsFromTable.length > 0 ? stepsFromTable : traceFromColumn;
+
+        return {
+          id: row.id,
+          agentSlug: row.agent_slug,
+          title: row.title,
+          subtitle: row.subtitle || undefined,
+          inputParameters: row.input_parameters,
+          outputResult: row.output_result,
+          executionTrace,
+          display: row.display,
+          featured: row.featured,
+          displayOrder: row.display_order || undefined,
+          createdAt: row.created_at,
+          updatedAt: row.updated_at,
+        };
+      }
     );
 
     // =========================================================================
