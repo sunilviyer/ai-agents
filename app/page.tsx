@@ -151,12 +151,19 @@ const techStack = [
 ];
 
 export default function Home() {
+  // Dark background image — all text must be light
+  const C = {
+    heading: '#f0f0f5',
+    body:    'rgba(240,240,245,0.80)',
+    meta:    'rgba(240,240,245,0.52)',
+  };
+
   return (
     <main
       className="bg-home"
       style={{
         minHeight: '100vh',
-        color: 'var(--text-body)',
+        color: C.body,
         backgroundImage: "url('/background/homepage-agent.webp')",
         backgroundSize: 'cover',
         backgroundPosition: 'center top',
@@ -174,7 +181,7 @@ export default function Home() {
           justifyContent: 'space-between',
           padding: '1.5rem 0 0',
         }}>
-          <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-heading)', letterSpacing: '-0.01em' }}>
+          <span style={{ fontSize: '0.9rem', fontWeight: 700, color: C.heading, letterSpacing: '-0.01em' }}>
             AI Agents Portfolio
           </span>
           <a
@@ -184,7 +191,7 @@ export default function Home() {
             style={{
               fontSize: '0.82rem',
               fontWeight: 600,
-              color: 'var(--text-meta)',
+              color: C.meta,
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
@@ -203,10 +210,10 @@ export default function Home() {
             fontWeight: 700,
             textTransform: 'uppercase',
             letterSpacing: '0.1em',
-            color: 'var(--text-meta)',
-            background: 'rgba(255,255,255,0.6)',
+            color: C.meta,
+            background: 'rgba(255,255,255,0.12)',
             backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255,255,255,0.8)',
+            border: '1px solid rgba(255,255,255,0.22)',
             padding: '0.35rem 1rem',
             borderRadius: '100px',
             marginBottom: '1.5rem',
@@ -220,10 +227,10 @@ export default function Home() {
             fontWeight: 900,
             letterSpacing: '-0.04em',
             lineHeight: 1.05,
-            color: 'var(--text-heading)',
+            color: C.heading,
           }}>
             AI Agents that<br />
-            <span style={{ color: '#669BBC' }}>actually work</span>
+            <span style={{ color: '#7eb8d8' }}>actually work</span>
           </h1>
 
           <p style={{
@@ -231,13 +238,13 @@ export default function Home() {
             maxWidth: '520px',
             fontSize: '1.05rem',
             lineHeight: 1.65,
-            color: 'var(--text-body)',
+            color: C.body,
           }}>
             Five distinct agents demonstrating real agentic workflows —
             from fraud research to spiritual guidance.
             Built by{' '}
             <a href="https://www.suniliyer.ca" target="_blank" rel="noopener noreferrer"
-               style={{ color: 'var(--text-heading)', fontWeight: 700, textDecoration: 'none' }}>
+               style={{ color: C.heading, fontWeight: 700, textDecoration: 'none' }}>
               Sunil Iyer
             </a>.
           </p>
@@ -280,7 +287,7 @@ export default function Home() {
 
               {/* Name + badge */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <span style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-heading)', letterSpacing: '-0.02em' }}>
+                <span style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f0f0f5', letterSpacing: '-0.02em' }}>
                   {agent.name}
                 </span>
                 <span className={`status-badge ${agent.status}`}>
@@ -293,7 +300,7 @@ export default function Home() {
                 margin: '0 0 0.75rem',
                 fontSize: '0.78rem',
                 fontWeight: 600,
-                color: agent.color,
+                color: 'rgba(240,240,245,0.65)',
               }}>
                 {agent.description}
               </p>
@@ -302,7 +309,7 @@ export default function Home() {
               <p style={{
                 margin: '0 0 1rem',
                 fontSize: '0.8rem',
-                color: 'var(--text-body)',
+                color: 'rgba(240,240,245,0.72)',
                 lineHeight: 1.45,
                 textAlign: 'center',
               }}>
@@ -317,9 +324,9 @@ export default function Home() {
                     fontWeight: 600,
                     padding: '0.15rem 0.5rem',
                     borderRadius: '100px',
-                    background: agent.color + '14',
-                    color: agent.color,
-                    border: `1px solid ${agent.color}30`,
+                    background: 'rgba(255,255,255,0.12)',
+                    color: 'rgba(240,240,245,0.80)',
+                    border: '1px solid rgba(255,255,255,0.20)',
                   }}>
                     {step}
                   </span>
@@ -331,7 +338,7 @@ export default function Home() {
                 marginTop: '1.25rem',
                 fontSize: '0.8rem',
                 fontWeight: 700,
-                color: agent.color,
+                color: 'rgba(240,240,245,0.90)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.25rem',
@@ -343,7 +350,16 @@ export default function Home() {
         </div>
 
         {/* ── ABOUT STRIP ─────────────────────────── */}
-        <div className="glass-panel" style={{ padding: '2rem 2.5rem', marginBottom: '2rem' }}>
+        <div style={{
+          padding: '2rem 2.5rem',
+          marginBottom: '2rem',
+          borderRadius: '20px',
+          background: 'rgba(255,255,255,0.10)',
+          backdropFilter: 'blur(36px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(36px) saturate(1.8)',
+          border: '1.5px solid rgba(255,255,255,0.18)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.30)',
+        }}>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
@@ -351,10 +367,10 @@ export default function Home() {
             alignItems: 'center',
           }}>
             <div>
-              <h2 style={{ margin: '0 0 0.5rem', fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-heading)', letterSpacing: '-0.02em' }}>
+              <h2 style={{ margin: '0 0 0.5rem', fontSize: '1.35rem', fontWeight: 800, color: C.heading, letterSpacing: '-0.02em' }}>
                 How it works
               </h2>
-              <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-body)', lineHeight: 1.6 }}>
+              <p style={{ margin: 0, fontSize: '0.88rem', color: C.body, lineHeight: 1.6 }}>
                 Four agents run pre-recorded demos so you can see real outputs without API costs.
                 Sage uses a local knowledge base for live responses.
               </p>
@@ -368,18 +384,18 @@ export default function Home() {
                 <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <div style={{
                     width: 28, height: 28, borderRadius: '6px',
-                    background: 'rgba(102,155,188,0.15)',
-                    border: '1px solid rgba(102,155,188,0.25)',
+                    background: 'rgba(126,184,216,0.20)',
+                    border: '1px solid rgba(126,184,216,0.35)',
                     flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: '0.65rem', fontWeight: 800,
-                    color: '#669BBC', letterSpacing: '-0.01em',
+                    color: '#7eb8d8', letterSpacing: '-0.01em',
                   }}>
                     {label[0]}
                   </div>
                   <div>
-                    <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-heading)' }}>{label}</span>
-                    <span style={{ fontSize: '0.82rem', color: 'var(--text-meta)', marginLeft: '0.4rem' }}>{desc}</span>
+                    <span style={{ fontWeight: 700, fontSize: '0.85rem', color: C.heading }}>{label}</span>
+                    <span style={{ fontSize: '0.82rem', color: C.meta, marginLeft: '0.4rem' }}>{desc}</span>
                   </div>
                 </div>
               ))}
@@ -401,14 +417,14 @@ export default function Home() {
               gap: '0.5rem',
               padding: '0.5rem 1rem',
               borderRadius: '100px',
-              background: 'rgba(255,255,255,0.55)',
+              background: 'rgba(255,255,255,0.10)',
               backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255,255,255,0.75)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              border: '1px solid rgba(255,255,255,0.18)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.20)',
               fontSize: '0.82rem',
             }}>
-              <span style={{ fontWeight: 700, color: 'var(--text-heading)' }}>{name}</span>
-              <span style={{ color: 'var(--text-meta)' }}>{sub}</span>
+              <span style={{ fontWeight: 700, color: C.heading }}>{name}</span>
+              <span style={{ color: C.meta }}>{sub}</span>
             </div>
           ))}
         </div>
