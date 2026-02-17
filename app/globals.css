@@ -4,11 +4,11 @@
    DESIGN TOKENS — light mode (default)
    ============================================================ */
 :root {
-  --agent-scout:   #669BBC;
-  --agent-ticker:  #22c55e;
-  --agent-matcher: #f97316;
-  --agent-quill:   #8b5cf6;
-  --agent-sage:    #C1121F;
+  --agent-scout:   #003049;
+  --agent-ticker:  #780000;
+  --agent-matcher: #669BBC;
+  --agent-quill:   #C1121F;
+  --agent-sage:    #FDF0D5;
 
   /* Glass — more visible at lower opacity with stronger border */
   --glass-light:   rgba(255, 255, 255, 0.35);
@@ -81,10 +81,9 @@ body {
 .bg-sage {
   background-attachment: scroll;
   background-repeat: no-repeat;
-  background-position: center center;
+  background-position: center 40%;
   background-size: cover;
   min-height: 100vh;
-  animation: bg-breathe 16s ease-in-out infinite alternate;
 }
 
 .bg-scout   { background-image: url('/background/scout-agent.png');   --glass-bg: var(--glass-dark); }
@@ -92,11 +91,6 @@ body {
 .bg-matcher { background-image: url('/background/matcher-agent.png'); --glass-bg: var(--glass-light); }
 .bg-quill   { background-image: url('/background/quill-agent.png');   --glass-bg: var(--glass-light); }
 .bg-sage    { background-image: url('/background/sage-agent.png');    --glass-bg: var(--glass-medium); }
-
-@keyframes bg-breathe {
-  0%   { background-size: 100%; background-position: center 40%; }
-  100% { background-size: 115%; background-position: center 55%; }
-}
 
 /* ============================================================
    HOME PAGE — animated gradient blobs
@@ -274,9 +268,9 @@ body {
 .demo-tab {
   flex-shrink: 0;
   scroll-snap-align: start;
-  padding: 0.5rem 1.1rem;
-  border-radius: 100px;
-  font-size: 0.82rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   border: 1.5px solid transparent;
@@ -285,6 +279,8 @@ body {
   -webkit-backdrop-filter: blur(12px);
   color: var(--text-body);
   transition: all 0.2s ease;
+  text-align: left;
+  min-width: 0;
 }
 
 .demo-tab.active {

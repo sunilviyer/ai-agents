@@ -126,28 +126,36 @@ export default function CaseStudyList({ agentSlug, agentName, agentColor, isDark
 
       {/* Tab selector */}
       <div className="demo-tabs" style={{ marginBottom: '1.25rem' }}>
-        {caseStudies.map((cs, index) => (
-          <button
-            key={cs.id}
-            className={`demo-tab ${activeTab === index ? 'active' : ''}`}
-            style={{
-              '--tab-color': agentColor,
-            } as React.CSSProperties}
-            onClick={() => setActiveTab(index)}
-          >
-            <span style={{
-              fontSize: '0.68rem',
-              opacity: 0.6,
-              display: 'block',
-              marginBottom: '0.15rem',
-            }}>
-              Demo {index + 1}
-            </span>
-            <span style={{ fontSize: '0.82rem' }}>
-              {cs.subtitle || cs.title.split(' - ')[0].substring(0, 28)}
-            </span>
-          </button>
-        ))}
+        {caseStudies.map((cs, index) => {
+          // Extract short label: first part of title before ' - ', truncated
+          const topic = cs.title.split(' - ')[0].trim();
+          const label = topic.length > 22 ? topic.substring(0, 21) + '…' : topic;
+          return (
+            <button
+              key={cs.id}
+              className={`demo-tab ${activeTab === index ? 'active' : ''}`}
+              style={{
+                '--tab-color': agentColor,
+              } as React.CSSProperties}
+              onClick={() => setActiveTab(index)}
+            >
+              <span style={{
+                fontSize: '0.63rem',
+                opacity: 0.55,
+                display: 'block',
+                marginBottom: '0.1rem',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}>
+                {index + 1}
+              </span>
+              <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>
+                {label}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Active case study — 3-panel layout */}

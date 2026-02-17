@@ -18,7 +18,7 @@ const agentInfo: Record<string, {
 }> = {
   scout: {
     name: 'Scout',
-    color: '#669BBC',
+    color: '#003049',
     description: 'Fraud Trends Investigator',
     status: 'demo',
     bgClass: 'bg-scout',
@@ -26,7 +26,7 @@ const agentInfo: Record<string, {
   },
   ticker: {
     name: 'Ticker',
-    color: '#22c55e',
+    color: '#780000',
     description: 'Stock Portfolio Monitor',
     status: 'demo',
     bgClass: 'bg-ticker',
@@ -34,7 +34,7 @@ const agentInfo: Record<string, {
   },
   matcher: {
     name: 'Matcher',
-    color: '#f97316',
+    color: '#669BBC',
     description: 'House Finder with School Ratings',
     status: 'demo',
     bgClass: 'bg-matcher',
@@ -42,7 +42,7 @@ const agentInfo: Record<string, {
   },
   quill: {
     name: 'Quill',
-    color: '#8b5cf6',
+    color: '#C1121F',
     description: 'Article Editor & SEO Optimizer',
     status: 'demo',
     bgClass: 'bg-quill',
@@ -50,7 +50,7 @@ const agentInfo: Record<string, {
   },
   sage: {
     name: 'Sage',
-    color: '#C1121F',
+    color: '#5a3e2b',
     description: 'Bhagavad Gita Spiritual Guide',
     status: 'live',
     bgClass: 'bg-sage',

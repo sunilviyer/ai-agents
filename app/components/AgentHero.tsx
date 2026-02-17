@@ -6,23 +6,23 @@ function ScoutRobot() {
     <svg viewBox="0 0 160 220" style={{ width: '75%', height: '75%' }}>
       <g className="robot-breathe">
         <ellipse cx="80" cy="215" rx="45" ry="6" fill="rgba(0,0,0,0.08)"/>
-        <rect x="50" y="160" width="18" height="50" rx="6" fill="#669BBC"/>
-        <rect x="92" y="160" width="18" height="50" rx="6" fill="#669BBC"/>
-        <rect x="44" y="203" width="30" height="12" rx="5" fill="#4a7a94"/>
-        <rect x="86" y="203" width="30" height="12" rx="5" fill="#4a7a94"/>
-        <rect x="38" y="85" width="84" height="80" rx="12" fill="#669BBC"/>
-        <rect x="50" y="98" width="60" height="45" rx="6" fill="#4a7a94"/>
-        <circle cx="80" cy="120" r="12" fill="#5a8fa8"/>
-        <circle cx="80" cy="120" r="6" fill="#669BBC"/>
-        <rect x="12" y="90" width="20" height="50" rx="6" fill="#669BBC"/>
-        <circle cx="22" cy="148" r="10" fill="#7eb3cc"/>
-        <rect x="128" y="90" width="20" height="50" rx="6" fill="#669BBC"/>
-        <circle cx="138" cy="148" r="10" fill="#7eb3cc"/>
-        <rect x="42" y="18" width="76" height="72" rx="16" fill="#669BBC"/>
+        <rect x="50" y="160" width="18" height="50" rx="6" fill="#003049"/>
+        <rect x="92" y="160" width="18" height="50" rx="6" fill="#003049"/>
+        <rect x="44" y="203" width="30" height="12" rx="5" fill="#00253a"/>
+        <rect x="86" y="203" width="30" height="12" rx="5" fill="#00253a"/>
+        <rect x="38" y="85" width="84" height="80" rx="12" fill="#003049"/>
+        <rect x="50" y="98" width="60" height="45" rx="6" fill="#00253a"/>
+        <circle cx="80" cy="120" r="12" fill="#004d74"/>
+        <circle cx="80" cy="120" r="6" fill="#003049"/>
+        <rect x="12" y="90" width="20" height="50" rx="6" fill="#003049"/>
+        <circle cx="22" cy="148" r="10" fill="#005f8a"/>
+        <rect x="128" y="90" width="20" height="50" rx="6" fill="#003049"/>
+        <circle cx="138" cy="148" r="10" fill="#005f8a"/>
+        <rect x="42" y="18" width="76" height="72" rx="16" fill="#003049"/>
         <ellipse className="robot-blink" cx="62" cy="50" rx="11" ry="13" fill="#FDF0D5"/>
         <ellipse className="robot-blink" cx="98" cy="50" rx="11" ry="13" fill="#FDF0D5"/>
-        <circle cx="62" cy="52" r="5" fill="#003049"/>
-        <circle cx="98" cy="52" r="5" fill="#003049"/>
+        <circle cx="62" cy="52" r="5" fill="#001a28"/>
+        <circle cx="98" cy="52" r="5" fill="#001a28"/>
         <circle cx="59" cy="48" r="2.5" fill="white" opacity="0.9"/>
         <circle cx="95" cy="48" r="2.5" fill="white" opacity="0.9"/>
         <circle cx="128" cy="30" r="16" fill="none" stroke="#FDF0D5" strokeWidth="4"/>
@@ -37,23 +37,23 @@ function TickerRobot() {
   return (
     <svg viewBox="0 0 200 240" style={{ width: '75%', height: '75%' }}>
       <g className="robot-breathe">
-        <rect x="60" y="100" width="80" height="90" rx="20" fill="#22c55e" stroke="#003049" strokeWidth="2"/>
-        <rect x="70" y="110" width="60" height="40" rx="5" fill="#003049"/>
-        <polyline points="75,140 85,130 95,135 105,125 115,128 125,120" stroke="#22c55e" strokeWidth="2" fill="none"/>
-        <circle cx="100" cy="70" r="35" fill="#22c55e" stroke="#003049" strokeWidth="2"/>
-        <line x1="100" y1="35" x2="100" y2="15" stroke="#003049" strokeWidth="3"/>
+        <rect x="60" y="100" width="80" height="90" rx="20" fill="#780000" stroke="#3a0000" strokeWidth="2"/>
+        <rect x="70" y="110" width="60" height="40" rx="5" fill="#3a0000"/>
+        <polyline points="75,140 85,130 95,135 105,125 115,128 125,120" stroke="#ff6666" strokeWidth="2" fill="none"/>
+        <circle cx="100" cy="70" r="35" fill="#780000" stroke="#3a0000" strokeWidth="2"/>
+        <line x1="100" y1="35" x2="100" y2="15" stroke="#3a0000" strokeWidth="3"/>
         <circle cx="100" cy="10" r="5" fill="#ef4444">
           <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/>
         </circle>
         <circle className="robot-blink" cx="90" cy="65" r="6" fill="#FDF0D5"/>
         <circle className="robot-blink" cx="110" cy="65" r="6" fill="#FDF0D5"/>
-        <circle cx="90" cy="65" r="3" fill="#003049"/>
-        <circle cx="110" cy="65" r="3" fill="#003049"/>
-        <path d="M 85 80 Q 100 88 115 80" stroke="#003049" strokeWidth="2" fill="none" strokeLinecap="round"/>
-        <rect x="35" y="120" width="20" height="50" rx="10" fill="#22c55e" stroke="#003049" strokeWidth="2"/>
-        <rect x="145" y="120" width="20" height="50" rx="10" fill="#22c55e" stroke="#003049" strokeWidth="2"/>
-        <rect x="70" y="190" width="20" height="40" rx="10" fill="#22c55e" stroke="#003049" strokeWidth="2"/>
-        <rect x="110" y="190" width="20" height="40" rx="10" fill="#22c55e" stroke="#003049" strokeWidth="2"/>
+        <circle cx="90" cy="65" r="3" fill="#3a0000"/>
+        <circle cx="110" cy="65" r="3" fill="#3a0000"/>
+        <path d="M 85 80 Q 100 88 115 80" stroke="#FDF0D5" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        <rect x="35" y="120" width="20" height="50" rx="10" fill="#780000" stroke="#3a0000" strokeWidth="2"/>
+        <rect x="145" y="120" width="20" height="50" rx="10" fill="#780000" stroke="#3a0000" strokeWidth="2"/>
+        <rect x="70" y="190" width="20" height="40" rx="10" fill="#780000" stroke="#3a0000" strokeWidth="2"/>
+        <rect x="110" y="190" width="20" height="40" rx="10" fill="#780000" stroke="#3a0000" strokeWidth="2"/>
       </g>
     </svg>
   );
@@ -82,23 +82,23 @@ function QuillRobot() {
   return (
     <svg viewBox="0 0 200 240" style={{ width: '75%', height: '75%' }}>
       <g className="robot-breathe">
-        <rect x="60" y="100" width="80" height="90" rx="20" fill="#8b5cf6" stroke="#003049" strokeWidth="2"/>
+        <rect x="60" y="100" width="80" height="90" rx="20" fill="#C1121F" stroke="#7a0b14" strokeWidth="2"/>
         <rect x="70" y="110" width="60" height="50" rx="5" fill="#FDF0D5"/>
-        <line x1="75" y1="120" x2="125" y2="120" stroke="#8b5cf6" strokeWidth="2"/>
-        <line x1="75" y1="130" x2="125" y2="130" stroke="#8b5cf6" strokeWidth="2"/>
-        <line x1="75" y1="140" x2="115" y2="140" stroke="#8b5cf6" strokeWidth="2"/>
-        <circle cx="100" cy="70" r="35" fill="#8b5cf6" stroke="#003049" strokeWidth="2"/>
-        <line x1="100" y1="35" x2="95" y2="10" stroke="#003049" strokeWidth="3"/>
-        <polygon points="95,10 90,5 100,8" fill="#FDF0D5" stroke="#003049" strokeWidth="2"/>
+        <line x1="75" y1="120" x2="125" y2="120" stroke="#C1121F" strokeWidth="2"/>
+        <line x1="75" y1="130" x2="125" y2="130" stroke="#C1121F" strokeWidth="2"/>
+        <line x1="75" y1="140" x2="115" y2="140" stroke="#C1121F" strokeWidth="2"/>
+        <circle cx="100" cy="70" r="35" fill="#C1121F" stroke="#7a0b14" strokeWidth="2"/>
+        <line x1="100" y1="35" x2="95" y2="10" stroke="#7a0b14" strokeWidth="3"/>
+        <polygon points="95,10 90,5 100,8" fill="#FDF0D5" stroke="#7a0b14" strokeWidth="2"/>
         <circle className="robot-blink" cx="90" cy="65" r="6" fill="#FDF0D5"/>
         <circle className="robot-blink" cx="110" cy="65" r="6" fill="#FDF0D5"/>
-        <circle cx="90" cy="65" r="3" fill="#003049"/>
-        <circle cx="110" cy="65" r="3" fill="#003049"/>
-        <path d="M 85 80 Q 100 88 115 80" stroke="#003049" strokeWidth="2" fill="none" strokeLinecap="round"/>
-        <rect x="35" y="120" width="20" height="50" rx="10" fill="#8b5cf6" stroke="#003049" strokeWidth="2"/>
-        <rect x="145" y="120" width="20" height="50" rx="10" fill="#8b5cf6" stroke="#003049" strokeWidth="2"/>
-        <rect x="70" y="190" width="20" height="40" rx="10" fill="#8b5cf6" stroke="#003049" strokeWidth="2"/>
-        <rect x="110" y="190" width="20" height="40" rx="10" fill="#8b5cf6" stroke="#003049" strokeWidth="2"/>
+        <circle cx="90" cy="65" r="3" fill="#7a0b14"/>
+        <circle cx="110" cy="65" r="3" fill="#7a0b14"/>
+        <path d="M 85 80 Q 100 88 115 80" stroke="#FDF0D5" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        <rect x="35" y="120" width="20" height="50" rx="10" fill="#C1121F" stroke="#7a0b14" strokeWidth="2"/>
+        <rect x="145" y="120" width="20" height="50" rx="10" fill="#C1121F" stroke="#7a0b14" strokeWidth="2"/>
+        <rect x="70" y="190" width="20" height="40" rx="10" fill="#C1121F" stroke="#7a0b14" strokeWidth="2"/>
+        <rect x="110" y="190" width="20" height="40" rx="10" fill="#C1121F" stroke="#7a0b14" strokeWidth="2"/>
       </g>
     </svg>
   );

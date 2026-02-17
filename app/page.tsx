@@ -1,53 +1,143 @@
 import Link from 'next/link';
 
+// Compact robot SVGs for home page tiles — 64×64 viewbox
+function TileRobot({ slug, color }: { slug: string; color: string }) {
+  if (slug === 'scout') {
+    const dark = '#00253a';
+    return (
+      <svg viewBox="0 0 64 80" width="46" height="46">
+        <rect x="18" y="30" width="28" height="28" rx="5" fill={color}/>
+        <rect x="22" y="34" width="20" height="14" rx="2" fill={dark}/>
+        <circle cx="32" cy="41" r="4" fill={color} opacity="0.7"/>
+        <rect x="4" y="32" width="11" height="16" rx="4" fill={color}/>
+        <rect x="49" y="32" width="11" height="16" rx="4" fill={color}/>
+        <rect x="16" y="8" width="32" height="24" rx="7" fill={color}/>
+        <ellipse cx="24" cy="20" rx="5" ry="6" fill="#FDF0D5"/>
+        <ellipse cx="40" cy="20" rx="5" ry="6" fill="#FDF0D5"/>
+        <circle cx="24" cy="21" r="2.5" fill={dark}/>
+        <circle cx="40" cy="21" r="2.5" fill={dark}/>
+        <circle cx="44" cy="11" r="6" fill="none" stroke="#FDF0D5" strokeWidth="2"/>
+        <line x1="48" y1="16" x2="52" y2="21" stroke="#FDF0D5" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    );
+  }
+  if (slug === 'ticker') {
+    const dark = '#3a0000';
+    return (
+      <svg viewBox="0 0 64 80" width="46" height="46">
+        <rect x="16" y="34" width="32" height="30" rx="8" fill={color}/>
+        <rect x="20" y="38" width="24" height="14" rx="2" fill={dark}/>
+        <polyline points="22,48 27,43 32,46 37,40 42,42" stroke="#ff9999" strokeWidth="1.5" fill="none"/>
+        <circle cx="32" cy="22" r="14" fill={color}/>
+        <circle cx="28" cy="20" r="3" fill="#FDF0D5"/>
+        <circle cx="36" cy="20" r="3" fill="#FDF0D5"/>
+        <circle cx="28" cy="20" r="1.5" fill={dark}/>
+        <circle cx="36" cy="20" r="1.5" fill={dark}/>
+        <line x1="32" y1="8" x2="32" y2="2" stroke={dark} strokeWidth="2"/>
+        <circle cx="32" cy="1" r="2" fill="#ef4444">
+          <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/>
+        </circle>
+        <rect x="4" y="40" width="10" height="18" rx="5" fill={color}/>
+        <rect x="50" y="40" width="10" height="18" rx="5" fill={color}/>
+      </svg>
+    );
+  }
+  if (slug === 'matcher') {
+    const dark = '#3d6b8a';
+    return (
+      <svg viewBox="0 0 64 80" width="46" height="46">
+        <rect x="16" y="34" width="32" height="30" rx="8" fill={color}/>
+        <rect x="26" y="20" width="12" height="16" rx="2" fill={dark}/>
+        <polygon points="32,8 22,20 42,20" fill={color}/>
+        <rect x="22" y="22" width="20" height="14" rx="2" fill={dark}/>
+        <rect x="4" y="40" width="10" height="18" rx="5" fill={color}/>
+        <rect x="50" y="40" width="10" height="18" rx="5" fill={color}/>
+        <rect x="22" y="64" width="8" height="12" rx="4" fill={color}/>
+        <rect x="34" y="64" width="8" height="12" rx="4" fill={color}/>
+      </svg>
+    );
+  }
+  if (slug === 'quill') {
+    const dark = '#7a0b14';
+    return (
+      <svg viewBox="0 0 64 80" width="46" height="46">
+        <rect x="16" y="34" width="32" height="30" rx="8" fill={color}/>
+        <rect x="20" y="38" width="24" height="18" rx="2" fill="#FDF0D5"/>
+        <line x1="22" y1="43" x2="42" y2="43" stroke={color} strokeWidth="1.5"/>
+        <line x1="22" y1="48" x2="42" y2="48" stroke={color} strokeWidth="1.5"/>
+        <line x1="22" y1="53" x2="36" y2="53" stroke={color} strokeWidth="1.5"/>
+        <circle cx="32" cy="22" r="14" fill={color}/>
+        <circle cx="28" cy="20" r="3" fill="#FDF0D5"/>
+        <circle cx="36" cy="20" r="3" fill="#FDF0D5"/>
+        <circle cx="28" cy="20" r="1.5" fill={dark}/>
+        <circle cx="36" cy="20" r="1.5" fill={dark}/>
+        <line x1="32" y1="8" x2="30" y2="2" stroke={dark} strokeWidth="2"/>
+        <polygon points="30,2 28,0 32,1" fill="#FDF0D5"/>
+        <rect x="4" y="40" width="10" height="18" rx="5" fill={color}/>
+        <rect x="50" y="40" width="10" height="18" rx="5" fill={color}/>
+      </svg>
+    );
+  }
+  if (slug === 'sage') {
+    return (
+      <svg viewBox="0 0 64 80" width="46" height="46">
+        <ellipse cx="32" cy="55" rx="16" ry="18" fill="#FDF0D5" stroke="#C1121F" strokeWidth="1.5"/>
+        <circle cx="32" cy="26" r="14" fill="#FDF0D5" stroke="#C1121F" strokeWidth="1.5"/>
+        <text x="32" y="31" fontSize="10" fill="#C1121F" textAnchor="middle" fontFamily="serif" fontWeight="bold">ॐ</text>
+        <line x1="26" y1="33" x2="30" y2="33" stroke="#C1121F" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="34" y1="33" x2="38" y2="33" stroke="#C1121F" strokeWidth="1.5" strokeLinecap="round"/>
+        <circle cx="32" cy="12" r="8" fill="none" stroke="#C1121F" strokeWidth="1" opacity="0.5">
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    );
+  }
+  return null;
+}
+
 const agents = [
   {
     slug: 'scout',
     name: 'Scout',
-    color: '#669BBC',
+    color: '#003049',
     description: 'Fraud Trends Investigator',
     status: 'demo' as const,
-    initial: 'S',
     tagline: 'Mines industry & regulatory sources to surface emerging fraud patterns.',
     pipeline: ['Plan Strategy', 'Industry Sources', 'Regulatory Data', 'Synthesize Report'],
   },
   {
     slug: 'ticker',
     name: 'Ticker',
-    color: '#22c55e',
+    color: '#780000',
     description: 'Stock Portfolio Monitor',
     status: 'demo' as const,
-    initial: 'T',
     tagline: 'Watches your portfolio 24/7, alerting you to earnings events and price swings.',
     pipeline: ['Load Watchlist', 'Fetch Market Data', 'Analyze Events', 'Generate Alerts'],
   },
   {
     slug: 'matcher',
     name: 'Matcher',
-    color: '#f97316',
+    color: '#669BBC',
     description: 'House Finder with School Ratings',
     status: 'demo' as const,
-    initial: 'M',
     tagline: 'Combines MLS listings with school ratings to score your perfect home match.',
     pipeline: ['Parse Criteria', 'Search Listings', 'Rate Schools', 'Score Matches'],
   },
   {
     slug: 'quill',
     name: 'Quill',
-    color: '#8b5cf6',
+    color: '#C1121F',
     description: 'Article Editor & SEO Optimizer',
     status: 'demo' as const,
-    initial: 'Q',
     tagline: 'Rewrites and polishes articles for clarity, engagement, and SEO performance.',
     pipeline: ['Analyze Article', 'Extract Keywords', 'Rewrite & Enhance', 'SEO Check'],
   },
   {
     slug: 'sage',
     name: 'Sage',
-    color: '#C1121F',
+    color: '#5a3e2b',
     description: 'Bhagavad Gita Spiritual Guide',
     status: 'live' as const,
-    initial: 'S',
     tagline: 'Answers your deepest questions through the wisdom of the Bhagavad Gita.',
     pipeline: ['Receive Question', 'Search Verses', 'Select Teachings', 'Compose Answer'],
   },
@@ -161,24 +251,20 @@ export default function Home() {
                 style={{ background: agent.color }}
               />
 
-              {/* Initial avatar */}
+              {/* Robot avatar */}
               <div style={{
-                width: 64,
-                height: 64,
+                width: 72,
+                height: 72,
                 borderRadius: '50%',
-                background: agent.color + '18',
-                border: `2px solid ${agent.color}35`,
+                background: agent.color + '14',
+                border: `2px solid ${agent.color}30`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.5rem',
-                fontWeight: 800,
-                color: agent.color,
-                letterSpacing: '-0.02em',
                 marginBottom: '1rem',
-                fontFamily: 'inherit',
+                flexShrink: 0,
               }}>
-                {agent.initial}
+                <TileRobot slug={agent.slug} color={agent.color} />
               </div>
 
               {/* Name + badge */}
