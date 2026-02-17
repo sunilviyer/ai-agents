@@ -21,8 +21,32 @@
 **/.pytest_cache/
 **/*.egg-info/
 
-# Agent outputs (uncomment if outputs contain sensitive data)
-# agents/**/output/*.json
+# Agent outputs — generated files, stored in DB not git
+agents/**/output/*.json
+
+# Internal planning and documentation (kept local, not in repo)
+docs/
+ACTION_PLAN.md
+DEPLOYMENT_GUIDE.md
+QUICK_START.md
+SETUP_BMAD.md
+SECURITY_VALIDATION_REPORT.md
+GATE_1_VALIDATION_REPORT.md
+UNIVERSAL_SCHEMA_DECISION.md
+website/API_TESTING.md
+website/README.md
+agents/**/CASE_STUDY_GENERATION.md
+agents/**/GATE_1_VALIDATION_CHECKLIST.md
+agents/**/WORKFLOW_VISUALIZATION.md
+
+# Screenshots and prototype HTML
+*.png
+scout-easel-v2.html
+scout-workflow-walk.html
+
+# Next.js (root-level if applicable)
+.next/
+next-env.d.ts
 
 # Node.js
 website/node_modules/
@@ -75,3 +99,4 @@ _bmad-output/
 
 # Custom Claude Code commands
 .claude/
+.vercel
