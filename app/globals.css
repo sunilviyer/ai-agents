@@ -227,6 +227,13 @@ body {
 
 @media (max-width: 767px) {
   .robot-orb { width: 160px; height: 160px; }
+
+  /* Navbar: hide text labels on mobile so nothing overlaps */
+  .navbar-back-label  { display: none; }
+  .navbar-theme-label { display: none; }
+
+  /* Theme toggle becomes icon-only pill on mobile */
+  .theme-toggle { padding: 0 0.45rem; min-width: 32px; }
 }
 
 /* ============================================================

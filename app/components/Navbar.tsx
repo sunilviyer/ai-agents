@@ -52,7 +52,7 @@ export default function Navbar({ agentName, agentColor, status, showBack = true 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
 
         {/* LEFT — back arrow to agents home */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '64px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
           {showBack && (
             <a
               href="/"
@@ -67,6 +67,7 @@ export default function Navbar({ agentName, agentColor, status, showBack = true 
                 textDecoration: 'none',
                 opacity: 0.65,
                 transition: 'opacity 0.2s',
+                whiteSpace: 'nowrap',
               }}
               onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
               onMouseLeave={e => (e.currentTarget.style.opacity = '0.65')}
@@ -74,13 +75,14 @@ export default function Navbar({ agentName, agentColor, status, showBack = true 
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
                 <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span style={{ fontSize: '0.78rem' }}>Agents</span>
+              {/* Hide "Agents" label on small screens */}
+              <span className="navbar-back-label" style={{ fontSize: '0.78rem' }}>Agents</span>
             </a>
           )}
         </div>
 
         {/* CENTER — agent name + status */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: 1, justifyContent: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flex: 1, justifyContent: 'center', overflow: 'hidden', padding: '0 0.5rem' }}>
           {agentName && (
             <>
               {agentColor && (
@@ -98,15 +100,15 @@ export default function Navbar({ agentName, agentColor, status, showBack = true 
                 fontWeight: 700,
                 letterSpacing: '-0.01em',
                 color: 'var(--text-heading)',
-                maxWidth: '160px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
+                minWidth: 0,
               }}>
                 {agentName}
               </span>
               {status && (
-                <span className={`status-badge ${status}`}>
+                <span className={`status-badge ${status}`} style={{ flexShrink: 0 }}>
                   {status === 'live' ? '● Live' : 'Demo'}
                 </span>
               )}
@@ -115,7 +117,7 @@ export default function Navbar({ agentName, agentColor, status, showBack = true 
         </div>
 
         {/* RIGHT — home link + theme toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'flex-end', minWidth: '64px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'flex-end', flexShrink: 0 }}>
           {/* suniliyer.ca home link */}
           <a
             href="https://www.suniliyer.ca"
@@ -145,7 +147,7 @@ export default function Navbar({ agentName, agentColor, status, showBack = true 
             <HomeIcon />
           </a>
 
-          {/* theme toggle with label */}
+          {/* theme toggle — icon only on mobile, icon+label on desktop */}
           <button
             className="theme-toggle"
             onClick={toggle}
@@ -153,7 +155,7 @@ export default function Navbar({ agentName, agentColor, status, showBack = true 
             style={{ width: 'auto', borderRadius: '100px', padding: '0 0.6rem', gap: '0.35rem', display: 'flex', alignItems: 'center' }}
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-            <span style={{ fontSize: '0.70rem', fontWeight: 700, letterSpacing: '0.03em' }}>
+            <span className="navbar-theme-label" style={{ fontSize: '0.70rem', fontWeight: 700, letterSpacing: '0.03em' }}>
               {theme === 'dark' ? 'Light' : 'Dark'}
             </span>
           </button>
