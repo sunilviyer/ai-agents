@@ -75,12 +75,23 @@ function checkRateLimit(identifier: string): boolean {
 }
 
 function parseJsonFromLLM(text: string): unknown {
-  let cleaned = text;
+  let cleaned = text.trim();
+
+  // Handle markdown code blocks
   if (cleaned.includes('```json')) {
     cleaned = cleaned.split('```json')[1].split('```')[0].trim();
   } else if (cleaned.includes('```')) {
     cleaned = cleaned.split('```')[1].split('```')[0].trim();
   }
+
+  // Find the first { and last } to extract just the JSON object
+  const firstBrace = cleaned.indexOf('{');
+  const lastBrace = cleaned.lastIndexOf('}');
+
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    cleaned = cleaned.substring(firstBrace, lastBrace + 1);
+  }
+
   return JSON.parse(cleaned);
 }
 
@@ -105,6 +116,17 @@ function getLevelGuidance(userLevel: string) {
   return levelMap[userLevel] ?? levelMap['beginner'];
 }
 
+const SAGE_SYSTEM_PROMPT = `You are the Sage — a guide to the Bhagavad Gita's teachings.
+
+STRICT SCOPE: You ONLY answer questions related to:
+- The Bhagavad Gita (verses, chapters, characters, philosophy)
+- Dharma, karma, yoga, moksha, and related Vedic concepts
+- How Gita teachings apply to the user's personal challenges
+
+If a user asks anything outside this scope (e.g. coding, news, recipes, general knowledge, other religions in detail, unrelated advice), you must set "in_scope" to false in your response.
+
+Do not apologize. Do not explain what you cannot do at length. Simply set in_scope to false and the system will redirect the user.`;
+
 // Step 1: Understand Intent
 async function step1UnderstandIntent(
   client: Anthropic,
@@ -117,14 +139,18 @@ async function step1UnderstandIntent(
 
 Question: ${question}
 
+First determine if this question is within scope — it must relate to the Bhagavad Gita, its teachings, characters, philosophy, or how those teachings apply to the user's life. Questions about coding, news, recipes, unrelated general knowledge, or topics with no connection to the Gita are out of scope.
+
 Identify:
-1. The main spiritual topic or concern
-2. Key Bhagavad Gita concepts that might be relevant (from: ${KEY_CONCEPTS.slice(0, 10).join(', ')}, etc.)
-3. The type of guidance being sought (understanding, practical application, resolution of doubt, etc.)
-4. Any specific life situations or challenges mentioned
+1. Whether the question is in scope (true/false)
+2. The main spiritual topic or concern
+3. Key Bhagavad Gita concepts that might be relevant (from: ${KEY_CONCEPTS.slice(0, 10).join(', ')}, etc.)
+4. The type of guidance being sought (understanding, practical application, resolution of doubt, etc.)
+5. Any specific life situations or challenges mentioned
 
 Respond in JSON format:
 {
+  "in_scope": true,
   "core_topic": "brief description",
   "key_concepts": ["concept1", "concept2"],
   "guidance_type": "type of guidance sought",
@@ -135,6 +161,7 @@ Respond in JSON format:
     model: MODEL_NAME,
     max_tokens: 500,
     temperature: TEMPERATURE,
+    system: SAGE_SYSTEM_PROMPT,
     messages: [{ role: 'user', content: prompt }],
   });
 
@@ -170,10 +197,32 @@ async function step2RetrieveVerses(
 ): Promise<{ verses: VerseWithRelevance[]; step: ExecutionStep }> {
   const stepStart = Date.now();
 
-  // Fetch all verses from DB (no commentaries yet)
-  const allVerses = await query<VerseRow>(
-    'SELECT verse_id, chapter, verse, sanskrit, transliteration, translation_en FROM gita_verses ORDER BY chapter, verse'
+  // Extract key concepts for filtering
+  const keyConcepts = (intentData.key_concepts as string[] | undefined ?? []);
+  const searchTerms = [
+    question,
+    intentData.core_topic as string ?? '',
+    ...keyConcepts
+  ].filter(Boolean).join(' ');
+
+  // Use full-text search to get top ~100 potentially relevant verses
+  // This dramatically reduces the payload sent to the LLM
+  const filteredVerses = await query<VerseRow>(
+    `SELECT verse_id, chapter, verse, sanskrit, transliteration, translation_en,
+            ts_rank(to_tsvector('english', translation_en), plainto_tsquery('english', $1)) as relevance_score
+     FROM gita_verses
+     WHERE to_tsvector('english', translation_en) @@ plainto_tsquery('english', $1)
+     ORDER BY relevance_score DESC
+     LIMIT 100`,
+    [searchTerms]
   );
+
+  // If full-text search returns too few results, fall back to sampling popular verses
+  const allVerses = filteredVerses.rows.length > 10
+    ? filteredVerses
+    : await query<VerseRow>(
+        'SELECT verse_id, chapter, verse, sanskrit, transliteration, translation_en FROM gita_verses WHERE chapter IN (2, 3, 4, 6, 9, 12, 18) ORDER BY chapter, verse LIMIT 100'
+      );
 
   // Build a compact summary for LLM (verse_id + translation only)
   const verseSummaries = allVerses.rows.map((v) => ({
@@ -185,9 +234,9 @@ async function step2RetrieveVerses(
 
 Question: ${question}
 Core Topic: ${intentData.core_topic}
-Key Concepts: ${(intentData.key_concepts as string[] | undefined ?? []).join(', ')}
+Key Concepts: ${keyConcepts.join(', ')}
 
-Available verses (showing translation):
+Available verses (pre-filtered to most relevant, showing translation):
 ${JSON.stringify(verseSummaries, null, 2)}
 
 Select the most relevant verses and explain why each is relevant to the question.
@@ -255,7 +304,8 @@ Select 3-5 verses maximum.`;
       step_name: 'Retrieve Verses',
       step_type: 'search',
       details: {
-        total_verses_searched: allVerses.rows.length,
+        search_terms: searchTerms.substring(0, 100),
+        verses_after_filtering: allVerses.rows.length,
         verses_selected: verses.length,
         selected_verse_ids: Array.from(selectedVerseIds),
       },
@@ -412,6 +462,7 @@ Format:
     model: MODEL_NAME,
     max_tokens: MAX_TOKENS,
     temperature: TEMPERATURE,
+    system: SAGE_SYSTEM_PROMPT,
     messages: [{ role: 'user', content: prompt }],
   });
 
@@ -550,6 +601,21 @@ export async function POST(request: NextRequest) {
     // Step 1: Understand Intent
     const { intentData, step: step1 } = await step1UnderstandIntent(client, question, Date.now());
     executionTrace.push(step1);
+
+    // Scope guardrail: if the question is not about the Gita, redirect immediately
+    if (intentData.in_scope === false) {
+      return NextResponse.json({
+        answer: {
+          teaching: 'The Sage speaks only of the Gita\'s teachings. What question does your journey bring to these sacred pages?',
+          executive_summary: '',
+          explanation: '',
+          verse_references: [],
+          related_topics: [],
+          suggested_questions: [],
+        },
+        execution_time_ms: step1.duration_ms,
+      });
+    }
 
     // Step 2: Retrieve Verses
     const { verses, step: step2 } = await step2RetrieveVerses(client, intentData, question);
