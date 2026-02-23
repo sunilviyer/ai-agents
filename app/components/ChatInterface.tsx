@@ -108,9 +108,11 @@ export default function ChatInterface({ agentColor }: Props) {
     }
   };
 
-  const textMeta = 'var(--text-meta)';
-  const textBody = 'var(--text-body)';
-  const textHead = 'var(--text-heading)';
+  // Force dark text colors for readability on the light sage background
+  // regardless of theme toggle
+  const textMeta = '#6b6b8a';
+  const textBody = '#3d3d5c';
+  const textHead = '#1a1a2e';
 
   return (
     <div>
